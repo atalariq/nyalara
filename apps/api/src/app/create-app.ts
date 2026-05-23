@@ -4,6 +4,8 @@ import type { IdTokenVerifier } from '../features/auth/firebase-admin-auth.js'
 import { registerCalculateElectricityRoutes } from '../features/calculations/register-calculate-electricity-routes.js'
 import type { EmissionFactorReader } from '../features/emission-factors/emission-factor-reader.js'
 import { registerEmissionFactorRoutes } from '../features/emission-factors/register-emission-factor-routes.js'
+import type { EnergyInsightService } from '../features/energy-insights/energy-insight-service.js'
+import { registerGenerateEnergyInsightRoutes } from '../features/energy-insights/register-generate-energy-insight-routes.js'
 import type { ElectricityUsageService } from '../features/electricity-usages/electricity-usage-service.js'
 import { registerElectricityUsageRoutes } from '../features/electricity-usages/register-electricity-usage-routes.js'
 import { registerListElectricityUsageRoutes } from '../features/electricity-usages/register-list-electricity-usages-routes.js'
@@ -20,6 +22,7 @@ export type CreateAppOptions = {
   auth: IdTokenVerifier
   emissionFactors: EmissionFactorReader
   electricityUsages: ElectricityUsageService
+  energyInsights?: EnergyInsightService
 }
 
 export function createApp(options: CreateAppOptions) {
@@ -84,6 +87,17 @@ export function createApp(options: CreateAppOptions) {
     options.auth,
     options.electricityUsages
   )
+  registerGenerateEnergyInsightRoutes(app, options.auth, {
+    generateMonthlyInsight:
+      options.energyInsights?.generateMonthlyInsight ??
+      (async () => {
+        throw new AppError(
+          500,
+          'gemini_not_configured',
+          'Gemini API is not configured.'
+        )
+      })
+  })
   registerOpenApiRoutes(app, options.environment)
 
   return app
