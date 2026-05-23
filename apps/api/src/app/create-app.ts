@@ -1,6 +1,8 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
 
 import type { IdTokenVerifier } from '../features/auth/firebase-admin-auth.js'
+import type { EmissionFactorReader } from '../features/emission-factors/emission-factor-reader.js'
+import { registerEmissionFactorRoutes } from '../features/emission-factors/register-emission-factor-routes.js'
 import { AppError, toErrorEnvelope } from '../features/platform/http/errors.js'
 import { registerHealthRoutes } from '../features/platform/health/register-health-routes.js'
 import { registerOpenApiRoutes } from '../features/platform/openapi/register-openapi-routes.js'
@@ -10,6 +12,7 @@ export type AppEnvironment = 'development' | 'production' | 'test'
 export type CreateAppOptions = {
   environment: AppEnvironment
   auth: IdTokenVerifier
+  emissionFactors: EmissionFactorReader
 }
 
 export function createApp(options: CreateAppOptions) {
@@ -43,6 +46,7 @@ export function createApp(options: CreateAppOptions) {
   })
 
   registerHealthRoutes(app)
+  registerEmissionFactorRoutes(app, options.emissionFactors)
   registerOpenApiRoutes(app, options.environment)
 
   return app

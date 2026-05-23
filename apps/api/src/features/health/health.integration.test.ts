@@ -10,6 +10,9 @@ describe('GET /v1/health', () => {
         verifyIdToken: async () => {
           throw new Error('not used in this test')
         }
+      },
+      emissionFactors: {
+        listActiveElectricityFactors: async () => []
       }
     })
 

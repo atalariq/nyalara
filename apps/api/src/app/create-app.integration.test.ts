@@ -10,6 +10,9 @@ describe('v1 app platform behavior', () => {
         verifyIdToken: async () => {
           throw new Error('not used in this test')
         }
+      },
+      emissionFactors: {
+        listActiveElectricityFactors: async () => []
       }
     })
 
@@ -34,6 +37,9 @@ describe('v1 app platform behavior', () => {
         verifyIdToken: async () => {
           throw new Error('not used in this test')
         }
+      },
+      emissionFactors: {
+        listActiveElectricityFactors: async () => []
       }
     })
 
@@ -56,6 +62,9 @@ describe('v1 app platform behavior', () => {
         verifyIdToken: async () => {
           throw new Error('not used in this test')
         }
+      },
+      emissionFactors: {
+        listActiveElectricityFactors: async () => []
       }
     })
 
