@@ -1,5 +1,6 @@
 {
   "name": "api",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
@@ -7,6 +8,7 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
+    "@carbon-tracker/shared": "workspace:^",
     "@hono/node-server": "^1.19.14",
     "hono": "^4.12.21"
   },
