@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+  /* =========================================================================
+   * INI SATU-SATUNYA TEMPAT EDIT WARNA.
+   * tailwind.config.js hanya mendaftarkan nama token, nilai ada di sini.
+   *
+   * Format: R G B (tanpa koma, tanpa #)
+   * Contoh: #25CE7F → 37 206 127
+   * ========================================================================= */
+
+  :root {
+    /* Background */
+    --background:           255 255 255;  /* #FFFFFF */
+    --background-secondary: 210 210 210;  /* #D2D2D2 */
+
+    /* Surface */
+    --surface:              255 255 255;  /* #FFFFFF */
+    --surface-raised:       210 210 210;  /* #D2D2D2 */
+    --surface-overlay:      179 179 179;  /* #B3B3B3 */
+
+    /* Teks */
+    --foreground:           28 28 28;     /* #1C1C1C */
+    --foreground-secondary: 104 104 104;  /* #686868 */
+    --foreground-muted:     142 142 142;  /* #8E8E8E */
+    --foreground-disabled:  179 179 179;  /* #B3B3B3 */
+    --foreground-inverse:   255 255 255;  /* #FFFFFF */
+
+    /* Brand */
+    --brand:                37 206 127;   /* #25CE7F */
+    --brand-hover:          31 172 106;   /* #1FAC6A */
+    --brand-subtle:         211 245 229;  /* #D3F5E5 */
+    --brand-muted:          182 239 212;  /* #B6EFD4 */
+
+    /* Border */
+    --border:               179 179 179;  /* #B3B3B3 */
+    --border-strong:        142 142 142;  /* #8E8E8E */
+    --border-brand:         37 206 127;   /* #25CE7F */
+  }
+
+  .dark {
+    /* Background */
+    --background:           28 28 28;     /* #1C1C1C */
+    --background-secondary: 23 23 23;     /* #171717 */
+
+    /* Surface */
+    --surface:              23 23 23;     /* #171717 */
+    --surface-raised:       66 66 66;     /* #424242 */
+    --surface-overlay:      104 104 104;  /* #686868 */
+
+    /* Teks */
+    --foreground:           255 255 255;  /* #FFFFFF */
+    --foreground-secondary: 179 179 179;  /* #B3B3B3 */
+    --foreground-muted:     142 142 142;  /* #8E8E8E */
+    --foreground-disabled:  104 104 104;  /* #686868 */
+    --foreground-inverse:   28 28 28;     /* #1C1C1C */
+
+    /* Brand */
+    --brand:                37 206 127;   /* #25CE7F */
+    --brand-hover:          73 214 148;   /* #49D694 */
+    --brand-subtle:         12 69 42;     /* #0C452A */
+    --brand-muted:          19 103 64;    /* #136740 */
+
+    /* Border */
+    --border:               66 66 66;     /* #424242 */
+    --border-strong:        104 104 104;  /* #686868 */
+    --border-brand:         37 206 127;   /* #25CE7F */
+  }
+
+}
