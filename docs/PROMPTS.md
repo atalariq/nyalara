@@ -1,12 +1,12 @@
 # Backend Implementation Prompts
 
 Use these prompts in a new agent session (Codex as primary, Opencode fallback).  
-Project root: `/home/atalariq/Works/carbon-tracker`
+Project root: repo root
 
 ## Prompt 1 — Kickoff and Vertical Slices
 
 ```txt
-You are working in /home/atalariq/Works/carbon-tracker.
+You are working in the repo root.
 
 Read these first:
 - docs/PRD.md

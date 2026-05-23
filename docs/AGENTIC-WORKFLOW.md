@@ -26,28 +26,28 @@ This workflow exists to prevent three common failures:
 
 Read these first when starting work:
 
-- [AGENTS.md](/home/atalariq/Works/carbon-tracker/AGENTS.md)
-- [docs/PROMPTS.md](/home/atalariq/Works/carbon-tracker/docs/PROMPTS.md)
-- [CONTEXT-MAP.md](/home/atalariq/Works/carbon-tracker/CONTEXT-MAP.md)
-- [docs/agents/domain.md](/home/atalariq/Works/carbon-tracker/docs/agents/domain.md)
+- [AGENTS.md](../AGENTS.md)
+- [docs/PROMPTS.md](./PROMPTS.md)
+- [CONTEXT-MAP.md](../CONTEXT-MAP.md)
+- [docs/agents/domain.md](./agents/domain.md)
 
 Then read the context docs relevant to the task:
 
-- [apps/api/CONTEXT.md](/home/atalariq/Works/carbon-tracker/apps/api/CONTEXT.md)
-- [apps/mobile/CONTEXT.md](/home/atalariq/Works/carbon-tracker/apps/mobile/CONTEXT.md)
-- [packages/shared/CONTEXT.md](/home/atalariq/Works/carbon-tracker/packages/shared/CONTEXT.md)
+- [apps/api/CONTEXT.md](../apps/api/CONTEXT.md)
+- [apps/mobile/CONTEXT.md](../apps/mobile/CONTEXT.md)
+- [packages/shared/CONTEXT.md](../packages/shared/CONTEXT.md)
 
 For backend work, also read:
 
-- [docs/PRD.md](/home/atalariq/Works/carbon-tracker/docs/PRD.md)
-- [apps/api/docs/adr/0001-zod-and-hono-zod-openapi.md](/home/atalariq/Works/carbon-tracker/apps/api/docs/adr/0001-zod-and-hono-zod-openapi.md)
-- [apps/api/docs/adr/0002-backend-authoritative-writes.md](/home/atalariq/Works/carbon-tracker/apps/api/docs/adr/0002-backend-authoritative-writes.md)
-- [apps/api/docs/adr/0003-guest-vs-full-account-policy.md](/home/atalariq/Works/carbon-tracker/apps/api/docs/adr/0003-guest-vs-full-account-policy.md)
-- [apps/api/docs/adr/0004-canonical-schema-v1-hard-cutover.md](/home/atalariq/Works/carbon-tracker/apps/api/docs/adr/0004-canonical-schema-v1-hard-cutover.md)
+- [docs/PRD.md](./PRD.md)
+- [apps/api/docs/adr/0001-zod-and-hono-zod-openapi.md](../apps/api/docs/adr/0001-zod-and-hono-zod-openapi.md)
+- [apps/api/docs/adr/0002-backend-authoritative-writes.md](../apps/api/docs/adr/0002-backend-authoritative-writes.md)
+- [apps/api/docs/adr/0003-guest-vs-full-account-policy.md](../apps/api/docs/adr/0003-guest-vs-full-account-policy.md)
+- [apps/api/docs/adr/0004-canonical-schema-v1-hard-cutover.md](../apps/api/docs/adr/0004-canonical-schema-v1-hard-cutover.md)
 
 ## What `docs/PROMPTS.md` Is For
 
-[`docs/PROMPTS.md`](/home/atalariq/Works/carbon-tracker/docs/PROMPTS.md) is not a product spec and not a skills directory. It is an operator manual for starting or resuming agent work consistently.
+[`docs/PROMPTS.md`](./PROMPTS.md) is not a product spec and not a skills directory. It is an operator manual for starting or resuming agent work consistently.
 
 Use it when:
 
