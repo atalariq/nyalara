@@ -90,6 +90,8 @@ In that case, `service-account.json` is required locally, but it should stay out
 
 If you use a shell env loader, keep the real value in `apps/api/.env` and avoid committing it.
 
+The current backend entrypoint also reads `apps/api/.env` automatically for local runs, so `pnpm --filter api dev` and `pnpm --filter api start` will pick up values from that file without an extra `source .env` step.
+
 ### Cloud Run backend runs
 
 For Cloud Run, a checked-in `service-account.json` is usually not needed.
@@ -138,6 +140,11 @@ firebase use --add
 7. Create or use a service account for local backend development.
 8. Copy `apps/api/.env.example` to `apps/api/.env`.
 9. Set `GOOGLE_APPLICATION_CREDENTIALS` to the local service account file path before running `apps/api`.
+10. Seed the canonical emission factor document required by the electricity MVP:
+
+```bash
+pnpm --filter api seed:emission-factors
+```
 
 ### Getting a local service account file
 

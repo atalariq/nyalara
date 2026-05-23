@@ -6,7 +6,10 @@ import { createGeminiEnergyInsightGenerator } from './features/energy-insights/g
 import { createFirestoreEnergyInsightService } from './features/energy-insights/firestore-energy-insight-service.js'
 import { createFirestoreElectricityUsageService } from './features/electricity-usages/firestore-electricity-usage-service.js'
 import { AppError } from './features/platform/http/errors.js'
+import { loadLocalEnv } from './features/platform/env/load-local-env.js'
 import { getFirebaseAdminServices } from './features/platform/firebase/firebase-admin.js'
+
+loadLocalEnv(new URL('../.env', import.meta.url))
 
 const firebase = getFirebaseAdminServices()
 const geminiApiKey = process.env.GEMINI_API_KEY
