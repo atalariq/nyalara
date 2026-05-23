@@ -1,5 +1,6 @@
 import type { Firestore } from 'firebase-admin/firestore'
 
+import { AppError } from '../platform/http/errors.js'
 import type {
   EmissionFactor,
   EmissionFactorReader
@@ -39,6 +40,23 @@ function toEmissionFactor(
   id: string,
   document: EmissionFactorDocument
 ): EmissionFactor {
+  if (
+    document.unit !== 'kwh' ||
+    !Number.isFinite(document.kgCo2ePerKwh) ||
+    document.kgCo2ePerKwh <= 0 ||
+    !document.country ||
+    !document.region ||
+    !document.version ||
+    document.active !== true ||
+    document.category !== 'electricity'
+  ) {
+    throw new AppError(
+      500,
+      'invalid_emission_factor_state',
+      'Active electricity emission factor data is invalid.'
+    )
+  }
+
   return {
     id,
     country: document.country,
