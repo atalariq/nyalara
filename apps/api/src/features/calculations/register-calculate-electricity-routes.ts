@@ -15,6 +15,7 @@ const periodSchema = z.object({
 const requestSchema = z.discriminatedUnion('inputType', [
   z.object({
     inputType: z.literal('kwh'),
+    timezoneOffsetMinutes: z.number().int(),
     input: z.object({
       kwh: z.number().positive(),
       meterStart: z.null(),
@@ -25,6 +26,7 @@ const requestSchema = z.discriminatedUnion('inputType', [
   }),
   z.object({
     inputType: z.literal('meter_reading'),
+    timezoneOffsetMinutes: z.number().int(),
     input: z
       .object({
         kwh: z.null(),

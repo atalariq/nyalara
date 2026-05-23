@@ -74,6 +74,7 @@ describe('POST /v1/calculate-electricity', () => {
       },
       body: JSON.stringify({
         inputType: 'kwh',
+        timezoneOffsetMinutes: 420,
         input: {
           kwh: 120,
           meterStart: null,
@@ -135,6 +136,7 @@ describe('POST /v1/calculate-electricity', () => {
       },
       body: JSON.stringify({
         inputType: 'meter_reading',
+        timezoneOffsetMinutes: 420,
         input: {
           kwh: null,
           meterStart: 1000,
@@ -197,6 +199,7 @@ describe('POST /v1/calculate-electricity', () => {
       },
       body: JSON.stringify({
         inputType: 'kwh',
+        timezoneOffsetMinutes: 420,
         input: {
           kwh: 120,
           meterStart: null,
@@ -254,6 +257,7 @@ describe('POST /v1/calculate-electricity', () => {
       },
       body: JSON.stringify({
         inputType: 'kwh',
+        timezoneOffsetMinutes: 420,
         input: {
           kwh: -10,
           meterStart: null,
@@ -275,6 +279,68 @@ describe('POST /v1/calculate-electricity', () => {
         code: 'validation_error',
         message: 'Request validation failed.',
         details: expect.any(Array)
+      }
+    })
+  })
+
+  it('rejects a request without timezoneOffsetMinutes', async () => {
+    const app = createApp({
+      environment: 'test',
+      auth: {
+        verifyIdToken: async () => createDecodedIdToken('guest-user', 'anonymous')
+      },
+      emissionFactors: {
+        listActiveElectricityFactors: async () => createActiveElectricityFactors()
+      },
+      electricityUsages: {
+        createUsage: async () => {
+          throw new Error('not used in this test')
+        },
+        getMonthlySummary: async () => {
+          throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async () => {
+          throw new Error('not used in this test')
+        }
+      }
+    })
+
+    const response = await app.request('/v1/calculate-electricity', {
+      method: 'POST',
+      headers: {
+        authorization: 'Bearer valid-guest-token',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        inputType: 'kwh',
+        input: {
+          kwh: 120,
+          meterStart: null,
+          meterEnd: null,
+          unit: 'kwh'
+        },
+        period: {
+          startDate: '2026-05-01',
+          endDate: '2026-05-31',
+          month: '2026-05'
+        }
+      })
+    })
+
+    expect(response.status).toBe(400)
+    await expect(response.json()).resolves.toEqual({
+      success: false,
+      error: {
+        code: 'validation_error',
+        message: 'Request validation failed.',
+        details: expect.arrayContaining([
+          expect.objectContaining({
+            path: ['timezoneOffsetMinutes']
+          })
+        ])
       }
     })
   })
@@ -314,6 +380,7 @@ describe('POST /v1/calculate-electricity', () => {
       },
       body: JSON.stringify({
         inputType: 'kwh',
+        timezoneOffsetMinutes: 420,
         input: {
           kwh: 120,
           meterStart: null,
