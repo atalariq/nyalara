@@ -23,6 +23,11 @@ describe('GET /v1/emission-factors', () => {
             active: true
           }
         ]
+      },
+      electricityUsages: {
+        createUsage: async () => {
+          throw new Error('not used in this test')
+        }
       }
     })
 
@@ -55,6 +60,11 @@ describe('GET /v1/emission-factors', () => {
       },
       emissionFactors: {
         listActiveElectricityFactors: async () => []
+      },
+      electricityUsages: {
+        createUsage: async () => {
+          throw new Error('not used in this test')
+        }
       }
     })
 

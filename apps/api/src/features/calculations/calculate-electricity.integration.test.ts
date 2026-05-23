@@ -49,6 +49,11 @@ describe('POST /v1/calculate-electricity', () => {
       },
       emissionFactors: {
         listActiveElectricityFactors: async () => createActiveElectricityFactors()
+      },
+      electricityUsages: {
+        createUsage: async () => {
+          throw new Error('not used in this test')
+        }
       }
     })
 
@@ -96,6 +101,11 @@ describe('POST /v1/calculate-electricity', () => {
       },
       emissionFactors: {
         listActiveElectricityFactors: async () => createActiveElectricityFactors()
+      },
+      electricityUsages: {
+        createUsage: async () => {
+          throw new Error('not used in this test')
+        }
       }
     })
 
@@ -145,6 +155,11 @@ describe('POST /v1/calculate-electricity', () => {
       },
       emissionFactors: {
         listActiveElectricityFactors: async () => createActiveElectricityFactors()
+      },
+      electricityUsages: {
+        createUsage: async () => {
+          throw new Error('not used in this test')
+        }
       }
     })
 
@@ -187,6 +202,11 @@ describe('POST /v1/calculate-electricity', () => {
       },
       emissionFactors: {
         listActiveElectricityFactors: async () => createActiveElectricityFactors()
+      },
+      electricityUsages: {
+        createUsage: async () => {
+          throw new Error('not used in this test')
+        }
       }
     })
 
@@ -233,6 +253,11 @@ describe('POST /v1/calculate-electricity', () => {
       },
       emissionFactors: {
         listActiveElectricityFactors: async () => createActiveElectricityFactors()
+      },
+      electricityUsages: {
+        createUsage: async () => {
+          throw new Error('not used in this test')
+        }
       }
     })
 

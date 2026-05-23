@@ -13,6 +13,11 @@ describe('GET /v1/health', () => {
       },
       emissionFactors: {
         listActiveElectricityFactors: async () => []
+      },
+      electricityUsages: {
+        createUsage: async () => {
+          throw new Error('not used in this test')
+        }
       }
     })
 

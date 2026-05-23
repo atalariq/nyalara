@@ -13,6 +13,11 @@ describe('v1 app platform behavior', () => {
       },
       emissionFactors: {
         listActiveElectricityFactors: async () => []
+      },
+      electricityUsages: {
+        createUsage: async () => {
+          throw new Error('not used in this test')
+        }
       }
     })
 
@@ -40,6 +45,11 @@ describe('v1 app platform behavior', () => {
       },
       emissionFactors: {
         listActiveElectricityFactors: async () => []
+      },
+      electricityUsages: {
+        createUsage: async () => {
+          throw new Error('not used in this test')
+        }
       }
     })
 
@@ -65,6 +75,11 @@ describe('v1 app platform behavior', () => {
       },
       emissionFactors: {
         listActiveElectricityFactors: async () => []
+      },
+      electricityUsages: {
+        createUsage: async () => {
+          throw new Error('not used in this test')
+        }
       }
     })
 
