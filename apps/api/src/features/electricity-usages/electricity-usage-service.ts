@@ -88,6 +88,21 @@ export type GetMonthlySummaryParams = {
   month: string
 }
 
+export type ListElectricityUsagesParams = {
+  userId: string
+  month: string
+}
+
+export type ElectricityUsageListItem = {
+  usageId: string
+  usage: ElectricityUsageRecord
+}
+
+export type RecalculateMonthlySummaryParams = {
+  userId: string
+  month: string
+}
+
 export type ElectricityUsageService = {
   createUsage(
     params: CreateElectricityUsageParams
@@ -95,4 +110,10 @@ export type ElectricityUsageService = {
   getMonthlySummary(
     params: GetMonthlySummaryParams
   ): Promise<MonthlySummary | null>
+  listUsages(
+    params: ListElectricityUsagesParams
+  ): Promise<ElectricityUsageListItem[]>
+  recalculateMonthlySummary(
+    params: RecalculateMonthlySummaryParams
+  ): Promise<MonthlySummary>
 }

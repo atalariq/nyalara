@@ -20,6 +20,12 @@ describe('v1 app platform behavior', () => {
         },
         getMonthlySummary: async () => {
           throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async () => {
+          throw new Error('not used in this test')
         }
       }
     })
@@ -55,6 +61,12 @@ describe('v1 app platform behavior', () => {
         },
         getMonthlySummary: async () => {
           throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async () => {
+          throw new Error('not used in this test')
         }
       }
     })
@@ -87,6 +99,12 @@ describe('v1 app platform behavior', () => {
           throw new Error('not used in this test')
         },
         getMonthlySummary: async () => {
+          throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async () => {
           throw new Error('not used in this test')
         }
       }

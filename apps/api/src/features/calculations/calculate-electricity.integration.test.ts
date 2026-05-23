@@ -56,6 +56,12 @@ describe('POST /v1/calculate-electricity', () => {
         },
         getMonthlySummary: async () => {
           throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async () => {
+          throw new Error('not used in this test')
         }
       }
     })
@@ -110,6 +116,12 @@ describe('POST /v1/calculate-electricity', () => {
           throw new Error('not used in this test')
         },
         getMonthlySummary: async () => {
+          throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async () => {
           throw new Error('not used in this test')
         }
       }
@@ -168,6 +180,12 @@ describe('POST /v1/calculate-electricity', () => {
         },
         getMonthlySummary: async () => {
           throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async () => {
+          throw new Error('not used in this test')
         }
       }
     })
@@ -217,6 +235,12 @@ describe('POST /v1/calculate-electricity', () => {
           throw new Error('not used in this test')
         },
         getMonthlySummary: async () => {
+          throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async () => {
           throw new Error('not used in this test')
         }
       }
@@ -271,6 +295,12 @@ describe('POST /v1/calculate-electricity', () => {
           throw new Error('not used in this test')
         },
         getMonthlySummary: async () => {
+          throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async () => {
           throw new Error('not used in this test')
         }
       }

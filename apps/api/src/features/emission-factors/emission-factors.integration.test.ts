@@ -30,6 +30,12 @@ describe('GET /v1/emission-factors', () => {
         },
         getMonthlySummary: async () => {
           throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async () => {
+          throw new Error('not used in this test')
         }
       }
     })
@@ -69,6 +75,12 @@ describe('GET /v1/emission-factors', () => {
           throw new Error('not used in this test')
         },
         getMonthlySummary: async () => {
+          throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async () => {
           throw new Error('not used in this test')
         }
       }

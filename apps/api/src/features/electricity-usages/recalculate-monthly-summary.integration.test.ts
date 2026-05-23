@@ -22,8 +22,8 @@ function createDecodedIdToken(
   } as DecodedIdToken
 }
 
-describe('GET /v1/monthly-summary', () => {
-  it('returns the authenticated user monthly summary for a valid month query', async () => {
+describe('POST /v1/recalculate-monthly-summary', () => {
+  it('recomputes the authenticated user monthly summary for the requested month', async () => {
     const app = createApp({
       environment: 'test',
       auth: {
@@ -40,32 +40,37 @@ describe('GET /v1/monthly-summary', () => {
         createUsage: async () => {
           throw new Error('not used in this test')
         },
-        getMonthlySummary: async ({ userId, month }) => {
+        getMonthlySummary: async () => {
+          throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async ({ userId, month }) => {
           expect(userId).toBe('guest-user')
           expect(month).toBe('2026-05')
 
           return {
             month: '2026-05',
-            totalKwh: 120,
-            totalKgCo2e: 102,
-            averageKwhPerDay: 120 / 31,
-            averageKgCo2ePerDay: 102 / 31,
-            usageCount: 1
+            totalKwh: 200,
+            totalKgCo2e: 170,
+            averageKwhPerDay: 200 / 31,
+            averageKgCo2ePerDay: 170 / 31,
+            usageCount: 2
           }
-        },
-        listUsages: async () => {
-          throw new Error('not used in this test')
-        },
-        recalculateMonthlySummary: async () => {
-          throw new Error('not used in this test')
         }
       }
     })
 
-    const response = await app.request('/v1/monthly-summary?month=2026-05', {
+    const response = await app.request('/v1/recalculate-monthly-summary', {
+      method: 'POST',
       headers: {
-        authorization: 'Bearer valid-guest-token'
-      }
+        authorization: 'Bearer valid-guest-token',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        month: '2026-05'
+      })
     })
 
     expect(response.status).toBe(200)
@@ -73,56 +78,16 @@ describe('GET /v1/monthly-summary', () => {
       success: true,
       data: {
         month: '2026-05',
-        totalKwh: 120,
-        totalKgCo2e: 102,
-        averageKwhPerDay: 120 / 31,
-        averageKgCo2ePerDay: 102 / 31,
-        usageCount: 1
+        totalKwh: 200,
+        totalKgCo2e: 170,
+        averageKwhPerDay: 200 / 31,
+        averageKgCo2ePerDay: 170 / 31,
+        usageCount: 2
       }
     })
   })
 
-  it('returns the uniform error envelope when the monthly summary does not exist', async () => {
-    const app = createApp({
-      environment: 'test',
-      auth: {
-        verifyIdToken: async () => createDecodedIdToken('guest-user', 'anonymous')
-      },
-      emissionFactors: {
-        listActiveElectricityFactors: async () => []
-      },
-      electricityUsages: {
-        createUsage: async () => {
-          throw new Error('not used in this test')
-        },
-        getMonthlySummary: async () => null
-        ,
-        listUsages: async () => {
-          throw new Error('not used in this test')
-        },
-        recalculateMonthlySummary: async () => {
-          throw new Error('not used in this test')
-        }
-      }
-    })
-
-    const response = await app.request('/v1/monthly-summary?month=2026-05', {
-      headers: {
-        authorization: 'Bearer valid-guest-token'
-      }
-    })
-
-    expect(response.status).toBe(404)
-    await expect(response.json()).resolves.toEqual({
-      success: false,
-      error: {
-        code: 'monthly_summary_not_found',
-        message: 'Monthly summary not found for the requested month.'
-      }
-    })
-  })
-
-  it('rejects an invalid month query with the uniform validation envelope', async () => {
+  it('rejects an invalid month payload with the uniform validation envelope', async () => {
     const app = createApp({
       environment: 'test',
       auth: {
@@ -147,10 +112,15 @@ describe('GET /v1/monthly-summary', () => {
       }
     })
 
-    const response = await app.request('/v1/monthly-summary?month=2026-5', {
+    const response = await app.request('/v1/recalculate-monthly-summary', {
+      method: 'POST',
       headers: {
-        authorization: 'Bearer valid-guest-token'
-      }
+        authorization: 'Bearer valid-guest-token',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        month: '2026-5'
+      })
     })
 
     expect(response.status).toBe(400)

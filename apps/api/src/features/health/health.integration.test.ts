@@ -20,6 +20,12 @@ describe('GET /v1/health', () => {
         },
         getMonthlySummary: async () => {
           throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async () => {
+          throw new Error('not used in this test')
         }
       }
     })

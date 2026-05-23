@@ -78,6 +78,12 @@ describe('POST /v1/electricity-usages', () => {
         },
         getMonthlySummary: async () => {
           throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async () => {
+          throw new Error('not used in this test')
         }
       }
     })
@@ -175,6 +181,12 @@ describe('POST /v1/electricity-usages', () => {
           throw new Error('not used in this test')
         },
         getMonthlySummary: async () => {
+          throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async () => {
           throw new Error('not used in this test')
         }
       }

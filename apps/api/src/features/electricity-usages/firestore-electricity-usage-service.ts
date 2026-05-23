@@ -3,8 +3,10 @@ import { FieldValue, type Firestore } from 'firebase-admin/firestore'
 import type {
   CreateElectricityUsageParams,
   CreateElectricityUsageResult,
+  ElectricityUsageListItem,
   ElectricityUsageService,
   GetMonthlySummaryParams,
+  RecalculateMonthlySummaryParams,
   MonthlySummary
 } from './electricity-usage-service.js'
 
@@ -31,6 +33,12 @@ export function createFirestoreElectricityUsageService(
     },
     async getMonthlySummary(params) {
       return readMonthlySummary(firestore, params)
+    },
+    async listUsages(params) {
+      return listUsages(firestore, params)
+    },
+    async recalculateMonthlySummary(params) {
+      return recalculateMonthlySummaryFromMonth(firestore, params)
     }
   }
 }
@@ -51,14 +59,22 @@ async function recalculateMonthlySummary(
   firestore: Firestore,
   params: CreateElectricityUsageParams
 ): Promise<MonthlySummary> {
+  return recalculateMonthlySummaryFromMonth(firestore, {
+    userId: params.userId,
+    month: params.usage.period.month
+  })
+}
+
+async function recalculateMonthlySummaryFromMonth(
+  firestore: Firestore,
+  params: RecalculateMonthlySummaryParams
+): Promise<MonthlySummary> {
   const usageCollection = firestore
     .collection('users')
     .doc(params.userId)
     .collection('electricity_usages')
 
-  const monthSnapshot = await usageCollection
-    .where('period.month', '==', params.usage.period.month)
-    .get()
+  const monthSnapshot = await usageCollection.where('period.month', '==', params.month).get()
 
   const usages = monthSnapshot.docs.map((doc) => {
     const data = doc.data()
@@ -73,10 +89,10 @@ async function recalculateMonthlySummary(
     (sum, usage) => sum + usage.totalKgCo2e,
     0
   )
-  const daysInMonth = getDaysInMonth(params.usage.period.month)
+  const daysInMonth = getDaysInMonth(params.month)
 
   const monthlySummary: MonthlySummary = {
-    month: params.usage.period.month,
+    month: params.month,
     totalKwh,
     totalKgCo2e,
     averageKwhPerDay: totalKwh / daysInMonth,
@@ -88,7 +104,7 @@ async function recalculateMonthlySummary(
     .collection('users')
     .doc(params.userId)
     .collection('monthly_summaries')
-    .doc(params.usage.period.month)
+    .doc(params.month)
     .set({
       ...monthlySummary,
       updatedAt: FieldValue.serverTimestamp()
@@ -131,5 +147,40 @@ async function readMonthlySummary(
     averageKwhPerDay: data.averageKwhPerDay as number,
     averageKgCo2ePerDay: data.averageKgCo2ePerDay as number,
     usageCount: data.usageCount as number
+  }
+}
+
+async function listUsages(
+  firestore: Firestore,
+  params: GetMonthlySummaryParams
+): Promise<ElectricityUsageListItem[]> {
+  const snapshot = await firestore
+    .collection('users')
+    .doc(params.userId)
+    .collection('electricity_usages')
+    .where('period.month', '==', params.month)
+    .get()
+
+  return snapshot.docs
+    .map((doc) => ({
+      usageId: doc.id,
+      usage: toElectricityUsageRecord(doc.data())
+    }))
+    .sort((left, right) =>
+      right.usage.timestamps.usageDate.localeCompare(left.usage.timestamps.usageDate)
+    )
+}
+
+function toElectricityUsageRecord(data: FirebaseFirestore.DocumentData) {
+  return {
+    inputType: data.inputType as 'kwh' | 'meter_reading',
+    input: data.input,
+    period: data.period,
+    calculation: data.calculation,
+    source: data.source,
+    timestamps: {
+      usageDate: data.timestamps.usageDate as string,
+      createdAtClient: data.timestamps.createdAtClient as string
+    }
   }
 }
