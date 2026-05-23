@@ -1,6 +1,8 @@
-# Welcome to your Expo app 👋
+# Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is the Expo mobile client for Carbon Tracker.
+
+Firebase setup for the current Expo client is documented in [../../docs/firebase-setup.md](../../docs/firebase-setup.md). The current app uses Expo env vars for the Firebase JS SDK, not `google-services.json` or `GoogleService-Info.plist`.
 
 ## Get started
 
