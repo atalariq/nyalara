@@ -1,10 +1,13 @@
 import { serve } from '@hono/node-server'
-import { Hono } from 'hono'
+import { createApp } from './app/create-app.js'
+import { createFirebaseAdminAuthVerifier } from './features/auth/firebase-admin-auth.js'
+import { getFirebaseAdminServices } from './features/platform/firebase/firebase-admin.js'
 
-const app = new Hono()
+const firebase = getFirebaseAdminServices()
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
+const app = createApp({
+  environment: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+  auth: createFirebaseAdminAuthVerifier(firebase.auth)
 })
 
 serve({
