@@ -49,6 +49,13 @@ Install dependencies from the repo root:
 pnpm install
 ```
 
+Install required CLIs for Firebase-backed local work:
+
+```bash
+firebase --version
+gcloud --version
+```
+
 Firebase setup is split by app role:
 
 - Mobile client setup: [docs/firebase-setup.md](docs/firebase-setup.md)
@@ -58,6 +65,11 @@ Quick entry points:
 
 - Mobile app: [apps/mobile/README.md](apps/mobile/README.md)
 - Backend API: [apps/api/README.md](apps/api/README.md)
+
+Environment templates:
+
+- Mobile env template: [apps/mobile/.env.example](apps/mobile/.env.example)
+- API env template: [apps/api/.env.example](apps/api/.env.example)
 
 ## Current Backend Surface
 

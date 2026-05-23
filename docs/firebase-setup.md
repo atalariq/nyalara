@@ -5,9 +5,30 @@ This repo uses two different Firebase integration modes:
 - `apps/mobile`: Firebase client SDK for Expo
 - `apps/api`: Firebase Admin SDK for backend verification and Firestore access
 
+## Required CLIs
+
+For a practical local setup, install:
+
+- Firebase CLI: `firebase`
+- Google Cloud CLI: `gcloud`
+
+Example installation references:
+
+- Firebase CLI: <https://firebase.google.com/docs/cli>
+- Google Cloud CLI: <https://cloud.google.com/sdk/docs/install>
+
+Verify both are available:
+
+```bash
+firebase --version
+gcloud --version
+```
+
 ## Current mobile setup
 
 The mobile app reads Firebase config from environment variables in [`apps/mobile/src/config/firebase.ts`](../apps/mobile/src/config/firebase.ts).
+
+Start from [`apps/mobile/.env.example`](../apps/mobile/.env.example) and copy it to a local `.env` file for the mobile app.
 
 Required variables:
 
@@ -24,6 +45,12 @@ Optional variable:
 
 ```bash
 EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID=...
+```
+
+Typical setup:
+
+```bash
+cp apps/mobile/.env.example apps/mobile/.env
 ```
 
 ### Do we need `google-services.json` or `GoogleService-Info.plist`?
@@ -46,6 +73,8 @@ The backend initializes Firebase Admin in [`apps/api/src/features/platform/fireb
 
 That means credentials come from Application Default Credentials.
 
+Start from [`apps/api/.env.example`](../apps/api/.env.example) and copy it to a local `.env` file for the API app.
+
 ### Local backend runs
 
 For local development against a real Firebase project, provide Admin credentials with one of the standard ADC methods.
@@ -53,10 +82,13 @@ For local development against a real Firebase project, provide Admin credentials
 The simplest path is:
 
 ```bash
+cp apps/api/.env.example apps/api/.env
 export GOOGLE_APPLICATION_CREDENTIALS=/absolute/path/to/service-account.json
 ```
 
 In that case, `service-account.json` is required locally, but it should stay outside the repo or be gitignored. Do not commit service account credentials.
+
+If you use a shell env loader, keep the real value in `apps/api/.env` and avoid committing it.
 
 ### Cloud Run backend runs
 
@@ -69,10 +101,12 @@ Use the Cloud Run service account attached to the deployment and grant it the Fi
 Required for mobile:
 
 - Expo Firebase env vars
+- `apps/mobile/.env` based on `apps/mobile/.env.example`
 
 Required for local backend runs against real Firebase:
 
 - Admin credentials via ADC, commonly `GOOGLE_APPLICATION_CREDENTIALS`
+- `apps/api/.env` based on `apps/api/.env.example`
 
 Not required for the current codebase:
 
@@ -82,12 +116,39 @@ Not required for the current codebase:
 
 ## Recommended local setup
 
-1. Create a Firebase project.
-2. Enable Firebase Auth and Firestore.
-3. Register the mobile app in Firebase so you can obtain the client config values.
-4. Put the mobile config values into your Expo env setup.
-5. Create or use a service account for local backend development.
-6. Export `GOOGLE_APPLICATION_CREDENTIALS` before running `apps/api`.
+1. Install `firebase` and `gcloud`.
+2. Authenticate both CLIs:
+
+```bash
+firebase login
+gcloud auth login
+gcloud auth application-default login
+```
+
+3. Create or select a Google Cloud / Firebase project:
+
+```bash
+gcloud config set project your-project-id
+firebase use --add
+```
+
+4. Enable Firebase Auth and Firestore for that project.
+5. Register the mobile app in Firebase so you can obtain the client config values.
+6. Copy `apps/mobile/.env.example` to `apps/mobile/.env` and fill in the Firebase web config.
+7. Create or use a service account for local backend development.
+8. Copy `apps/api/.env.example` to `apps/api/.env`.
+9. Set `GOOGLE_APPLICATION_CREDENTIALS` to the local service account file path before running `apps/api`.
+
+### Getting a local service account file
+
+One common workflow is:
+
+1. Open Google Cloud Console or Firebase Console for the project.
+2. Create a service account with the permissions your backend needs.
+3. Download the JSON key to a secure local path outside the repo.
+4. Point `GOOGLE_APPLICATION_CREDENTIALS` at that file.
+
+Do not commit the JSON key.
 
 ## Why tests did not require credentials
 
