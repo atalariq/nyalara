@@ -2,7 +2,7 @@
 
 This document is the maintainer reference for running agentic work in this repo with:
 
-- `PROMPTS.md` for reusable session prompts
+- `docs/PROMPTS.md` for reusable session prompts
 - repo-local Matt Pocock style skills in `.agents/skills/`
 - repo context docs such as `AGENTS.md`, `CONTEXT-MAP.md`, `apps/*/CONTEXT.md`, and ADRs
 
@@ -16,9 +16,9 @@ This workflow exists to prevent three common failures:
 2. Splitting work into horizontal tasks instead of thin vertical slices
 3. Losing architectural decisions between sessions or between different agent tools
 
-`PROMPTS.md` and the skill workflow solve those problems together:
+`docs/PROMPTS.md` and the skill workflow solve those problems together:
 
-- `PROMPTS.md` gives a stable session bootstrap and a locked decision snapshot
+- `docs/PROMPTS.md` gives a stable session bootstrap and a locked decision snapshot
 - skills provide structured execution modes such as slicing, grilling, TDD, and handoff
 - context docs and ADRs keep domain language and durable decisions consistent
 
@@ -27,7 +27,7 @@ This workflow exists to prevent three common failures:
 Read these first when starting work:
 
 - [AGENTS.md](/home/atalariq/Works/carbon-tracker/AGENTS.md)
-- [PROMPTS.md](/home/atalariq/Works/carbon-tracker/PROMPTS.md)
+- [docs/PROMPTS.md](/home/atalariq/Works/carbon-tracker/docs/PROMPTS.md)
 - [CONTEXT-MAP.md](/home/atalariq/Works/carbon-tracker/CONTEXT-MAP.md)
 - [docs/agents/domain.md](/home/atalariq/Works/carbon-tracker/docs/agents/domain.md)
 
@@ -45,9 +45,9 @@ For backend work, also read:
 - [apps/api/docs/adr/0003-guest-vs-full-account-policy.md](/home/atalariq/Works/carbon-tracker/apps/api/docs/adr/0003-guest-vs-full-account-policy.md)
 - [apps/api/docs/adr/0004-canonical-schema-v1-hard-cutover.md](/home/atalariq/Works/carbon-tracker/apps/api/docs/adr/0004-canonical-schema-v1-hard-cutover.md)
 
-## What `PROMPTS.md` Is For
+## What `docs/PROMPTS.md` Is For
 
-[`PROMPTS.md`](/home/atalariq/Works/carbon-tracker/PROMPTS.md) is not a product spec and not a skills directory. It is an operator manual for starting or resuming agent work consistently.
+[`docs/PROMPTS.md`](/home/atalariq/Works/carbon-tracker/docs/PROMPTS.md) is not a product spec and not a skills directory. It is an operator manual for starting or resuming agent work consistently.
 
 Use it when:
 
@@ -56,7 +56,7 @@ Use it when:
 - handing implementation to another maintainer
 - resuming after context loss
 
-`PROMPTS.md` currently contains:
+`docs/PROMPTS.md` currently contains:
 
 - a kickoff prompt for slice planning
 - an implementation prompt for one-slice-at-a-time TDD work
@@ -65,7 +65,7 @@ Use it when:
 - a fallback instruction when a skill is unavailable
 - a locked decision snapshot for backend implementation
 
-Treat the prompt text as reusable scaffolding. Do not treat it as the primary source of truth if it diverges from ADRs or context docs. If a durable decision changes, update ADRs/context docs first, then update `PROMPTS.md`.
+Treat the prompt text as reusable scaffolding. Do not treat it as the primary source of truth if it diverges from ADRs or context docs. If a durable decision changes, update ADRs/context docs first, then update `docs/PROMPTS.md`.
 
 ## Installed Repo-Local Skills
 
@@ -103,7 +103,7 @@ The exact trigger syntax can vary by tool/client. The safe rule is:
 - state the target artifact or scope
 - state the expected outcome
 
-If the client does not support repo-local skills directly, copy the corresponding prompt from `PROMPTS.md` and ask the agent to follow that workflow manually.
+If the client does not support repo-local skills directly, copy the corresponding prompt from `docs/PROMPTS.md` and ask the agent to follow that workflow manually.
 
 ## Standard Workflow
 
@@ -237,7 +237,7 @@ Use it even when the code is in progress. It is cheaper than reconstructing stat
 
 For the current backend effort, the locked workflow is:
 
-1. Start from `PROMPTS.md` Prompt 1
+1. Start from `docs/PROMPTS.md` Prompt 1
 2. Use `to-issues` to create backend-only slices
 3. Implement one slice with `tdd`
 4. Use emulator-backed integration tests from day one
@@ -254,7 +254,7 @@ Current backend decisions already captured:
 - canonical schema v1 hard cutover
 - shared API contracts in `packages/shared`
 
-If you are resuming backend work, use `PROMPTS.md` before writing new prompt text from scratch.
+If you are resuming backend work, use `docs/PROMPTS.md` before writing new prompt text from scratch.
 
 ## Codex vs Opencode
 
@@ -271,7 +271,7 @@ Operational rule:
 That means:
 
 - if Codex and Opencode differ in syntax, preserve the workflow, not the exact invocation form
-- if a skill is unavailable in one tool, run the equivalent process manually using `PROMPTS.md`
+- if a skill is unavailable in one tool, run the equivalent process manually using `docs/PROMPTS.md`
 
 ## Conversation Management
 
@@ -404,7 +404,7 @@ In the next conversation:
 
 1. read the handoff document
 2. open the repo artifacts it references
-3. re-anchor on `AGENTS.md`, `PROMPTS.md`, relevant `CONTEXT.md`, and ADRs
+3. re-anchor on `AGENTS.md`, `docs/PROMPTS.md`, relevant `CONTEXT.md`, and ADRs
 4. continue with the suggested skill or prompt
 
 The handoff should help the next agent find the right files and decisions quickly. It should not replace reading those files.
@@ -415,7 +415,7 @@ When continuing from a handoff, trust artifacts in this order:
 
 1. current repo code
 2. ADRs and context docs
-3. `PROMPTS.md`
+3. `docs/PROMPTS.md`
 4. the handoff document
 5. old conversation text
 
@@ -451,19 +451,19 @@ Update `docs/AGENTIC-WORKFLOW.md` when:
 - a skill is removed or replaced
 - maintainers adopt a different session bootstrap pattern
 
-Update `PROMPTS.md` when:
+Update `docs/PROMPTS.md` when:
 
 - the preferred reusable prompts change
 - implementation constraints change
 - the locked decision snapshot becomes stale
 
-Update context docs and ADRs before `PROMPTS.md` when the change is architectural or domain-level.
+Update context docs and ADRs before `docs/PROMPTS.md` when the change is architectural or domain-level.
 
 ## Quick Start
 
 For a fresh implementation session:
 
-1. Read `AGENTS.md`, `PROMPTS.md`, and the relevant context docs.
+1. Read `AGENTS.md`, `docs/PROMPTS.md`, and the relevant context docs.
 2. If architecture is still fuzzy, use `grill-with-docs`.
 3. Use `to-issues` to create or refine vertical slices.
 4. Use `tdd` to implement one slice.
@@ -471,6 +471,6 @@ For a fresh implementation session:
 
 For a fresh maintainer who forgot the workflow:
 
-- `PROMPTS.md` tells you what prompt to paste
+- `docs/PROMPTS.md` tells you what prompt to paste
 - this document tells you why the workflow is shaped this way
 - the skill files in `.agents/skills/` tell you the exact operating rules when needed
