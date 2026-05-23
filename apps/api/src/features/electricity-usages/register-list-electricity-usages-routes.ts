@@ -101,7 +101,24 @@ export function registerListElectricityUsageRoutes(
 
     return c.json({
       success: true,
-      data: usages
+      data: usages.map((item) => ({
+        ...item,
+        usage: {
+          ...item.usage,
+          timestamps: {
+            ...item.usage.timestamps,
+            createdAtClient: normalizeIsoDateTimeToUtc(
+              item.usage.timestamps.createdAtClient
+            )
+          }
+        }
+      }))
     })
   })
+}
+
+function normalizeIsoDateTimeToUtc(value: string) {
+  const date = new Date(value)
+
+  return Number.isNaN(date.getTime()) ? value : date.toISOString()
 }

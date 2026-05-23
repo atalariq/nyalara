@@ -164,7 +164,7 @@ describe('GET /v1/electricity-usages', () => {
             },
             timestamps: {
               usageDate: '2026-05-31',
-              createdAtClient: '2026-05-31T09:30:00+07:00'
+              createdAtClient: '2026-05-31T02:30:00.000Z'
             }
           }
         },
@@ -198,7 +198,7 @@ describe('GET /v1/electricity-usages', () => {
             },
             timestamps: {
               usageDate: '2026-05-15',
-              createdAtClient: '2026-05-15T09:30:00+07:00'
+              createdAtClient: '2026-05-15T02:30:00.000Z'
             }
           }
         }
