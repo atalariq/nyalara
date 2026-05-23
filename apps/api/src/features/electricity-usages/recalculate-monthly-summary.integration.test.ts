@@ -87,6 +87,70 @@ describe('POST /v1/recalculate-monthly-summary', () => {
     })
   })
 
+  it('allows a full-account session to recompute its own monthly summary', async () => {
+    const app = createApp({
+      environment: 'test',
+      auth: {
+        verifyIdToken: async (idToken) => {
+          expect(idToken).toBe('valid-full-account-token')
+
+          return createDecodedIdToken('full-user', 'password')
+        }
+      },
+      emissionFactors: {
+        listActiveElectricityFactors: async () => []
+      },
+      electricityUsages: {
+        createUsage: async () => {
+          throw new Error('not used in this test')
+        },
+        getMonthlySummary: async () => {
+          throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async ({ userId, month }) => {
+          expect(userId).toBe('full-user')
+          expect(month).toBe('2026-05')
+
+          return {
+            month: '2026-05',
+            totalKwh: 120,
+            totalKgCo2e: 102,
+            averageKwhPerDay: 120 / 31,
+            averageKgCo2ePerDay: 102 / 31,
+            usageCount: 1
+          }
+        }
+      }
+    })
+
+    const response = await app.request('/v1/recalculate-monthly-summary', {
+      method: 'POST',
+      headers: {
+        authorization: 'Bearer valid-full-account-token',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        month: '2026-05'
+      })
+    })
+
+    expect(response.status).toBe(200)
+    await expect(response.json()).resolves.toEqual({
+      success: true,
+      data: {
+        month: '2026-05',
+        totalKwh: 120,
+        totalKgCo2e: 102,
+        averageKwhPerDay: 120 / 31,
+        averageKgCo2ePerDay: 102 / 31,
+        usageCount: 1
+      }
+    })
+  })
+
   it('rejects an invalid month payload with the uniform validation envelope', async () => {
     const app = createApp({
       environment: 'test',
