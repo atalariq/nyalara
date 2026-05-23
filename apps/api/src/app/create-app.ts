@@ -1,6 +1,7 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
 
 import type { IdTokenVerifier } from '../features/auth/firebase-admin-auth.js'
+import { registerCalculateElectricityRoutes } from '../features/calculations/register-calculate-electricity-routes.js'
 import type { EmissionFactorReader } from '../features/emission-factors/emission-factor-reader.js'
 import { registerEmissionFactorRoutes } from '../features/emission-factors/register-emission-factor-routes.js'
 import { AppError, toErrorEnvelope } from '../features/platform/http/errors.js'
@@ -16,7 +17,23 @@ export type CreateAppOptions = {
 }
 
 export function createApp(options: CreateAppOptions) {
-  const app = new OpenAPIHono()
+  const app = new OpenAPIHono({
+    defaultHook: (result, c) => {
+      if (!result.success) {
+        return c.json(
+          toErrorEnvelope(
+            new AppError(
+              400,
+              'validation_error',
+              'Request validation failed.',
+              result.error.issues
+            )
+          ),
+          400
+        )
+      }
+    }
+  })
 
   app.notFound((c) => {
     return c.json(
@@ -47,6 +64,7 @@ export function createApp(options: CreateAppOptions) {
 
   registerHealthRoutes(app)
   registerEmissionFactorRoutes(app, options.emissionFactors)
+  registerCalculateElectricityRoutes(app, options.auth, options.emissionFactors)
   registerOpenApiRoutes(app, options.environment)
 
   return app
