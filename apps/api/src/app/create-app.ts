@@ -6,6 +6,7 @@ import type { EmissionFactorReader } from '../features/emission-factors/emission
 import { registerEmissionFactorRoutes } from '../features/emission-factors/register-emission-factor-routes.js'
 import type { ElectricityUsageService } from '../features/electricity-usages/electricity-usage-service.js'
 import { registerElectricityUsageRoutes } from '../features/electricity-usages/register-electricity-usage-routes.js'
+import { registerMonthlySummaryRoutes } from '../features/electricity-usages/register-monthly-summary-routes.js'
 import { AppError, toErrorEnvelope } from '../features/platform/http/errors.js'
 import { registerHealthRoutes } from '../features/platform/health/register-health-routes.js'
 import { registerOpenApiRoutes } from '../features/platform/openapi/register-openapi-routes.js'
@@ -74,6 +75,7 @@ export function createApp(options: CreateAppOptions) {
     options.emissionFactors,
     options.electricityUsages
   )
+  registerMonthlySummaryRoutes(app, options.auth, options.electricityUsages)
   registerOpenApiRoutes(app, options.environment)
 
   return app

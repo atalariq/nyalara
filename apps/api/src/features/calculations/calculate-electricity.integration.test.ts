@@ -53,6 +53,9 @@ describe('POST /v1/calculate-electricity', () => {
       electricityUsages: {
         createUsage: async () => {
           throw new Error('not used in this test')
+        },
+        getMonthlySummary: async () => {
+          throw new Error('not used in this test')
         }
       }
     })
@@ -104,6 +107,9 @@ describe('POST /v1/calculate-electricity', () => {
       },
       electricityUsages: {
         createUsage: async () => {
+          throw new Error('not used in this test')
+        },
+        getMonthlySummary: async () => {
           throw new Error('not used in this test')
         }
       }
@@ -159,6 +165,9 @@ describe('POST /v1/calculate-electricity', () => {
       electricityUsages: {
         createUsage: async () => {
           throw new Error('not used in this test')
+        },
+        getMonthlySummary: async () => {
+          throw new Error('not used in this test')
         }
       }
     })
@@ -205,6 +214,9 @@ describe('POST /v1/calculate-electricity', () => {
       },
       electricityUsages: {
         createUsage: async () => {
+          throw new Error('not used in this test')
+        },
+        getMonthlySummary: async () => {
           throw new Error('not used in this test')
         }
       }
@@ -256,6 +268,9 @@ describe('POST /v1/calculate-electricity', () => {
       },
       electricityUsages: {
         createUsage: async () => {
+          throw new Error('not used in this test')
+        },
+        getMonthlySummary: async () => {
           throw new Error('not used in this test')
         }
       }

@@ -27,6 +27,9 @@ describe('GET /v1/emission-factors', () => {
       electricityUsages: {
         createUsage: async () => {
           throw new Error('not used in this test')
+        },
+        getMonthlySummary: async () => {
+          throw new Error('not used in this test')
         }
       }
     })
@@ -63,6 +66,9 @@ describe('GET /v1/emission-factors', () => {
       },
       electricityUsages: {
         createUsage: async () => {
+          throw new Error('not used in this test')
+        },
+        getMonthlySummary: async () => {
           throw new Error('not used in this test')
         }
       }

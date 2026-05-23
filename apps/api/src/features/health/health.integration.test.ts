@@ -17,6 +17,9 @@ describe('GET /v1/health', () => {
       electricityUsages: {
         createUsage: async () => {
           throw new Error('not used in this test')
+        },
+        getMonthlySummary: async () => {
+          throw new Error('not used in this test')
         }
       }
     })

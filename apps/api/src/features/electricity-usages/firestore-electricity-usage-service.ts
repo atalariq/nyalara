@@ -4,6 +4,7 @@ import type {
   CreateElectricityUsageParams,
   CreateElectricityUsageResult,
   ElectricityUsageService,
+  GetMonthlySummaryParams,
   MonthlySummary
 } from './electricity-usage-service.js'
 
@@ -27,6 +28,9 @@ export function createFirestoreElectricityUsageService(
         usage: params.usage,
         monthlySummary
       }
+    },
+    async getMonthlySummary(params) {
+      return readMonthlySummary(firestore, params)
     }
   }
 }
@@ -97,4 +101,35 @@ function getDaysInMonth(month: string) {
   const [year, monthIndex] = month.split('-').map(Number)
 
   return new Date(Date.UTC(year, monthIndex, 0)).getUTCDate()
+}
+
+async function readMonthlySummary(
+  firestore: Firestore,
+  params: GetMonthlySummaryParams
+): Promise<MonthlySummary | null> {
+  const snapshot = await firestore
+    .collection('users')
+    .doc(params.userId)
+    .collection('monthly_summaries')
+    .doc(params.month)
+    .get()
+
+  if (!snapshot.exists) {
+    return null
+  }
+
+  const data = snapshot.data()
+
+  if (!data) {
+    return null
+  }
+
+  return {
+    month: data.month as string,
+    totalKwh: data.totalKwh as number,
+    totalKgCo2e: data.totalKgCo2e as number,
+    averageKwhPerDay: data.averageKwhPerDay as number,
+    averageKgCo2ePerDay: data.averageKgCo2ePerDay as number,
+    usageCount: data.usageCount as number
+  }
 }

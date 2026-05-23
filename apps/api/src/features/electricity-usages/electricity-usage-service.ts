@@ -83,8 +83,16 @@ export type CreateElectricityUsageResult = {
   monthlySummary: MonthlySummary
 }
 
+export type GetMonthlySummaryParams = {
+  userId: string
+  month: string
+}
+
 export type ElectricityUsageService = {
   createUsage(
     params: CreateElectricityUsageParams
   ): Promise<CreateElectricityUsageResult>
+  getMonthlySummary(
+    params: GetMonthlySummaryParams
+  ): Promise<MonthlySummary | null>
 }
