@@ -1,29 +1,29 @@
 // features/profile/screens/ProfileScreen.tsx
-import { useLogout } from "@/features/auth/hooks/useLogout";
-import AppLoading from "@/shared/components/feedback/AppLoading";
-import { LogOut } from "lucide-react-native";
-import { Alert, Pressable, ScrollView, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { AccountInfoList } from "../components/AccountInfoList";
-import { AchievementsBadges } from "../components/AchievementsBadges";
-import { CarbonEffectsGrid } from "../components/CarbonEffectsGrid";
-import { MonthlyGoalCard } from "../components/MonthlyGoalCard";
-import { ProfileHeader } from "../components/ProfileHeader";
-import { useProfile } from "../hooks/useProfile";
+import { useLogout } from '@/features/auth/hooks/useLogout'
+import AppLoading from '@/shared/components/feedback/AppLoading'
+import { LogOut } from 'lucide-react-native'
+import { Alert, Pressable, ScrollView, Text, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { AccountInfoList } from '../components/AccountInfoList'
+import { AchievementsBadges } from '../components/AchievementsBadges'
+import { CarbonEffectsGrid } from '../components/CarbonEffectsGrid'
+import { MonthlyGoalCard } from '../components/MonthlyGoalCard'
+import { ProfileHeader } from '../components/ProfileHeader'
+import { useProfile } from '../hooks/useProfile'
 
 export default function ProfileScreen() {
-  const { profile, isLoading, error } = useProfile();
-  const { logout, isLoading: isLoggingOut } = useLogout();
+  const { profile, isLoading, error } = useProfile()
+  const { logout, isLoading: isLoggingOut } = useLogout()
 
   function handleLogout() {
-    Alert.alert("Log Out", "Are you sure you want to log out?", [
-      { text: "Cancel", style: "cancel" },
+    Alert.alert('Log Out', 'Are you sure you want to log out?', [
+      { text: 'Cancel', style: 'cancel' },
       {
-        text: "Log Out",
-        style: "destructive",
+        text: 'Log Out',
+        style: 'destructive',
         onPress: logout,
       },
-    ]);
+    ])
   }
 
   if (isLoading) {
@@ -31,17 +31,17 @@ export default function ProfileScreen() {
       <SafeAreaView className="flex-1 bg-background items-center justify-center">
         <AppLoading size="md" label="Memuat profil..." />
       </SafeAreaView>
-    );
+    )
   }
 
   if (error || !profile) {
     return (
       <SafeAreaView className="flex-1 bg-background items-center justify-center">
         <Text className="text-foreground-muted text-sm">
-          {error ?? "Profil tidak ditemukan"}
+          {error ?? 'Profil tidak ditemukan'}
         </Text>
       </SafeAreaView>
-    );
+    )
   }
 
   return (
@@ -53,8 +53,8 @@ export default function ProfileScreen() {
       >
         <ProfileHeader
           name={profile.displayName}
-          level={{ label: "Eco Warrior", current: 620, target: 1000 }}
-          city={profile.city ?? "—"}
+          level={{ label: 'Eco Warrior', current: 620, target: 1000 }}
+          city={profile.city ?? '—'}
           avatarUrl={profile.photoURL}
           onEditPress={() => {}}
         />
@@ -72,16 +72,16 @@ export default function ProfileScreen() {
           data={{
             name: profile.displayName,
             email: profile.email,
-            residence: profile.residence ?? "—",
+            residence: profile.residence ?? '—',
             residents: profile.residents ?? 0,
-            city: profile.city ?? "—",
+            city: profile.city ?? '—',
             plnRate: `Rp ${profile.electricityRate}/kWh`,
           }}
         />
 
         <MonthlyGoalCard
           data={{
-            title: "Reduce usage by 20% from last month",
+            title: 'Reduce usage by 20% from last month',
             description:
               "You've reached 14% reduction so far. Keep going for that Eco-Badge!",
             baselineKwh: 520,
@@ -93,9 +93,9 @@ export default function ProfileScreen() {
 
         <AchievementsBadges
           achievements={[
-            { id: "1", label: "Eco Starter", emoji: "🌱" },
-            { id: "2", label: "Zero Waste Hero", emoji: "🏆" },
-            { id: "3", label: "Early Bird", emoji: "🐦" },
+            { id: '1', label: 'Eco Starter', emoji: '🌱' },
+            { id: '2', label: 'Zero Waste Hero', emoji: '🏆' },
+            { id: '3', label: 'Early Bird', emoji: '🐦' },
           ]}
         />
 
@@ -123,5 +123,5 @@ export default function ProfileScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }

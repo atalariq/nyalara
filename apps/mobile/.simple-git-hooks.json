@@ -1,0 +1,1 @@
+{\n  "pre-commit": "pnpm pretty-quick --staged"\n}\n

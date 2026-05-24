@@ -1,11 +1,11 @@
 // LOGIN SCREEN
 
-import { router } from "expo-router";
-import { ArrowLeft, Lock, Mail } from "lucide-react-native";
+import { router } from 'expo-router'
+import { ArrowLeft, Lock, Mail } from 'lucide-react-native'
 
-import React from "react";
+import React from 'react'
 
-import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
+import { AntDesign, FontAwesome5 } from '@expo/vector-icons'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -14,20 +14,20 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import { FormField } from "../components/FormFields";
-import { useLoginForm } from "../hooks/useAuthForm";
-import { useGoogleAuth } from "../hooks/useGoogleAuth";
+} from 'react-native'
+import { FormField } from '../components/FormFields'
+import { useLoginForm } from '../hooks/useAuthForm'
+import { useGoogleAuth } from '../hooks/useGoogleAuth'
 
 export function LoginScreen() {
-  const { form, onSubmit, error, isLoading } = useLoginForm();
+  const { form, onSubmit, error, isLoading } = useLoginForm()
 
-  const { promptAsync } = useGoogleAuth();
+  const { promptAsync } = useGoogleAuth()
 
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-[#F6F6F6]"
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView
         className="flex-1"
@@ -55,7 +55,7 @@ export function LoginScreen() {
           </Text>
 
           <Text className="text-zinc-500 text-center text-[15px] leading-5 mt-4 px-5">
-            Log back into your sustainable living{"\n"}
+            Log back into your sustainable living{'\n'}
             journey and continue tracking.
           </Text>
         </View>
@@ -104,7 +104,7 @@ export function LoginScreen() {
             icon={Mail}
             placeholder="your@email.com"
             inputProps={{
-              keyboardType: "email-address",
+              keyboardType: 'email-address',
             }}
           />
 
@@ -141,15 +141,15 @@ export function LoginScreen() {
         </TouchableOpacity>
 
         <Text className="text-zinc-500 text-base text-center mt-6">
-          Don&apos;t have an account?{" "}
+          Don&apos;t have an account?{' '}
           <Text
             className="text-brand font-bold"
-            onPress={() => router.push("/(auth)/register")}
+            onPress={() => router.push('/(auth)/register')}
           >
             Sign Up
           </Text>
         </Text>
       </ScrollView>
     </KeyboardAvoidingView>
-  );
+  )
 }

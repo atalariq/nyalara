@@ -1,14 +1,14 @@
-import { AppButton } from "@/shared/components/ui/AppButton";
-import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
-import { ArrowLeft, Bolt, Leaf } from "lucide-react-native";
-import { Pressable, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { AppButton } from '@/shared/components/ui/AppButton'
+import { LinearGradient } from 'expo-linear-gradient'
+import { router } from 'expo-router'
+import { ArrowLeft, Bolt, Leaf } from 'lucide-react-native'
+import { Pressable, Text, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export function DeviceOnboardingScreen() {
   return (
     <LinearGradient
-      colors={["#2AD47F", "#EFFFF6", "#FFFFFF"]}
+      colors={['#2AD47F', '#EFFFF6', '#FFFFFF']}
       locations={[0, 0.9, 1]}
       className="flex-1"
     >
@@ -40,7 +40,7 @@ export function DeviceOnboardingScreen() {
 
           {/* Heading */}
           <Text className="text-white text-[52px] font-bold leading-[58px] mb-4">
-            Add your{"\n"}devices
+            Add your{'\n'}devices
           </Text>
 
           <Text className="text-white/90 text-lg leading-7 max-w-[290px] mb-10">
@@ -68,20 +68,20 @@ export function DeviceOnboardingScreen() {
               variant="secondary"
               size="lg"
               fullWidth
-              onPress={() => router.push("/(onboarding)/device-setup/list")}
+              onPress={() => router.push('/(onboarding)/device-setup/list')}
             />
             <AppButton
               label="Skip for now"
               variant="secondary-subtle"
               size="lg"
               fullWidth
-              onPress={() => router.replace("/(app)/dashboard")}
+              onPress={() => router.replace('/(app)/dashboard')}
             />
           </View>
         </View>
       </SafeAreaView>
     </LinearGradient>
-  );
+  )
 }
 
 function FeatureCard({
@@ -89,9 +89,9 @@ function FeatureCard({
   title,
   desc,
 }: {
-  icon: React.ReactNode;
-  title: string;
-  desc: string;
+  icon: React.ReactNode
+  title: string
+  desc: string
 }) {
   return (
     <View className="bg-white/70 rounded-[30px] px-4 py-4 flex-row items-center gap-4 mb-4">
@@ -109,5 +109,5 @@ function FeatureCard({
         <Text className="text-[#666] text-sm leading-5">{desc}</Text>
       </View>
     </View>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import { db } from "@/config/firebase";
+import { db } from '@/config/firebase'
 import {
   addDoc,
   collection,
@@ -11,19 +11,19 @@ import {
   serverTimestamp,
   updateDoc,
   where,
-} from "firebase/firestore";
-import type { CreateDevicePayload, Device } from "../types/device.types";
+} from 'firebase/firestore'
+import type { CreateDevicePayload, Device } from '../types/device.types'
 
-const COLLECTION = "devices";
+const COLLECTION = 'devices'
 
 function toDevice(id: string, data: any): Device {
-  const createdAt = data.createdAt;
+  const createdAt = data.createdAt
   const createdAtMillis =
-    createdAt && typeof createdAt.toDate === "function"
+    createdAt && typeof createdAt.toDate === 'function'
       ? createdAt.toDate().getTime()
-      : typeof createdAt === "number"
+      : typeof createdAt === 'number'
         ? createdAt
-        : Date.now();
+        : Date.now()
 
   return {
     id,
@@ -41,7 +41,7 @@ function toDevice(id: string, data: any): Device {
     monthlyEmissions: data.monthlyEmissions,
     monthlyCost: data.monthlyCost,
     createdAt: createdAtMillis,
-  };
+  }
 }
 
 export const deviceService = {
@@ -53,18 +53,18 @@ export const deviceService = {
       ...payload,
       userId,
       createdAt: serverTimestamp(),
-    });
-    return toDevice(ref.id, { ...payload, userId });
+    })
+    return toDevice(ref.id, { ...payload, userId })
   },
 
   async getUserDevices(userId: string): Promise<Device[]> {
     const q = query(
       collection(db, COLLECTION),
-      where("userId", "==", userId),
-      orderBy("createdAt", "desc"),
-    );
-    const snap = await getDocs(q);
-    return snap.docs.map((d) => toDevice(d.id, d.data()));
+      where('userId', '==', userId),
+      orderBy('createdAt', 'desc'),
+    )
+    const snap = await getDocs(q)
+    return snap.docs.map((d) => toDevice(d.id, d.data()))
   },
 
   listenUserDevices(
@@ -73,22 +73,22 @@ export const deviceService = {
   ): () => void {
     const q = query(
       collection(db, COLLECTION),
-      where("userId", "==", userId),
-      orderBy("createdAt", "desc"),
-    );
+      where('userId', '==', userId),
+      orderBy('createdAt', 'desc'),
+    )
     return onSnapshot(q, (snap) => {
-      onData(snap.docs.map((d) => toDevice(d.id, d.data())));
-    });
+      onData(snap.docs.map((d) => toDevice(d.id, d.data())))
+    })
   },
 
   async updateDevice(
     deviceId: string,
-    payload: Partial<Omit<Device, "id" | "userId" | "createdAt">>,
+    payload: Partial<Omit<Device, 'id' | 'userId' | 'createdAt'>>,
   ): Promise<void> {
-    await updateDoc(doc(db, COLLECTION, deviceId), payload);
+    await updateDoc(doc(db, COLLECTION, deviceId), payload)
   },
 
   async deleteDevice(deviceId: string): Promise<void> {
-    await deleteDoc(doc(db, COLLECTION, deviceId));
+    await deleteDoc(doc(db, COLLECTION, deviceId))
   },
-};
+}

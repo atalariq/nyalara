@@ -1,14 +1,14 @@
-import { router } from "expo-router";
-import { useEffect, useRef } from "react";
-import { Animated, Pressable, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useDeviceStore } from "../../devices/store/deviceStore";
+import { router } from 'expo-router'
+import { useEffect, useRef } from 'react'
+import { Animated, Pressable, Text, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { useDeviceStore } from '../../devices/store/deviceStore'
 
 export function DeviceSetupCompleteScreen() {
-  const devices = useDeviceStore((s) => s.devices);
+  const devices = useDeviceStore((s) => s.devices)
 
-  const scaleAnim = useRef(new Animated.Value(0)).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0)).current
+  const fadeAnim = useRef(new Animated.Value(0)).current
 
   useEffect(() => {
     Animated.sequence([
@@ -23,11 +23,11 @@ export function DeviceSetupCompleteScreen() {
         duration: 400,
         useNativeDriver: true,
       }),
-    ]).start();
-  }, []);
+    ]).start()
+  }, [])
 
-  const totalKwh = devices.reduce((sum, d) => sum + d.monthlyKwh, 0);
-  const dailyKwh = totalKwh / 30;
+  const totalKwh = devices.reduce((sum, d) => sum + d.monthlyKwh, 0)
+  const dailyKwh = totalKwh / 30
 
   return (
     <SafeAreaView className="flex-1 bg-[#25CE7F]">
@@ -63,7 +63,7 @@ export function DeviceSetupCompleteScreen() {
             System Ready.
           </Text>
           <Text className="text-white/80 text-sm text-center leading-relaxed mb-8">
-            Your smart energy tracking system is ready.{"\n"}
+            Your smart energy tracking system is ready.{'\n'}
             You're all set to start building better energy habits.
           </Text>
 
@@ -78,8 +78,8 @@ export function DeviceSetupCompleteScreen() {
                   Network Status
                 </Text>
                 <Text className="text-white text-base font-bold">
-                  {devices.length} Device{devices.length !== 1 ? "s" : ""}{" "}
-                  Connected
+                  {devices.length} Device
+                  {devices.length !== 1 ? 's' : ''} Connected
                 </Text>
               </View>
             </View>
@@ -104,7 +104,7 @@ export function DeviceSetupCompleteScreen() {
       {/* CTA */}
       <View className="px-5 pb-8">
         <Pressable
-          onPress={() => router.replace("/(app)/dashboard")}
+          onPress={() => router.replace('/(app)/dashboard')}
           className="bg-white rounded-full py-4 flex-row items-center justify-center gap-2"
         >
           <Text className="text-[#0E0E0E] text-base font-semibold">
@@ -114,5 +114,5 @@ export function DeviceSetupCompleteScreen() {
         </Pressable>
       </View>
     </SafeAreaView>
-  );
+  )
 }

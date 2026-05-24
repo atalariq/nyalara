@@ -1,13 +1,13 @@
-import React from "react";
-import { Text, View } from "react-native";
-import { OnboardingSlideData } from "../types";
-import { OnboardingDots } from "./OnboardingDots";
-import { OnboardingMockup } from "./OnboardingMockup";
+import React from 'react'
+import { Text, View } from 'react-native'
+import { OnboardingSlideData } from '../types'
+import { OnboardingDots } from './OnboardingDots'
+import { OnboardingMockup } from './OnboardingMockup'
 
 interface Props {
-  slide: OnboardingSlideData;
-  totalSlides: number;
-  activeIndex: number;
+  slide: OnboardingSlideData
+  totalSlides: number
+  activeIndex: number
 }
 
 export const OnboardingSlide = ({ slide, totalSlides, activeIndex }: Props) => {
@@ -53,5 +53,5 @@ export const OnboardingSlide = ({ slide, totalSlides, activeIndex }: Props) => {
         </View>
       </View>
     </View>
-  );
-};
+  )
+}

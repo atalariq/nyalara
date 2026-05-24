@@ -1,15 +1,15 @@
-import { CARBON_CONFIG } from "@/shared/config/carbonConfig";
-import { Text, View } from "react-native";
-import type { DailyUsage } from "../types/dailyUsage.types";
+import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
+import { Text, View } from 'react-native'
+import type { DailyUsage } from '../types/dailyUsage.types'
 
 type Props = {
-  history: DailyUsage[];
-};
+  history: DailyUsage[]
+}
 
 export function EnvironmentalImpact({ history }: Props) {
-  const totalKwh = history.reduce((sum, d) => sum + d.totalKwh, 0);
-  const totalEmissions = totalKwh * CARBON_CONFIG.emissionFactor;
-  const totalCost = totalKwh * CARBON_CONFIG.electricityRate;
+  const totalKwh = history.reduce((sum, d) => sum + d.totalKwh, 0)
+  const totalEmissions = totalKwh * CARBON_CONFIG.emissionFactor
+  const totalCost = totalKwh * CARBON_CONFIG.electricityRate
 
   return (
     <View className="mx-4 rounded-3xl bg-[#0E0E0E] p-6">
@@ -37,10 +37,13 @@ export function EnvironmentalImpact({ history }: Props) {
         <View className="items-end">
           <Text className="text-xs text-white/50">Est. Cost</Text>
           <Text className="text-base font-bold text-brand mt-0.5">
-            Rp {totalCost.toLocaleString("id-ID", { maximumFractionDigits: 0 })}
+            Rp{' '}
+            {totalCost.toLocaleString('id-ID', {
+              maximumFractionDigits: 0,
+            })}
           </Text>
         </View>
       </View>
     </View>
-  );
+  )
 }

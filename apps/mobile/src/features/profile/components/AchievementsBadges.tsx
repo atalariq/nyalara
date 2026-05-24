@@ -1,9 +1,9 @@
-import { Text, View } from "react-native";
-import type { Achievement } from "../types/profile.types";
+import { Text, View } from 'react-native'
+import type { Achievement } from '../types/profile.types'
 
 type Props = {
-  achievements: Achievement[];
-};
+  achievements: Achievement[]
+}
 
 export function AchievementsBadges({ achievements }: Props) {
   return (
@@ -25,5 +25,5 @@ export function AchievementsBadges({ achievements }: Props) {
         ))}
       </View>
     </View>
-  );
+  )
 }

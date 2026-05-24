@@ -1,17 +1,17 @@
-import { Plus } from "lucide-react-native";
-import { Pressable, Text, View } from "react-native";
-import type { DeviceFilter } from "../../hooks/useDeviceList";
+import { Plus } from 'lucide-react-native'
+import { Pressable, Text, View } from 'react-native'
+import type { DeviceFilter } from '../../hooks/useDeviceList'
 
 type Props = {
-  selected: DeviceFilter;
-  onSelect: (filter: DeviceFilter) => void;
-  onAddPress: () => void;
-};
+  selected: DeviceFilter
+  onSelect: (filter: DeviceFilter) => void
+  onAddPress: () => void
+}
 
 const FILTERS: { key: DeviceFilter; label: string }[] = [
-  { key: "all", label: "All" },
-  { key: "active", label: "Active" },
-];
+  { key: 'all', label: 'All' },
+  { key: 'active', label: 'Active' },
+]
 
 export function DeviceFilterBar({ selected, onSelect, onAddPress }: Props) {
   return (
@@ -22,12 +22,12 @@ export function DeviceFilterBar({ selected, onSelect, onAddPress }: Props) {
             key={key}
             onPress={() => onSelect(key)}
             className={`flex-1 items-center justify-center rounded-full px-4 py-3 ${
-              selected === key ? "bg-[#25CE7F]" : "bg-transparent"
+              selected === key ? 'bg-[#25CE7F]' : 'bg-transparent'
             }`}
           >
             <Text
               className={`font-semibold ${
-                selected === key ? "text-white" : "text-[#4B5563]"
+                selected === key ? 'text-white' : 'text-[#4B5563]'
               }`}
             >
               {label}
@@ -43,5 +43,5 @@ export function DeviceFilterBar({ selected, onSelect, onAddPress }: Props) {
         <Plus size={20} color="#25CE7F" />
       </Pressable>
     </View>
-  );
+  )
 }

@@ -1,8 +1,8 @@
 // features/auth/screens/RegisterScreen.tsx
-import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
-import { router } from "expo-router";
-import { ArrowLeft, Lock, Mail, User } from "lucide-react-native";
-import React from "react";
+import { AntDesign, FontAwesome5 } from '@expo/vector-icons'
+import { router } from 'expo-router'
+import { ArrowLeft, Lock, Mail, User } from 'lucide-react-native'
+import React from 'react'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -11,21 +11,21 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import { FormField } from "../components/FormFields";
-import { useRegisterForm } from "../hooks/useAuthForm";
-import { useGoogleAuth } from "../hooks/useGoogleAuth";
-import { useGuestLogin } from "../hooks/useGuestLogin";
+} from 'react-native'
+import { FormField } from '../components/FormFields'
+import { useRegisterForm } from '../hooks/useAuthForm'
+import { useGoogleAuth } from '../hooks/useGoogleAuth'
+import { useGuestLogin } from '../hooks/useGuestLogin'
 
 export function RegisterScreen() {
-  const { form, onSubmit, error, isLoading } = useRegisterForm();
-  const { promptAsync } = useGoogleAuth();
-  const { loginAsGuest, isLoading: isGuestLoading } = useGuestLogin();
+  const { form, onSubmit, error, isLoading } = useRegisterForm()
+  const { promptAsync } = useGoogleAuth()
+  const { loginAsGuest, isLoading: isGuestLoading } = useGuestLogin()
 
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-[#F6F6F6]"
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView
         className="flex-1"
@@ -51,7 +51,7 @@ export function RegisterScreen() {
             Join Wattly
           </Text>
           <Text className="text-zinc-500 text-center text-[15px] leading-5 mt-4 px-5">
-            Step into the future of sustainable living{"\n"}
+            Step into the future of sustainable living{'\n'}
             with a personal touch.
           </Text>
         </View>
@@ -103,7 +103,7 @@ export function RegisterScreen() {
             label="Email Address"
             icon={Mail}
             placeholder="your@email.com"
-            inputProps={{ keyboardType: "email-address" }}
+            inputProps={{ keyboardType: 'email-address' }}
           />
 
           <FormField
@@ -160,21 +160,21 @@ export function RegisterScreen() {
         </TouchableOpacity>
 
         <Text className="text-zinc-500 text-base text-center mt-6">
-          Already have an account?{" "}
+          Already have an account?{' '}
           <Text
             className="text-brand font-bold"
-            onPress={() => router.push("/(auth)/login")}
+            onPress={() => router.push('/(auth)/login')}
           >
             Log In
           </Text>
         </Text>
 
         <Text className="text-zinc-400 text-xs text-center mt-4 leading-5 px-5">
-          By signing up, you agree to our{" "}
-          <Text className="text-brand font-semibold">Terms</Text> &{" "}
+          By signing up, you agree to our{' '}
+          <Text className="text-brand font-semibold">Terms</Text> &{' '}
           <Text className="text-brand font-semibold">Privacy Policy</Text>
         </Text>
       </ScrollView>
     </KeyboardAvoidingView>
-  );
+  )
 }

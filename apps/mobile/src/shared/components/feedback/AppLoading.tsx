@@ -1,29 +1,29 @@
 // shared/components/ui/AppLoading.tsx
-import React, { useEffect, useRef } from "react";
-import { Animated, Easing, Text, View } from "react-native";
+import React, { useEffect, useRef } from 'react'
+import { Animated, Easing, Text, View } from 'react-native'
 
 type AppLoadingProps = {
-  size?: "sm" | "md" | "lg";
-  color?: "brand" | "primary" | "muted";
-  label?: string;
-  fullScreen?: boolean;
-};
+  size?: 'sm' | 'md' | 'lg'
+  color?: 'brand' | 'primary' | 'muted'
+  label?: string
+  fullScreen?: boolean
+}
 
-const spinnerSize = { sm: 20, md: 36, lg: 52 };
-const borderWidth = { sm: 2, md: 3, lg: 4 };
-const labelSize = { sm: "text-xs", md: "text-sm", lg: "text-base" };
+const spinnerSize = { sm: 20, md: 36, lg: 52 }
+const borderWidth = { sm: 2, md: 3, lg: 4 }
+const labelSize = { sm: 'text-xs', md: 'text-sm', lg: 'text-base' }
 
 const COLORS = {
-  brand: "#25CE7F",
-  primary: "#111111",
-  muted: "#888888",
-};
+  brand: '#25CE7F',
+  primary: '#111111',
+  muted: '#888888',
+}
 
 function Spinner({
-  size = "md",
-  color = "brand",
-}: Pick<AppLoadingProps, "size" | "color">) {
-  const rotation = useRef(new Animated.Value(0)).current;
+  size = 'md',
+  color = 'brand',
+}: Pick<AppLoadingProps, 'size' | 'color'>) {
+  const rotation = useRef(new Animated.Value(0)).current
 
   useEffect(() => {
     Animated.loop(
@@ -33,17 +33,17 @@ function Spinner({
         easing: Easing.linear,
         useNativeDriver: true,
       }),
-    ).start();
-  }, []);
+    ).start()
+  }, [])
 
   const rotate = rotation.interpolate({
     inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"],
-  });
+    outputRange: ['0deg', '360deg'],
+  })
 
-  const spinnerColor = COLORS[color ?? "brand"];
-  const diameter = spinnerSize[size ?? "md"];
-  const border = borderWidth[size ?? "md"];
+  const spinnerColor = COLORS[color ?? 'brand']
+  const diameter = spinnerSize[size ?? 'md']
+  const border = borderWidth[size ?? 'md']
 
   return (
     <Animated.View
@@ -52,36 +52,36 @@ function Spinner({
         height: diameter,
         borderRadius: diameter / 2,
         borderWidth: border,
-        borderColor: spinnerColor + "30",
+        borderColor: spinnerColor + '30',
         borderTopColor: spinnerColor,
         transform: [{ rotate }],
       }}
     />
-  );
+  )
 }
 
 export default function AppLoading({
-  size = "md",
-  color = "brand",
+  size = 'md',
+  color = 'brand',
   label,
   fullScreen = false,
 }: AppLoadingProps) {
-  const labelColor = COLORS[color ?? "brand"];
+  const labelColor = COLORS[color ?? 'brand']
 
   if (fullScreen) {
     return (
       <View
         className="absolute inset-0 items-center justify-center"
-        style={{ backgroundColor: "#0E0E0ECC", zIndex: 999 }}
+        style={{ backgroundColor: '#0E0E0ECC', zIndex: 999 }}
       >
         <View
           className="items-center justify-center gap-4 rounded-3xl px-10 py-8"
-          style={{ backgroundColor: "#171717" }}
+          style={{ backgroundColor: '#171717' }}
         >
           <Spinner size={size} color={color} />
           {label && (
             <Text
-              className={`${labelSize[size ?? "md"]} font-medium`}
+              className={`${labelSize[size ?? 'md']} font-medium`}
               style={{ color: labelColor }}
             >
               {label}
@@ -89,7 +89,7 @@ export default function AppLoading({
           )}
         </View>
       </View>
-    );
+    )
   }
 
   return (
@@ -97,12 +97,12 @@ export default function AppLoading({
       <Spinner size={size} color={color} />
       {label && (
         <Text
-          className={`${labelSize[size ?? "md"]} font-medium`}
+          className={`${labelSize[size ?? 'md']} font-medium`}
           style={{ color: labelColor }}
         >
           {label}
         </Text>
       )}
     </View>
-  );
+  )
 }

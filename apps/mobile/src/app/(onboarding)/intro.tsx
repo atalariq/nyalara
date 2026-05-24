@@ -1,5 +1,5 @@
-import IntroScreen from "@/features/onboarding/screens/IntroScreen";
+import IntroScreen from '@/features/onboarding/screens/IntroScreen'
 
 export default function IntroPage() {
-  return <IntroScreen />;
+  return <IntroScreen />
 }

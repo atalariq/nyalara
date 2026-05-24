@@ -1,5 +1,5 @@
 // features/auth/services/authService.ts
-import { auth } from "@/config/firebase";
+import { auth } from '@/config/firebase'
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -8,7 +8,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
-} from "firebase/auth";
+} from 'firebase/auth'
 
 export const authService = {
   async register(
@@ -16,28 +16,24 @@ export const authService = {
     password: string,
     fullName: string,
   ): Promise<void> {
-    const { user } = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password,
-    );
-    await updateProfile(user, { displayName: fullName });
+    const { user } = await createUserWithEmailAndPassword(auth, email, password)
+    await updateProfile(user, { displayName: fullName })
   },
 
   async login(email: string, password: string): Promise<void> {
-    await signInWithEmailAndPassword(auth, email, password);
+    await signInWithEmailAndPassword(auth, email, password)
   },
 
   async loginWithGoogle(idToken: string): Promise<void> {
-    const credential = GoogleAuthProvider.credential(idToken);
-    await signInWithCredential(auth, credential);
+    const credential = GoogleAuthProvider.credential(idToken)
+    await signInWithCredential(auth, credential)
   },
 
   async loginAsGuest(): Promise<void> {
-    await signInAnonymously(auth);
+    await signInAnonymously(auth)
   },
 
   async logout(): Promise<void> {
-    await signOut(auth);
+    await signOut(auth)
   },
-};
+}

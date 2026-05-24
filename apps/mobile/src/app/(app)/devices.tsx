@@ -1,1 +1,1 @@
-export { default } from "@/features/devices/screens/DevicesScreen";
+export { default } from '@/features/devices/screens/DevicesScreen'

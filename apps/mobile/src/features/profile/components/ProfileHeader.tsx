@@ -1,14 +1,14 @@
-import { Leaf, MapPin, Pencil } from "lucide-react-native";
-import { Image, Pressable, Text, View } from "react-native";
-import type { EcoLevel } from "../types/profile.types";
+import { Leaf, MapPin, Pencil } from 'lucide-react-native'
+import { Image, Pressable, Text, View } from 'react-native'
+import type { EcoLevel } from '../types/profile.types'
 
 type Props = {
-  name: string;
-  level: EcoLevel;
-  city: string;
-  avatarUrl?: string;
-  onEditPress?: () => void;
-};
+  name: string
+  level: EcoLevel
+  city: string
+  avatarUrl?: string
+  onEditPress?: () => void
+}
 
 export function ProfileHeader({
   name,
@@ -17,7 +17,7 @@ export function ProfileHeader({
   avatarUrl,
   onEditPress,
 }: Props) {
-  const progressPercent = Math.min((level.current / level.target) * 100, 100);
+  const progressPercent = Math.min((level.current / level.target) * 100, 100)
 
   return (
     <View className="px-4 pt-4 pb-5">
@@ -70,5 +70,5 @@ export function ProfileHeader({
         </View>
       </View>
     </View>
-  );
+  )
 }
