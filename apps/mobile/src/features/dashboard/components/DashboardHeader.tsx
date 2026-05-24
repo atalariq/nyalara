@@ -27,7 +27,7 @@ export function DashboardHeader({
         {displayName}!
       </Text>
 
-      <View className="mt-4 flex-row items-start gap-2 rounded-[16px] bg-white/60 px-3 py-3">
+      {/* <View className="mt-4 flex-row items-start gap-2 rounded-[16px] bg-white/60 px-3 py-3">
         {isLoadingTip ? (
           <ActivityIndicator size="small" color="#28C76F" />
         ) : (
@@ -38,7 +38,7 @@ export function DashboardHeader({
             </Text>
           </>
         )}
-      </View>
+      </View> */}
     </View>
   )
 }

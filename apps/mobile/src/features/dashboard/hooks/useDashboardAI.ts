@@ -1,6 +1,6 @@
-// features/dashboard/hooks/useDashboardAI.ts
 import { useDevices } from '@/features/devices/hooks/useDevices'
 import { useEnergyHistory } from '@/features/energy/hooks/useEnergyHistory'
+import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
 import { useEffect, useRef, useState } from 'react'
 import { fetchAIInsight } from '../api/dashboardApi'
 import type { AIInsight, DashboardStats } from '../types/dashboard.types'
@@ -10,14 +10,25 @@ const CACHE_DURATION_MS = 10 * 60 * 1000
 export function useDashboardAI(stats: DashboardStats): AIInsight {
   const { devices } = useDevices()
   const { today } = useEnergyHistory()
+
   const [insight, setInsight] = useState<AIInsight>({
     recommendations: [],
     dailyTip: '',
+    environmentalQuote: '',
     status: 'idle',
   })
 
   const lastFetchRef = useRef<number>(0)
   const lastStatsRef = useRef<string>('')
+
+  // Hitung co2ReducedKg dari devices estimate vs actual
+  const estimatedMonthlyKwh = devices.reduce(
+    (sum, d) => sum + (d.watt * d.hoursPerDay * 30) / 1000,
+    0,
+  )
+  const totalKwh = today?.totalKwh ?? 0
+  const savedKwh = Math.max(estimatedMonthlyKwh - totalKwh, 0)
+  const co2ReducedKg = savedKwh * CARBON_CONFIG.emissionFactor
 
   useEffect(() => {
     if (stats.isLoading) return
@@ -26,6 +37,7 @@ export function useDashboardAI(stats: DashboardStats): AIInsight {
     const now = Date.now()
     const isCacheValid = now - lastFetchRef.current < CACHE_DURATION_MS
     const isSameStats = lastStatsRef.current === statsKey
+
     if (isCacheValid && isSameStats) return
 
     const deviceSummary = today?.devices
@@ -38,15 +50,14 @@ export function useDashboardAI(stats: DashboardStats): AIInsight {
     lastFetchRef.current = now
     lastStatsRef.current = statsKey
 
-    // Tambah timeout supaya tidak stuck loading selamanya
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 10_000)
+    const timeout = setTimeout(() => {}, 10_000)
 
-    fetchAIInsight(stats, deviceSummary)
+    fetchAIInsight(stats, deviceSummary, co2ReducedKg)
       .then((data) =>
         setInsight({
           recommendations: data.recommendations,
           dailyTip: data.dailyTip,
+          environmentalQuote: data.environmentalQuote,
           status: 'success',
         }),
       )

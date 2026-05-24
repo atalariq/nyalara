@@ -6,7 +6,7 @@ const defaultEnvFilePath = fileURLToPath(new URL('../.env', import.meta.url))
 export async function mintAnonymousAuthToken({
   envFilePath = defaultEnvFilePath,
   fetchImpl = fetch,
-  stdout = process.stdout
+  stdout = process.stdout,
 } = {}) {
   const env = readEnvFile(envFilePath)
   const apiKey = requireEnv(env, 'EXPO_PUBLIC_FIREBASE_API_KEY')
@@ -17,25 +17,27 @@ export async function mintAnonymousAuthToken({
     {
       method: 'POST',
       headers: {
-        'content-type': 'application/json'
+        'content-type': 'application/json',
       },
       body: JSON.stringify({
-        returnSecureToken: true
-      })
-    }
+        returnSecureToken: true,
+      }),
+    },
   )
 
   const payload = await response.json()
 
   if (!response.ok) {
-    throw new Error(payload?.error?.message ?? 'Anonymous Firebase sign-in failed.')
+    throw new Error(
+      payload?.error?.message ?? 'Anonymous Firebase sign-in failed.',
+    )
   }
 
   const result = {
     projectId,
     uid: payload.localId,
     isAnonymous: true,
-    idToken: payload.idToken
+    idToken: payload.idToken,
   }
 
   stdout.write(`${JSON.stringify(result)}\n`)

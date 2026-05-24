@@ -7,6 +7,8 @@ import { EnergyBarChart } from '../components/EnergyBarChart'
 import { EnergyHeader } from '../components/EnergyHeader'
 import { EnvironmentalImpact } from '../components/EnvironmentalImpact'
 import { useEnergyHistory } from '../hooks/useEnergyHistory'
+import { useDashboardAI } from '@/features/dashboard/hooks/useDashboardAI'
+import { useDashboardStats } from '@/features/dashboard/hooks/useDashboardStats'
 
 function getComparedToYesterday(
   todayKwh: number,
@@ -21,8 +23,10 @@ function getComparedToYesterday(
 }
 
 export default function EnergyScreen() {
-  useDevices() // ← populate devices store
+  useDevices()
   const { today, history, isLoading, error } = useEnergyHistory()
+  const stats = useDashboardStats()
+  const insight = useDashboardAI(stats)
 
   if (isLoading) {
     return (
@@ -56,7 +60,11 @@ export default function EnergyScreen() {
         />
         <EnergyBarChart history={history} />
         <ActiveDevicesList today={today} />
-        <EnvironmentalImpact history={history} />
+        <EnvironmentalImpact
+          history={history}
+          environmentalQuote={insight.environmentalQuote}
+          isLoading={insight.status === 'loading'}
+        />
       </ScrollView>
     </SafeAreaView>
   )

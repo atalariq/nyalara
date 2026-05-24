@@ -1,21 +1,20 @@
-// features/dashboard/types/dashboard.types.ts
-
 export type DashboardStats = {
   dailyKwh: number
   monthlyKwh: number
-  dailyCo2Kg: number // kg CO₂
+  dailyCo2Kg: number
   monthlyCo2Kg: number
-  dailyCostIdr: number // IDR
+  dailyCostIdr: number
   monthlyCostIdr: number
-  progress: number // 0–1 vs daily goal
-  remaining: number // kWh remaining to goal
+  progress: number
+  remaining: number
   isLoading: boolean
-  savedKwh: number // ← tambah
+  savedKwh: number
   co2ReducedKg: number
 }
 
 export type AIInsight = {
   recommendations: string[]
   dailyTip: string
+  environmentalQuote: string // ← tambah
   status: 'idle' | 'loading' | 'success' | 'error'
 }

@@ -6,7 +6,7 @@ import { join } from 'node:path'
 
 import {
   defaultEnvFilePath,
-  mintAnonymousAuthToken
+  mintAnonymousAuthToken,
 } from './mint-anonymous-auth-token.mjs'
 
 test('mints an anonymous Firebase token and prints the minimal JSON payload', async () => {
@@ -17,8 +17,8 @@ test('mints an anonymous Firebase token and prints the minimal JSON payload', as
     envFilePath,
     [
       'EXPO_PUBLIC_FIREBASE_API_KEY=test-api-key',
-      'EXPO_PUBLIC_FIREBASE_PROJECT_ID=carbon-tracker-c1925'
-    ].join('\n')
+      'EXPO_PUBLIC_FIREBASE_PROJECT_ID=carbon-tracker-c1925',
+    ].join('\n'),
   )
 
   const writes = []
@@ -36,31 +36,31 @@ test('mints an anonymous Firebase token and prints the minimal JSON payload', as
         async json() {
           return {
             localId: 'guest-uid',
-            idToken: 'guest-id-token'
+            idToken: 'guest-id-token',
           }
-        }
+        },
       }
     },
     stdout: {
       write(chunk) {
         writes.push(String(chunk))
         return true
-      }
-    }
+      },
+    },
   })
 
   assert.equal(
     requestUrl,
-    'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=test-api-key'
+    'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=test-api-key',
   )
   assert.deepEqual(JSON.parse(requestInit.body), {
-    returnSecureToken: true
+    returnSecureToken: true,
   })
   assert.deepEqual(result, {
     projectId: 'carbon-tracker-c1925',
     uid: 'guest-uid',
     isAnonymous: true,
-    idToken: 'guest-id-token'
+    idToken: 'guest-id-token',
   })
   assert.deepEqual(JSON.parse(writes.join('')), result)
 })
@@ -72,7 +72,7 @@ test('defaults to apps/mobile/.env for local Firebase client configuration', () 
 test('documents the dev-only guest-session smoke test for the protected calculation route', () => {
   const firebaseSetupGuide = readFileSync(
     new URL('../../../docs/firebase-setup.md', import.meta.url),
-    'utf8'
+    'utf8',
   )
 
   assert.match(firebaseSetupGuide, /dev-only/i)
