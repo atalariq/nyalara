@@ -1,8 +1,6 @@
 // features/dashboard/api/dashboardApi.ts
 import type { DashboardStats } from '../types/dashboard.types'
 
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.EXPO_PUBLIC_GEMINI_API_KEY}`
-
 type GeminiInsightResponse = {
   recommendations: string[]
   dailyTip: string
@@ -10,39 +8,66 @@ type GeminiInsightResponse = {
 
 export async function fetchAIInsight(
   stats: DashboardStats,
-  deviceSummary: string, // ← ubah dari string[] ke string
+  deviceSummary: string,
 ): Promise<GeminiInsightResponse> {
+  const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY
+  if (!apiKey) throw new Error('Missing EXPO_PUBLIC_GEMINI_API_KEY')
+
+  // ← prompt harus didefinisikan di sini
   const prompt = `
-You are an energy saving assistant for a household carbon tracker app in Indonesia.
+You are an energy assistant for Indonesia.
+Today's usage: ${stats.dailyKwh.toFixed(2)} kWh, ${stats.dailyCo2Kg.toFixed(2)} kg CO2, Rp ${stats.dailyCostIdr.toFixed(0)}.
+Devices: ${deviceSummary || 'none'}.
+Goal progress: ${(stats.progress * 100).toFixed(0)}%.
 
-User's actual energy usage today:
-- kWh used today: ${stats.dailyKwh.toFixed(3)} kWh
-- CO₂ emitted today: ${stats.dailyCo2Kg.toFixed(3)} kg
-- Electricity cost today: Rp ${stats.dailyCostIdr.toFixed(0)}
-- Active devices today: ${deviceSummary || 'none recorded yet'}
-- Progress to 5 kWh daily goal: ${(stats.progress * 100).toFixed(0)}%
+Reply ONLY with this exact JSON, no markdown:
+{"recommendations":["tip1","tip2","tip3","tip4"],"dailyTip":"one sentence"}
 
-Respond ONLY with valid JSON (no markdown, no explanation):
-{
-  "recommendations": ["tip1", "tip2", "tip3", "tip4"],
-  "dailyTip": "one short sentence about their energy usage today"
-}
+Max 6 words per tip. Be specific.
+`.trim()
 
-Keep each tip under 8 words. Be specific to their devices. Friendly tone.
-  `.trim()
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.7, maxOutputTokens: 1024 },
+      }),
+    },
+  )
 
-  const res = await fetch(GEMINI_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.7, maxOutputTokens: 300 },
-    }),
-  })
+  console.log('[Gemini] Response status:', res.status)
 
-  if (!res.ok) throw new Error(`Gemini error: ${res.status}`)
+  if (!res.ok) {
+    if (res.status === 429 || res.status === 503) {
+      return {
+        recommendations: [
+          'Turn off devices when not in use',
+          'Use energy-efficient appliances',
+          'Monitor peak usage hours',
+          'Unplug chargers when fully charged',
+        ],
+        dailyTip: 'Every small action counts toward a greener home.',
+      }
+    }
+    throw new Error(`Gemini error: ${res.status}`)
+  }
+
   const data = await res.json()
   const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
+
+  console.log('[Gemini] Raw response:', text)
+
+  if (!text) throw new Error('Empty response from Gemini')
+
   const clean = text.replace(/```json|```/g, '').trim()
-  return JSON.parse(clean) as GeminiInsightResponse
+
+  try {
+    return JSON.parse(clean) as GeminiInsightResponse
+  } catch {
+    console.error('[Gemini] JSON parse failed. Raw:', clean)
+    throw new Error('Invalid JSON from Gemini')
+  }
 }

@@ -20,17 +20,14 @@ export function useDashboardAI(stats: DashboardStats): AIInsight {
   const lastStatsRef = useRef<string>('')
 
   useEffect(() => {
-    // Tunggu sampai ada data today dari Firestore
     if (stats.isLoading) return
 
     const statsKey = `${stats.dailyKwh.toFixed(1)}-${devices.length}`
     const now = Date.now()
     const isCacheValid = now - lastFetchRef.current < CACHE_DURATION_MS
     const isSameStats = lastStatsRef.current === statsKey
-
     if (isCacheValid && isSameStats) return
 
-    // Kirim device breakdown ke Gemini supaya lebih spesifik
     const deviceSummary = today?.devices
       ? Object.values(today.devices)
           .map((d) => `${d.name} (${d.kwh.toFixed(3)} kWh)`)
@@ -41,6 +38,10 @@ export function useDashboardAI(stats: DashboardStats): AIInsight {
     lastFetchRef.current = now
     lastStatsRef.current = statsKey
 
+    // Tambah timeout supaya tidak stuck loading selamanya
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 10_000)
+
     fetchAIInsight(stats, deviceSummary)
       .then((data) =>
         setInsight({
@@ -50,6 +51,7 @@ export function useDashboardAI(stats: DashboardStats): AIInsight {
         }),
       )
       .catch(() => setInsight((prev) => ({ ...prev, status: 'error' })))
+      .finally(() => clearTimeout(timeout))
   }, [stats.dailyKwh, stats.isLoading, devices.length])
 
   return insight

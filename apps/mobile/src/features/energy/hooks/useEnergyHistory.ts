@@ -1,5 +1,5 @@
 import { useAuthStore } from '@/features/auth/store/authStore'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { dailyUsageService } from '../services/dailyUsageService'
 import type { DailyUsage } from '../types/dailyUsage.types'
 
@@ -18,50 +18,41 @@ function sortHistoryByDateAscending(history: DailyUsage[]): DailyUsage[] {
 export function useEnergyHistory(): EnergyHistoryState {
   const user = useAuthStore((s) => s.user)
   const isAuthLoading = useAuthStore((s) => s.isLoading)
+
   const [today, setToday] = useState<DailyUsage | null>(null)
   const [history, setHistory] = useState<DailyUsage[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [todayLoaded, setTodayLoaded] = useState(false)
-  const [historyLoaded, setHistoryLoaded] = useState(false)
 
-  async function fetchData() {
-    if (!user?.uid) {
-      setIsLoading(false)
-      return
-    }
-    setIsLoading(true)
-    setError(null)
-    try {
-      const [todayData, historyData] = await Promise.all([
-        dailyUsageService.getByDate(user.uid, new Date()),
-        dailyUsageService.getHistory(user.uid, 30),
-      ])
-      setToday(todayData)
-      setHistory(sortHistoryByDateAscending(historyData))
-    } catch (e) {
-      setError('Gagal memuat data energi')
-    } finally {
+  // Track berapa listener yang sudah fire pertama kali
+  const loadedCountRef = useRef(0)
+  const TOTAL_LISTENERS = 2
+
+  function markOneLoaded() {
+    loadedCountRef.current += 1
+    if (loadedCountRef.current >= TOTAL_LISTENERS) {
       setIsLoading(false)
     }
   }
 
   useEffect(() => {
-    if (todayLoaded && historyLoaded) {
-      setIsLoading(false)
-    }
-  }, [todayLoaded, historyLoaded])
+    // Auth belum siap
+    if (isAuthLoading) return
 
-  useEffect(() => {
-    if (isAuthLoading || !user?.uid) return
-    setError(null)
+    // User tidak login
+    if (!user?.uid) {
+      setIsLoading(false)
+      return
+    }
+
+    // Reset state
     setIsLoading(true)
-    setTodayLoaded(false)
-    setHistoryLoaded(false)
+    setError(null)
+    loadedCountRef.current = 0
 
     const unsubscribeToday = dailyUsageService.listenToday(user.uid, (data) => {
       setToday(data)
-      setTodayLoaded(true)
+      markOneLoaded()
     })
 
     const unsubscribeHistory = dailyUsageService.listenHistory(
@@ -69,7 +60,7 @@ export function useEnergyHistory(): EnergyHistoryState {
       30,
       (data) => {
         setHistory(sortHistoryByDateAscending(data))
-        setHistoryLoaded(true)
+        markOneLoaded()
       },
     )
 
@@ -79,5 +70,20 @@ export function useEnergyHistory(): EnergyHistoryState {
     }
   }, [user?.uid, isAuthLoading])
 
-  return { today, history, isLoading, error, refetch: fetchData }
+  async function refetch() {
+    if (!user?.uid) return
+    setError(null)
+    try {
+      const [todayData, historyData] = await Promise.all([
+        dailyUsageService.getByDate(user.uid, new Date()),
+        dailyUsageService.getHistory(user.uid, 30),
+      ])
+      setToday(todayData)
+      setHistory(sortHistoryByDateAscending(historyData))
+    } catch {
+      setError('Gagal memuat data energi')
+    }
+  }
+
+  return { today, history, isLoading, error, refetch }
 }
