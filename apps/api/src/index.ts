@@ -8,12 +8,22 @@ import { createFirestoreElectricityUsageService } from './features/electricity-u
 import { AppError } from './features/platform/http/errors.js'
 import { loadLocalEnv } from './features/platform/env/load-local-env.js'
 import { getFirebaseAdminServices } from './features/platform/firebase/firebase-admin.js'
+import {
+  resolvePort,
+  shouldLoadLocalEnv
+} from './features/platform/runtime/server-config.js'
 
-loadLocalEnv(new URL('../.env', import.meta.url))
+if (shouldLoadLocalEnv(process.env)) {
+  loadLocalEnv([
+    new URL('../.env', import.meta.url),
+    new URL('../../.env', import.meta.url)
+  ])
+}
 
 const firebase = getFirebaseAdminServices()
 const geminiApiKey = process.env.GEMINI_API_KEY
 const geminiModel = process.env.GEMINI_MODEL ?? 'gemini-3.5-flash'
+const port = resolvePort(process.env)
 
 const app = createApp({
   environment: process.env.NODE_ENV === 'production' ? 'production' : 'development',
@@ -39,9 +49,25 @@ const app = createApp({
   )
 })
 
-serve({
+const server = serve({
   fetch: app.fetch,
-  port: 3000
+  port
 }, (info) => {
-  console.log(`Server is running on http://localhost:${info.port}`)
+  console.log(`Server is running on port ${info.port}`)
+})
+
+process.on('SIGINT', () => {
+  server.close()
+  process.exit(0)
+})
+
+process.on('SIGTERM', () => {
+  server.close((error) => {
+    if (error) {
+      console.error(error)
+      process.exit(1)
+    }
+
+    process.exit(0)
+  })
 })

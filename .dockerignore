@@ -1,0 +1,14 @@
+.git
+.gitignore
+.codex
+.agents
+node_modules
+apps/*/node_modules
+packages/*/node_modules
+apps/*/dist
+packages/*/dist
+coverage
+.env
+apps/*/.env
+docs
+*.md
