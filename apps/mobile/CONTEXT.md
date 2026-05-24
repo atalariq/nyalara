@@ -37,11 +37,17 @@ When editing mobile code, prefer moves that converge toward the PRD contract and
 - **Estimated value**: client-side provisional result shown instantly.
 - **Verified value**: backend-authoritative calculation state after sync/verification.
 - **Usage log**: user entry for a specific period/month.
-- **Pending sync**: locally written data not yet confirmed in cloud/backend.
+- **Pending sync**: a local draft that has not yet been submitted successfully to the backend API.
 - **Monthly summary**: period aggregate shown in dashboard.
 - **Insight**: backend-generated Gemini advice rendered to the user.
-- **Guest session**: authenticated session using Firebase anonymous auth; supports offline usage with Firestore cache and cloud sync when online.
-- **Full account session**: authenticated session using permanent identity (email/social); required for account-bound features such as AI insight generation.
+- **Offline draft queue**: the local-only store of usage drafts waiting for network availability and backend submission.
+- **Client-generated ID**: the stable identifier assigned to an offline draft before submission and reused on every retry so the backend can treat repeated submissions as the same usage log intent.
+- **Environment namespace**: the configured prefix that selects the top-level data space inside the shared Firebase project, with `dev_`-prefixed collections for development and unprefixed collections for production.
+- **Cached emission factor**: the most recently fetched active electricity emission factor from the backend, stored locally so estimated previews can work without a live network request.
+- **Bootstrap fallback factor**: the built-in emergency emission factor used only when the app has never fetched an active factor and the user is offline; any result derived from it is provisional until backend verification.
+- **API-contract-first migration**: the frontend migration approach where mobile features integrate through backend route DTOs first and only touch canonical Firestore documents directly for explicitly allowed cases such as `preferences/main`.
+- **Guest session**: authenticated session using Firebase anonymous auth; can create offline drafts and submit them to core tracking APIs when connectivity returns.
+- **Full account session**: authenticated session using permanent identity (email/social); required for account-bound insight features, including reading and generating insights.
 
 ## Invariants and rules
 

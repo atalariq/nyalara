@@ -1,4 +1,5 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
+import { cors } from 'hono/cors'
 
 import type { IdTokenVerifier } from '../features/auth/firebase-admin-auth.js'
 import { registerCalculateElectricityRoutes } from '../features/calculations/register-calculate-electricity-routes.js'
@@ -14,6 +15,7 @@ import { registerRecalculateMonthlySummaryRoutes } from '../features/electricity
 import { AppError, toErrorEnvelope } from '../features/platform/http/errors.js'
 import { registerHealthRoutes } from '../features/platform/health/register-health-routes.js'
 import { registerOpenApiRoutes } from '../features/platform/openapi/register-openapi-routes.js'
+import { createRateLimiter } from '../features/platform/rate-limiter/create-rate-limiter.js'
 
 export type AppEnvironment = 'development' | 'production' | 'test'
 
@@ -43,6 +45,20 @@ export function createApp(options: CreateAppOptions) {
       }
     }
   })
+
+  app.use(
+    '*',
+    cors({
+      origin: '*',
+      allowMethods: ['GET', 'POST', 'OPTIONS'],
+      allowHeaders: ['Authorization', 'Content-Type'],
+      maxAge: 86_400
+    })
+  )
+
+  if (options.environment !== 'test') {
+    app.use('*', createRateLimiter({ windowMs: 60_000, maxRequests: 100 }))
+  }
 
   app.notFound((c) => {
     return c.json(

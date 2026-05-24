@@ -88,7 +88,7 @@ Usage mode with a verified Firebase ID token from Firebase anonymous auth; can a
 _Avoid_: unauthenticated local-only guest
 
 **Full Account Session**:
-Usage mode with a verified Firebase ID token from a permanent account identity; required for AI insight generation.
+Usage mode with a verified Firebase ID token from a permanent account identity; required for reading and generating insight features.
 _Avoid_: anonymous guest session
 
 **Canonical Schema v1**:
@@ -98,3 +98,19 @@ _Avoid_: legacy root collections
 **Legacy Schema v0**:
 Pre-cutover mobile collections such as root `devices`, `dailyUsage`, and `userProfiles`.
 _Avoid_: canonical schema
+
+**Offline Draft Queue**:
+Local-only mobile storage for electricity usage drafts that have not yet been submitted to backend APIs and therefore are not canonical usage records.
+_Avoid_: pending Firestore sync, canonical usage record
+
+**Client-generated ID**:
+The caller-provided identifier attached to a usage draft and used by the backend as an idempotency key so repeated submissions represent the same usage record intent.
+_Avoid_: duplicate create request, random retry token
+
+**Environment Namespace**:
+The configured prefix that selects the top-level collection family inside the shared Firebase project, with `dev_`-prefixed collections for development and unprefixed collections for production.
+_Avoid_: inferred environment, mixed dev/prod collections
+
+**Bootstrap Fallback Factor**:
+The mobile-only emergency factor used for first-run offline estimation before any active emission factor has been fetched; backend verification always supersedes it.
+_Avoid_: canonical emission factor, verified factor

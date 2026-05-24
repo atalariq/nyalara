@@ -32,6 +32,8 @@ For current MVP work, prefer electricity-first shared contracts and avoid wideni
 - **Breaking change**: any type change that requires coordinated updates in mobile and backend.
 - **Versioning point**: explicit path/model split when a backward-incompatible contract is unavoidable.
 - **Canonical Contract v1**: PRD-aligned electricity API contracts used by current backend/mobile integration.
+- **Mobile-facing API DTO**: a request or response contract for a backend route consumed by the mobile app; canonical route DTOs belong in this package rather than being duplicated in app-specific code.
+- **API-contract-first migration**: the migration approach where frontend features are rewritten against shared backend route DTOs before any direct adoption of backend-owned persistence shapes.
 - **Legacy Contract v0**: older payload conventions tied to pre-cutover mobile data flows.
 
 ## Invariants and rules
@@ -45,6 +47,7 @@ For current MVP work, prefer electricity-first shared contracts and avoid wideni
 ## Contract strategy for this repo
 
 - Prefer modeling electricity usage, calculations, summaries, and insight payloads explicitly.
+- Define the request and response DTO for every mobile-facing backend route in this package.
 - Distinguish estimated vs verified calculation states in shared types.
 - Keep date/month formats explicit (`YYYY-MM`, ISO timestamps) where relevant.
 
