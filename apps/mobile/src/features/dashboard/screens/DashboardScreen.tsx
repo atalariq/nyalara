@@ -1,5 +1,7 @@
 import { useAuthStore } from '@/features/auth/store/authStore'
 import { useActiveDeviceTimer } from '@/features/devices/hooks/useActiveDeviceTimer'
+import { useDevices } from '@/features/devices/hooks/useDevices'
+import { useEnergyHistory } from '@/features/energy/hooks/useEnergyHistory'
 import { useHamburgerStore } from '@/shared/components/ui/HamburgerMenu/HamburgerStore'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Menu } from 'lucide-react-native'
@@ -25,12 +27,14 @@ export default function DashboardScreen() {
 
   useActiveDeviceTimer()
 
-  const stats = useDashboardStats()
-  const insight = useDashboardAI(stats)
+  const { devices } = useDevices()
+  const { today: todayUsage, isLoading } = useEnergyHistory()
+  const stats = useDashboardStats({ today: todayUsage, devices, isLoading })
+  const insight = useDashboardAI({ stats, devices, today: todayUsage })
 
   const displayName = user?.displayName?.split(' ')[0] ?? 'User'
 
-  const today = new Date().toLocaleDateString('en-US', {
+  const todayLabel = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'short',
     day: 'numeric',
@@ -100,7 +104,7 @@ export default function DashboardScreen() {
           </View>
 
           {/* HEADER */}
-          <DashboardHeader displayName={displayName} dateLabel={today} />
+          <DashboardHeader displayName={displayName} dateLabel={todayLabel} />
 
           {/* MAIN CARD */}
           <View className="mx-5 mt-7 rounded-[32px] bg-white/90 p-5 shadow-sm shadow-black/10">

@@ -25,11 +25,11 @@ function getComparedToYesterday(
 }
 
 export default function EnergyScreen() {
-  useDevices()
+  const { devices } = useDevices()
   const { today, history, isLoading, error } = useEnergyHistory()
-  const { co2ReducedKg } = useCarbonSummary(history)
-  const stats = useDashboardStats()
-  const insight = useDashboardAI(stats)
+  const { co2ReducedKg } = useCarbonSummary(history, devices)
+  const stats = useDashboardStats({ today, devices, isLoading })
+  const insight = useDashboardAI({ stats, devices, today })
 
   if (isLoading) {
     return (

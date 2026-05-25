@@ -1,43 +1,29 @@
-// features/dashboard/hooks/useDashboardStats.ts
-import { useDevices } from '@/features/devices/hooks/useDevices'
-import { useEnergyHistory } from '@/features/energy/hooks/useEnergyHistory'
-import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
-import type { DashboardStats } from '../types/dashboard.types'
+import type { Device } from '@/features/devices/types/device.types'
+import type { DailyUsage } from '@/features/energy/types/dailyUsage.types'
+import { useMemo } from 'react'
+import {
+  calculateDashboardStats,
+  type DashboardStatsInput,
+} from '../lib/dashboard-metrics'
 
-const DAILY_GOAL_KWH = 5
+type UseDashboardStatsInput = {
+  today: DailyUsage | null
+  devices: Device[]
+  isLoading: boolean
+}
 
-export function useDashboardStats(): DashboardStats & { isLoading: boolean } {
-  const { today, isLoading } = useEnergyHistory()
-  const { devices } = useDevices()
-
-  const dailyKwh = today?.totalKwh ?? 0
-  const dailyCo2Kg = today?.totalEmissions ?? 0
-  const dailyCostIdr = today?.totalCost ?? 0
-
-  // Estimasi harian dari konfigurasi device (hoursPerDay)
-  const estimatedDailyKwh = devices.reduce(
-    (sum, d) => sum + (d.watt * d.hoursPerDay) / 1000,
-    0,
+export function useDashboardStats({
+  today,
+  devices,
+  isLoading,
+}: UseDashboardStatsInput) {
+  return useMemo(
+    () =>
+      calculateDashboardStats({
+        today,
+        devices,
+        isLoading,
+      } satisfies DashboardStatsInput),
+    [today, devices, isLoading],
   )
-
-  // Saved = selisih estimasi vs actual (min 0)
-  const savedKwh = Math.max(estimatedDailyKwh - dailyKwh, 0)
-  const co2ReducedKg = savedKwh * CARBON_CONFIG.emissionFactor
-
-  const progress = Math.min(dailyKwh / DAILY_GOAL_KWH, 1)
-  const remaining = Math.max(DAILY_GOAL_KWH - dailyKwh, 0)
-
-  return {
-    dailyKwh,
-    monthlyKwh: 0,
-    dailyCo2Kg,
-    monthlyCo2Kg: 0,
-    dailyCostIdr,
-    monthlyCostIdr: 0,
-    savedKwh,
-    co2ReducedKg,
-    progress,
-    remaining,
-    isLoading,
-  }
 }

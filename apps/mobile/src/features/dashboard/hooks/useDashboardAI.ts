@@ -1,5 +1,5 @@
-import { useDevices } from '@/features/devices/hooks/useDevices'
-import { useEnergyHistory } from '@/features/energy/hooks/useEnergyHistory'
+import type { Device } from '@/features/devices/types/device.types'
+import type { DailyUsage } from '@/features/energy/types/dailyUsage.types'
 import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
 import { useEffect, useRef, useState } from 'react'
 import { fetchAIInsight } from '../api/dashboardApi'
@@ -7,10 +7,15 @@ import type { AIInsight, DashboardStats } from '../types/dashboard.types'
 
 const CACHE_DURATION_MS = 10 * 60 * 1000
 
-export function useDashboardAI(stats: DashboardStats): AIInsight {
-  const { devices } = useDevices()
-  const { today } = useEnergyHistory()
-
+export function useDashboardAI({
+  stats,
+  devices,
+  today,
+}: {
+  stats: DashboardStats
+  devices: Device[]
+  today: DailyUsage | null
+}): AIInsight {
   const [insight, setInsight] = useState<AIInsight>({
     recommendations: [],
     dailyTip: '',
@@ -63,7 +68,7 @@ export function useDashboardAI(stats: DashboardStats): AIInsight {
       )
       .catch(() => setInsight((prev) => ({ ...prev, status: 'error' })))
       .finally(() => clearTimeout(timeout))
-  }, [stats.dailyKwh, stats.isLoading, devices.length])
+  }, [devices, stats, today, co2ReducedKg])
 
   return insight
 }
