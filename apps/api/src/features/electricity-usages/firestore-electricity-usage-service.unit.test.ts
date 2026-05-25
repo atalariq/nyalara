@@ -16,12 +16,18 @@ describe('createFirestoreElectricityUsageService', () => {
         month: '2026-06'
       })
     ).resolves.toEqual({
-      month: '2026-06',
-      totalKwh: 0,
-      totalKgCo2e: 0,
-      averageKwhPerDay: 0,
-      averageKgCo2ePerDay: 0,
-      usageCount: 0
+      monthlySummary: {
+        month: '2026-06',
+        totalKwh: 0,
+        totalKgCo2e: 0,
+        averageKwhPerDay: 0,
+        averageKgCo2ePerDay: 0,
+        usageCount: 0
+      },
+      currentStreak: {
+        length: 0,
+        lastTrackedDate: null
+      }
     })
 
     expect(
@@ -155,7 +161,13 @@ describe('createFirestoreElectricityUsageService', () => {
       averageKgCo2ePerDay: 170 / 31,
       usageCount: 2
     })
-    expect(recomputed).toEqual(created.monthlySummary)
+    expect(recomputed).toEqual({
+      monthlySummary: created.monthlySummary,
+      currentStreak: {
+        length: 1,
+        lastTrackedDate: '2026-05-31'
+      }
+    })
     expect(
       firestore.getDocument('users/guest-user/monthly_summaries/2026-05')
     ).toMatchObject(created.monthlySummary)
@@ -236,12 +248,18 @@ describe('createFirestoreElectricityUsageService', () => {
         month: '2026-05'
       })
     ).resolves.toEqual({
-      month: '2026-05',
-      totalKwh: 80,
-      totalKgCo2e: 68,
-      averageKwhPerDay: 80 / 31,
-      averageKgCo2ePerDay: 68 / 31,
-      usageCount: 1
+      monthlySummary: {
+        month: '2026-05',
+        totalKwh: 80,
+        totalKgCo2e: 68,
+        averageKwhPerDay: 80 / 31,
+        averageKgCo2ePerDay: 68 / 31,
+        usageCount: 1
+      },
+      currentStreak: {
+        length: 1,
+        lastTrackedDate: '2026-05-10'
+      }
     })
   })
 
@@ -377,6 +395,18 @@ class FakeFirestore {
     this.documents.set(path, structuredClone(value))
   }
 
+  merge(path: string, value: Record<string, unknown>) {
+    const existing = this.documents.get(path) ?? {}
+    this.documents.set(path, {
+      ...structuredClone(existing),
+      ...structuredClone(value)
+    })
+  }
+
+  delete(path: string) {
+    this.documents.delete(path)
+  }
+
   listCollection(path: string) {
     const prefix = `${path}/`
     const documents: Array<{ id: string; data: Record<string, unknown> }> = []
@@ -412,6 +442,15 @@ class FakeCollectionReference {
     return new FakeDocumentReference(this.firestore, `${this.path}/${id}`)
   }
 
+  async get() {
+    return {
+      docs: this.firestore.listCollection(this.path).map(({ id, data }) => ({
+        id,
+        data: () => data
+      }))
+    }
+  }
+
   where(fieldPath: string, operator: string, value: unknown) {
     return new FakeQuery(this.firestore, this.path, [{ fieldPath, operator, value }])
   }
@@ -436,8 +475,22 @@ class FakeDocumentReference {
     }
   }
 
-  async set(value: Record<string, unknown>) {
+  async set(
+    value: Record<string, unknown>,
+    options?: {
+      merge?: boolean
+    }
+  ) {
+    if (options?.merge) {
+      this.firestore.merge(this.path, value)
+      return
+    }
+
     this.firestore.write(this.path, value)
+  }
+
+  async delete() {
+    this.firestore.delete(this.path)
   }
 }
 
