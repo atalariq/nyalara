@@ -3,8 +3,10 @@ import { getApp, getApps, initializeApp } from 'firebase/app'
 import {
   Auth,
   getAuth,
-  getReactNativePersistence,
   initializeAuth,
+
+  // @ts-ignore
+  getReactNativePersistence,
 } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 
