@@ -31,9 +31,7 @@ export function ActiveDevicesList({ today }: Props) {
   )
 
   useEffect(() => {
-    const activeIds = new Set(
-      devices.filter((d) => d.active && d.activatedAt).map((d) => d.id),
-    )
+    const activeIds = new Set(devices.filter((d) => d.active && d.activatedAt).map((d) => d.id))
 
     Object.keys(activeSessionActivatedAtRef.current).forEach((id) => {
       if (!activeIds.has(id)) {
@@ -53,37 +51,27 @@ export function ActiveDevicesList({ today }: Props) {
     return (
       <View className="mx-4 rounded-3xl bg-white p-5 shadow-sm shadow-black/5">
         <View className="flex-row items-center justify-between mb-4">
-          <Text className="text-sm font-bold text-[#0E0E0E]">
-            Today's Devices
-          </Text>
+          <Text className="text-sm font-bold text-[#0E0E0E]">Today's Devices</Text>
           <View className="flex-row items-center gap-1">
             <Zap size={12} color="#25CE7F" />
             <Text className="text-xs text-brand font-semibold">0 tracked</Text>
           </View>
         </View>
         <View className="items-center py-4">
-          <Text className="text-sm text-[#AAA]">
-            No device usage recorded today
-          </Text>
-          <Text className="text-xs text-[#CCC] mt-1">
-            Toggle a device ON to start tracking
-          </Text>
+          <Text className="text-sm text-[#AAA]">No device usage recorded today</Text>
+          <Text className="text-xs text-[#CCC] mt-1">Toggle a device ON to start tracking</Text>
         </View>
       </View>
     )
   }
 
   return (
-    <View className="mx-4 rounded-3xl bg-white p-5 shadow-sm shadow-black/5">
+    <View className="rounded-[30px] bg-surface p-5">
       <View className="flex-row items-center justify-between mb-4">
-        <Text className="text-sm font-bold text-[#0E0E0E]">
-          Today's Devices
-        </Text>
+        <Text className="text-sm font-bold text-[#0E0E0E]">Today's Devices</Text>
         <View className="flex-row items-center gap-1">
           <Zap size={12} color="#25CE7F" />
-          <Text className="text-xs text-brand font-semibold">
-            {allEntries.length} tracked
-          </Text>
+          <Text className="text-xs text-brand font-semibold">{allEntries.length} tracked</Text>
         </View>
       </View>
 
@@ -91,9 +79,7 @@ export function ActiveDevicesList({ today }: Props) {
         {allEntries.map(([deviceId, record]) => {
           const isToggling = togglingIds.has(deviceId)
           const liveDevice = !isToggling
-            ? devices.find(
-                (d) => d.id === deviceId && d.active && d.activatedAt,
-              )
+            ? devices.find((d) => d.id === deviceId && d.active && d.activatedAt)
             : undefined
 
           const watt = record?.watt ?? liveDevice?.watt ?? 0
@@ -101,28 +87,22 @@ export function ActiveDevicesList({ today }: Props) {
           const activationAt = liveDevice?.activatedAt ?? now
 
           if (liveDevice) {
-            const previousActivation =
-              activeSessionActivatedAtRef.current[deviceId]
+            const previousActivation = activeSessionActivatedAtRef.current[deviceId]
 
             if (previousActivation !== activationAt) {
               activeSessionActivatedAtRef.current[deviceId] = activationAt
-              activeSessionBaseMinutesRef.current[deviceId] =
-                record?.durationMinutes ?? 0
+              activeSessionBaseMinutesRef.current[deviceId] = record?.durationMinutes ?? 0
               activeSessionBaseKwhRef.current[deviceId] = record?.kwh ?? 0
             }
           }
 
           const baseMinutes = liveDevice
-            ? (activeSessionBaseMinutesRef.current[deviceId] ??
-              record?.durationMinutes ??
-              0)
+            ? (activeSessionBaseMinutesRef.current[deviceId] ?? record?.durationMinutes ?? 0)
             : (record?.durationMinutes ?? 0)
           const baseKwh = liveDevice
             ? (activeSessionBaseKwhRef.current[deviceId] ?? record?.kwh ?? 0)
             : (record?.kwh ?? 0)
-          const elapsedMinutes = liveDevice
-            ? Math.max((now - activationAt) / 1000 / 60, 0)
-            : 0
+          const elapsedMinutes = liveDevice ? Math.max((now - activationAt) / 1000 / 60, 0) : 0
           const currentMinutes = baseMinutes + elapsedMinutes
 
           // Freeze nilai saat toggle OFF dimulai
@@ -138,9 +118,7 @@ export function ActiveDevicesList({ today }: Props) {
             ? (frozenMinutesRef.current[deviceId] ?? currentMinutes)
             : currentMinutes
 
-          const unflushedKwh = liveDevice
-            ? (watt * (elapsedMinutes / 60)) / 1000
-            : 0
+          const unflushedKwh = liveDevice ? (watt * (elapsedMinutes / 60)) / 1000 : 0
           const totalKwh = liveDevice
             ? baseKwh + unflushedKwh
             : record?.kwh != null
@@ -153,10 +131,7 @@ export function ActiveDevicesList({ today }: Props) {
           const durationLabel = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
 
           return (
-            <View
-              key={deviceId}
-              className="flex-row items-center justify-between"
-            >
+            <View key={deviceId} className="flex-row items-center justify-between">
               <View className="flex-row items-center gap-3">
                 <View
                   className={`h-9 w-9 rounded-2xl items-center justify-center ${
@@ -167,21 +142,15 @@ export function ActiveDevicesList({ today }: Props) {
                 </View>
                 <View>
                   <View className="flex-row items-center gap-2">
-                    <Text className="text-sm font-semibold text-[#0E0E0E]">
-                      {name}
-                    </Text>
+                    <Text className="text-sm font-semibold text-[#0E0E0E]">{name}</Text>
                     {liveDevice && (
                       <View className="rounded-full bg-[#E8FFF4] px-1.5 py-0.5">
-                        <Text className="text-[10px] font-semibold text-brand">
-                          Active
-                        </Text>
+                        <Text className="text-[10px] font-semibold text-brand">Active</Text>
                       </View>
                     )}
                     {isToggling && (
                       <View className="rounded-full bg-[#F5F5F5] px-1.5 py-0.5">
-                        <Text className="text-[10px] text-[#AAA]">
-                          saving...
-                        </Text>
+                        <Text className="text-[10px] text-[#AAA]">saving...</Text>
                       </View>
                     )}
                   </View>
@@ -190,9 +159,7 @@ export function ActiveDevicesList({ today }: Props) {
                   </Text>
                 </View>
               </View>
-              <Text className="text-sm font-bold text-brand">
-                {totalKwh.toFixed(4)} kWh
-              </Text>
+              <Text className="text-sm font-bold text-brand">{totalKwh.toFixed(4)} kWh</Text>
             </View>
           )
         })}
