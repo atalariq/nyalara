@@ -1,31 +1,17 @@
-import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
-import { useDevices } from '@/features/devices/hooks/useDevices'
+// features/energy/components/EnvironmentalImpact.tsx
 import { ActivityIndicator, Text, View } from 'react-native'
-import type { DailyUsage } from '../types/dailyUsage.types'
 
 type Props = {
-  history: DailyUsage[]
+  co2ReducedKg: number
   environmentalQuote: string
   isLoading: boolean
 }
 
 export function EnvironmentalImpact({
-  history,
+  co2ReducedKg,
   environmentalQuote,
   isLoading,
 }: Props) {
-  const { devices } = useDevices()
-
-  const totalKwh = history.reduce((sum, d) => sum + d.totalKwh, 0)
-  const totalCost = totalKwh * CARBON_CONFIG.electricityRate
-
-  const estimatedMonthlyKwh = devices.reduce(
-    (sum, d) => sum + (d.watt * d.hoursPerDay * 30) / 1000,
-    0,
-  )
-  const savedKwh = Math.max(estimatedMonthlyKwh - totalKwh, 0)
-  const co2ReducedKg = savedKwh * CARBON_CONFIG.emissionFactor
-
   return (
     <View className="mx-4 rounded-[34px] border border-black/5 bg-surface px-6 py-7 shadow-sm shadow-black/5">
       <Text className="font-bold text-[13px] uppercase tracking-[2px] text-brand">

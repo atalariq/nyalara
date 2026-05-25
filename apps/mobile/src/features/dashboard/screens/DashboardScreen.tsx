@@ -33,7 +33,7 @@ export default function DashboardScreen() {
   })
 
   return (
-    <SafeAreaView className="flex-1 bg-brand">
+    <SafeAreaView className="flex-1 bg-[#F3FBF7]">
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 140 }}

@@ -1,4 +1,8 @@
+// features/energy/screens/EnergyScreen.tsx
 import { useDevices } from '@/features/devices/hooks/useDevices'
+import { useCarbonSummary } from '@/features/dashboard/hooks/useCarbonSummary'
+import { useDashboardAI } from '@/features/dashboard/hooks/useDashboardAI'
+import { useDashboardStats } from '@/features/dashboard/hooks/useDashboardStats'
 import AppLoading from '@/shared/components/feedback/AppLoading'
 import { ScrollView, Text } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -7,8 +11,6 @@ import { EnergyBarChart } from '../components/EnergyBarChart'
 import { EnergyHeader } from '../components/EnergyHeader'
 import { EnvironmentalImpact } from '../components/EnvironmentalImpact'
 import { useEnergyHistory } from '../hooks/useEnergyHistory'
-import { useDashboardAI } from '@/features/dashboard/hooks/useDashboardAI'
-import { useDashboardStats } from '@/features/dashboard/hooks/useDashboardStats'
 
 function getComparedToYesterday(
   todayKwh: number,
@@ -25,6 +27,7 @@ function getComparedToYesterday(
 export default function EnergyScreen() {
   useDevices()
   const { today, history, isLoading, error } = useEnergyHistory()
+  const { co2ReducedKg } = useCarbonSummary(history)
   const stats = useDashboardStats()
   const insight = useDashboardAI(stats)
 
@@ -61,7 +64,7 @@ export default function EnergyScreen() {
         <EnergyBarChart history={history} />
         <ActiveDevicesList today={today} />
         <EnvironmentalImpact
-          history={history}
+          co2ReducedKg={co2ReducedKg}
           environmentalQuote={insight.environmentalQuote}
           isLoading={insight.status === 'loading'}
         />

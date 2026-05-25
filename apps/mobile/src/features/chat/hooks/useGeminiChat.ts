@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useChatStore } from '../store/chatStore'
 
 const GEMINI_API_KEY = process.env.EXPO_PUBLIC_GEMINI_API_KEY!
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${GEMINI_API_KEY}`
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`
 
 const SYSTEM_CONTEXT = `You are a helpful carbon footprint assistant for CarbonTracker app. 
 Help users understand their electronic device energy consumption, carbon emissions, and electricity costs.
@@ -37,7 +37,6 @@ export function useGeminiChat() {
       })
 
       const data = await res.json()
-      console.log('Gemini response:', JSON.stringify(data, null, 2)) // ← tambah ini
       const reply =
         data.candidates?.[0]?.content?.parts?.[0]?.text ??
         "Sorry, I couldn't process that."
