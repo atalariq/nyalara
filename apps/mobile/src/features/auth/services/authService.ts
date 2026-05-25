@@ -1,5 +1,6 @@
 // features/auth/services/authService.ts
 import { auth } from '@/config/firebase'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -34,6 +35,12 @@ export const authService = {
   },
 
   async logout(): Promise<void> {
+    try {
+      await GoogleSignin.signOut()
+    } catch {
+      // Ignore provider-specific sign-out failures so Firebase sign-out still completes.
+    }
+
     await signOut(auth)
   },
 }
