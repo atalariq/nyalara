@@ -28,10 +28,12 @@ export function createProtectedApiClient({
   baseUrl = process.env.EXPO_PUBLIC_API_BASE_URL ?? '',
   fetchImpl = fetch,
   authInstance,
+  waitForAuthReady,
 }: {
   authInstance: AuthLike
   baseUrl?: string
   fetchImpl?: FetchLike
+  waitForAuthReady?: () => Promise<void>
 }): ProtectedApiClient {
   return {
     async get<TResponse>(path: string, query?: Record<string, QueryValue>) {
@@ -42,6 +44,7 @@ export function createProtectedApiClient({
         method: 'GET',
         path,
         query,
+        waitForAuthReady,
       })
     },
     async post<TRequest, TResponse>(path: string, body: TRequest) {
@@ -52,6 +55,7 @@ export function createProtectedApiClient({
         method: 'POST',
         path,
         body,
+        waitForAuthReady,
       })
     },
     async patch<TRequest, TResponse>(path: string, body: TRequest) {
@@ -62,6 +66,7 @@ export function createProtectedApiClient({
         method: 'PATCH',
         path,
         body,
+        waitForAuthReady,
       })
     },
     async delete<TResponse>(path: string) {
@@ -71,6 +76,7 @@ export function createProtectedApiClient({
         fetchImpl,
         method: 'DELETE',
         path,
+        waitForAuthReady,
       })
     },
   }
@@ -84,6 +90,7 @@ async function request<TResponse>({
   path,
   body,
   query,
+  waitForAuthReady,
 }: {
   authInstance: AuthLike
   baseUrl: string
@@ -92,8 +99,14 @@ async function request<TResponse>({
   path: string
   body?: unknown
   query?: Record<string, QueryValue>
+  waitForAuthReady?: () => Promise<void>
 }): Promise<TResponse> {
-  const currentUser = authInstance.currentUser
+  let currentUser = authInstance.currentUser
+
+  if (!currentUser && waitForAuthReady) {
+    await waitForAuthReady()
+    currentUser = authInstance.currentUser
+  }
 
   if (!currentUser) {
     throw new Error(

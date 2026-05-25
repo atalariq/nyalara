@@ -28,6 +28,39 @@ test('protected api client rejects requests when no authenticated Firebase user 
   assert.equal(fetchCalled, false)
 })
 
+test('protected api client waits for auth readiness before reading the Firebase user', async () => {
+  let fetchCalled = false
+
+  const authInstance = {
+    currentUser: null,
+  }
+
+  const client = createProtectedApiClient({
+    authInstance,
+    waitForAuthReady: async () => {
+      authInstance.currentUser = {
+        async getIdToken() {
+          return 'firebase-id-token'
+        },
+      }
+    },
+    baseUrl: 'http://localhost:3000',
+    fetchImpl: async () => {
+      fetchCalled = true
+
+      return {
+        async json() {
+          return { success: true }
+        },
+      }
+    },
+  })
+
+  await client.get('/v1/devices')
+
+  assert.equal(fetchCalled, true)
+})
+
 test('protected api client attaches a bearer token from the current Firebase user', async () => {
   let requestUrl = ''
   let requestInit
