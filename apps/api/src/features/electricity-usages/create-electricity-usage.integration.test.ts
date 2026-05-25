@@ -73,6 +73,10 @@ describe('POST /v1/electricity-usages', () => {
               averageKwhPerDay: 120 / 31,
               averageKgCo2ePerDay: 102 / 31,
               usageCount: 1
+            },
+            currentStreak: {
+              length: 1,
+              lastTrackedDate: '2026-05-31'
             }
           }
         },
@@ -162,6 +166,10 @@ describe('POST /v1/electricity-usages', () => {
           averageKwhPerDay: 120 / 31,
           averageKgCo2ePerDay: 102 / 31,
           usageCount: 1
+        },
+        currentStreak: {
+          length: 1,
+          lastTrackedDate: '2026-05-31'
         }
       }
     })
@@ -195,6 +203,10 @@ describe('POST /v1/electricity-usages', () => {
               averageKwhPerDay: 90 / 31,
               averageKgCo2ePerDay: 76.5 / 31,
               usageCount: 1
+            },
+            currentStreak: {
+              length: 1,
+              lastTrackedDate: '2026-05-20'
             }
           }
         },
@@ -284,6 +296,10 @@ describe('POST /v1/electricity-usages', () => {
           averageKwhPerDay: 90 / 31,
           averageKgCo2ePerDay: 76.5 / 31,
           usageCount: 1
+        },
+        currentStreak: {
+          length: 1,
+          lastTrackedDate: '2026-05-20'
         }
       }
     })

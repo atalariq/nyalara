@@ -3,6 +3,8 @@ import { cors } from 'hono/cors'
 
 import type { IdTokenVerifier } from '../features/auth/firebase-admin-auth.js'
 import { registerCalculateElectricityRoutes } from '../features/calculations/register-calculate-electricity-routes.js'
+import type { DeviceService } from '../features/devices/device-service.js'
+import { registerDeviceRoutes } from '../features/devices/register-device-routes.js'
 import type { EmissionFactorReader } from '../features/emission-factors/emission-factor-reader.js'
 import { registerEmissionFactorRoutes } from '../features/emission-factors/register-emission-factor-routes.js'
 import type { EnergyInsightService } from '../features/energy-insights/energy-insight-service.js'
@@ -24,6 +26,7 @@ export type CreateAppOptions = {
   auth: IdTokenVerifier
   emissionFactors: EmissionFactorReader
   electricityUsages: ElectricityUsageService
+  devices?: DeviceService
   energyInsights?: EnergyInsightService
 }
 
@@ -50,7 +53,7 @@ export function createApp(options: CreateAppOptions) {
     '*',
     cors({
       origin: '*',
-      allowMethods: ['GET', 'POST', 'OPTIONS'],
+      allowMethods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
       allowHeaders: ['Authorization', 'Content-Type'],
       maxAge: 86_400
     })
@@ -89,10 +92,12 @@ export function createApp(options: CreateAppOptions) {
 
   registerHealthRoutes(app)
   registerEmissionFactorRoutes(app, options.emissionFactors)
+  registerDeviceRoutes(app, options.auth, options.devices ?? createMissingDeviceService())
   registerCalculateElectricityRoutes(app, options.auth, options.emissionFactors)
   registerElectricityUsageRoutes(
     app,
     options.auth,
+    options.devices ?? createMissingDeviceService(),
     options.emissionFactors,
     options.electricityUsages
   )
@@ -117,4 +122,24 @@ export function createApp(options: CreateAppOptions) {
   registerOpenApiRoutes(app, options.environment)
 
   return app
+}
+
+function createMissingDeviceService(): DeviceService {
+  return {
+    async listDevices() {
+      throw new AppError(500, 'devices_not_configured', 'Device service is not configured.')
+    },
+    async createDevice() {
+      throw new AppError(500, 'devices_not_configured', 'Device service is not configured.')
+    },
+    async updateDevice() {
+      throw new AppError(500, 'devices_not_configured', 'Device service is not configured.')
+    },
+    async deleteDevice() {
+      throw new AppError(500, 'devices_not_configured', 'Device service is not configured.')
+    },
+    async getDevicesByIds() {
+      throw new AppError(500, 'devices_not_configured', 'Device service is not configured.')
+    }
+  }
 }

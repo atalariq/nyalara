@@ -33,6 +33,7 @@ describe('createFirestoreEnergyInsightService', () => {
       insightId: '2026-05',
       title: 'Existing insight',
       summary: 'Use the cached insight.',
+      isStale: false,
       suggestions: [
         {
           title: 'Keep it up',
@@ -84,6 +85,7 @@ describe('createFirestoreEnergyInsightService', () => {
             title: 'Pemakaian listrik bulan ini masih terkendali',
             summary:
               'Emisi listrik bulan ini lebih rendah 11.3% dibanding bulan sebelumnya.',
+            isStale: false,
             suggestions: [
               {
                 title: 'Pertahankan perangkat hemat energi',
@@ -117,6 +119,7 @@ describe('createFirestoreEnergyInsightService', () => {
       insightId: '2026-05',
       title: 'Pemakaian listrik bulan ini masih terkendali',
       summary: 'Emisi listrik bulan ini lebih rendah 11.3% dibanding bulan sebelumnya.',
+      isStale: false,
       suggestions: [
         {
           title: 'Pertahankan perangkat hemat energi',
@@ -143,6 +146,7 @@ describe('createFirestoreEnergyInsightService', () => {
         month: '2026-05'
       },
       title: 'Pemakaian listrik bulan ini masih terkendali',
+      isStale: false,
       basedOnUsageIds: ['usage-1', 'usage-2'],
       metrics: {
         totalKwh: 120,

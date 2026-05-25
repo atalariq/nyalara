@@ -51,12 +51,18 @@ describe('POST /v1/recalculate-monthly-summary', () => {
           expect(month).toBe('2026-05')
 
           return {
-            month: '2026-05',
-            totalKwh: 200,
-            totalKgCo2e: 170,
-            averageKwhPerDay: 200 / 31,
-            averageKgCo2ePerDay: 170 / 31,
-            usageCount: 2
+            monthlySummary: {
+              month: '2026-05',
+              totalKwh: 200,
+              totalKgCo2e: 170,
+              averageKwhPerDay: 200 / 31,
+              averageKgCo2ePerDay: 170 / 31,
+              usageCount: 2
+            },
+            currentStreak: {
+              length: 2,
+              lastTrackedDate: '2026-05-31'
+            }
           }
         }
       }
@@ -77,12 +83,18 @@ describe('POST /v1/recalculate-monthly-summary', () => {
     await expect(response.json()).resolves.toEqual({
       success: true,
       data: {
-        month: '2026-05',
-        totalKwh: 200,
-        totalKgCo2e: 170,
-        averageKwhPerDay: 200 / 31,
-        averageKgCo2ePerDay: 170 / 31,
-        usageCount: 2
+        monthlySummary: {
+          month: '2026-05',
+          totalKwh: 200,
+          totalKgCo2e: 170,
+          averageKwhPerDay: 200 / 31,
+          averageKgCo2ePerDay: 170 / 31,
+          usageCount: 2
+        },
+        currentStreak: {
+          length: 2,
+          lastTrackedDate: '2026-05-31'
+        }
       }
     })
   })
@@ -115,12 +127,18 @@ describe('POST /v1/recalculate-monthly-summary', () => {
           expect(month).toBe('2026-05')
 
           return {
-            month: '2026-05',
-            totalKwh: 120,
-            totalKgCo2e: 102,
-            averageKwhPerDay: 120 / 31,
-            averageKgCo2ePerDay: 102 / 31,
-            usageCount: 1
+            monthlySummary: {
+              month: '2026-05',
+              totalKwh: 120,
+              totalKgCo2e: 102,
+              averageKwhPerDay: 120 / 31,
+              averageKgCo2ePerDay: 102 / 31,
+              usageCount: 1
+            },
+            currentStreak: {
+              length: 1,
+              lastTrackedDate: '2026-05-20'
+            }
           }
         }
       }
@@ -141,12 +159,18 @@ describe('POST /v1/recalculate-monthly-summary', () => {
     await expect(response.json()).resolves.toEqual({
       success: true,
       data: {
-        month: '2026-05',
-        totalKwh: 120,
-        totalKgCo2e: 102,
-        averageKwhPerDay: 120 / 31,
-        averageKgCo2ePerDay: 102 / 31,
-        usageCount: 1
+        monthlySummary: {
+          month: '2026-05',
+          totalKwh: 120,
+          totalKgCo2e: 102,
+          averageKwhPerDay: 120 / 31,
+          averageKgCo2ePerDay: 102 / 31,
+          usageCount: 1
+        },
+        currentStreak: {
+          length: 1,
+          lastTrackedDate: '2026-05-20'
+        }
       }
     })
   })

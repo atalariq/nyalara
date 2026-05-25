@@ -108,6 +108,7 @@ describe('POST /v1/generate-energy-insight', () => {
             insightId: '2026-05',
             title: 'Existing insight',
             summary: 'Use the cached monthly insight.',
+            isStale: false,
             suggestions: [
               {
                 title: 'Keep it up',
@@ -138,6 +139,7 @@ describe('POST /v1/generate-energy-insight', () => {
         insightId: '2026-05',
         title: 'Existing insight',
         summary: 'Use the cached monthly insight.',
+        isStale: false,
         suggestions: [
           {
             title: 'Keep it up',
@@ -186,6 +188,7 @@ describe('POST /v1/generate-energy-insight', () => {
             insightId: '2026-05',
             title: 'Insight regenerated on demand',
             summary: 'A fresh Gemini-backed insight was generated for this month.',
+            isStale: false,
             suggestions: [
               {
                 title: 'Schedule heavy appliances off-peak',
@@ -218,6 +221,7 @@ describe('POST /v1/generate-energy-insight', () => {
         insightId: '2026-05',
         title: 'Insight regenerated on demand',
         summary: 'A fresh Gemini-backed insight was generated for this month.',
+        isStale: false,
         suggestions: [
           {
             title: 'Schedule heavy appliances off-peak',
@@ -241,6 +245,7 @@ describe('POST /v1/generate-energy-insight', () => {
         },
         title: 'Existing insight',
         summary: 'Use the cached monthly insight.',
+        isStale: false,
         suggestions: [
           {
             title: 'Keep it up',
@@ -255,6 +260,7 @@ describe('POST /v1/generate-energy-insight', () => {
         insight: {
           title: 'Should not be used',
           summary: 'Generator should not run when cached insight exists.',
+          isStale: false,
           suggestions: []
         },
         model: {
@@ -310,6 +316,7 @@ describe('POST /v1/generate-energy-insight', () => {
         insightId: '2026-05',
         title: 'Existing insight',
         summary: 'Use the cached monthly insight.',
+        isStale: false,
         suggestions: [
           {
             title: 'Keep it up',
@@ -333,6 +340,7 @@ describe('POST /v1/generate-energy-insight', () => {
         },
         title: 'Existing insight',
         summary: 'Use the cached monthly insight.',
+        isStale: false,
         suggestions: [
           {
             title: 'Keep it up',
@@ -400,6 +408,7 @@ describe('POST /v1/generate-energy-insight', () => {
             insight: {
               title: 'Fresh regenerated insight',
               summary: 'A new Gemini-backed insight replaced the cached one.',
+              isStale: false,
               suggestions: [
                 {
                   title: 'Shift appliance usage',
@@ -438,6 +447,7 @@ describe('POST /v1/generate-energy-insight', () => {
         insightId: '2026-05',
         title: 'Fresh regenerated insight',
         summary: 'A new Gemini-backed insight replaced the cached one.',
+        isStale: false,
         suggestions: [
           {
             title: 'Shift appliance usage',
@@ -471,6 +481,7 @@ describe('POST /v1/generate-energy-insight', () => {
         name: 'gemini-3.5-flash',
         promptVersion: 'energy-insight-v1'
       },
+      isStale: false,
       createdAt: expect.anything()
     })
   })

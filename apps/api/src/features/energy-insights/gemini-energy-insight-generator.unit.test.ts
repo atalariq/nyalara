@@ -104,6 +104,7 @@ describe('createGeminiEnergyInsightGenerator', () => {
       insight: {
         title: 'Pemakaian listrik bulan ini masih terkendali',
         summary: 'Pemakaian listrik kamu berada di bawah target bulanan.',
+        isStale: false,
         suggestions: [
           {
             title: 'Kurangi standby power',
