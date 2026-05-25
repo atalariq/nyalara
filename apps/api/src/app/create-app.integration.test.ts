@@ -121,4 +121,42 @@ describe('v1 app platform behavior', () => {
       }
     })
   })
+
+  it('does not rate limit development traffic', async () => {
+    const app = createApp({
+      environment: 'development',
+      auth: {
+        verifyIdToken: async () => {
+          throw new Error('not used in this test')
+        }
+      },
+      emissionFactors: {
+        listActiveElectricityFactors: async () => []
+      },
+      electricityUsages: {
+        createUsage: async () => {
+          throw new Error('not used in this test')
+        },
+        getMonthlySummary: async () => {
+          throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async () => {
+          throw new Error('not used in this test')
+        }
+      }
+    })
+
+    const responses = await Promise.all(
+      Array.from({ length: 120 }, () =>
+        app.request('/v1/health', {
+          headers: { 'x-forwarded-for': '192.168.1.1' }
+        })
+      )
+    )
+
+    expect(responses.every((response) => response.status === 200)).toBe(true)
+  })
 })

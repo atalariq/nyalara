@@ -1,5 +1,6 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
 import { cors } from 'hono/cors'
+import { logger } from 'hono/logger'
 
 import type { IdTokenVerifier } from '../features/auth/firebase-admin-auth.js'
 import { registerCalculateElectricityRoutes } from '../features/calculations/register-calculate-electricity-routes.js'
@@ -59,7 +60,11 @@ export function createApp(options: CreateAppOptions) {
     })
   )
 
-  if (options.environment !== 'test') {
+  if (options.environment === 'development') {
+    app.use('*', logger())
+  }
+
+  if (options.environment === 'production') {
     app.use('*', createRateLimiter({ windowMs: 60_000, maxRequests: 100 }))
   }
 
