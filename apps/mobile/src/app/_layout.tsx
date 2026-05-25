@@ -1,6 +1,8 @@
-// app/_layout.tsx
 import { initAuthListener } from '@/features/auth/store/authStore'
 import { LoadingProvider } from '@/providers/LoadingProvider'
+import { GeminiChatSheet } from '@/features/chat/components/GeminiChatSheet'
+import { FloatingChatButton } from '@/shared/components/ui/FloatingChatButton'
+import { HamburgerMenu } from '@/shared/components/ui/HamburgerMenu/HamburgerMenu'
 import { useFonts } from 'expo-font'
 import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
@@ -13,7 +15,6 @@ import {
 import Toast from 'react-native-toast-message'
 import '../../global.css'
 
-// ✅ Disable strict mode — fix freeze dari @gorhom/bottom-sheet
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
   strict: false,
@@ -46,6 +47,10 @@ export default function RootLayout() {
       <LoadingProvider>
         <Stack screenOptions={{ headerShown: false }} />
         <Toast />
+        <FloatingChatButton />
+        <GeminiChatSheet />
+        {/* HamburgerMenu harus paling akhir supaya z-index di atas semua */}
+        <HamburgerMenu />
       </LoadingProvider>
     </GestureHandlerRootView>
   )
