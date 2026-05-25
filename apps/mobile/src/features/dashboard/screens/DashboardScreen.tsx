@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { Menu } from 'lucide-react-native'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useGoalsStore } from '@/features/goals/store/goalsStore'
 
 import {
   DashboardDailyImpact,
@@ -17,14 +18,12 @@ import {
 import { useDashboardAI } from '../hooks/useDashboardAI'
 import { useDashboardStats } from '../hooks/useDashboardStats'
 
-const DAILY_GOAL_KWH = 5
-
 export default function DashboardScreen() {
   const user = useAuthStore((s) => s.user)
   const open = useHamburgerStore((s) => s.open)
+  const dailyTargetKwh = useGoalsStore((s) => s.dailyTargetKwh)
 
   useActiveDeviceTimer()
-
   const stats = useDashboardStats()
   const insight = useDashboardAI(stats)
 
@@ -113,7 +112,7 @@ export default function DashboardScreen() {
 
           {/* PROGRESS */}
           <DashboardProgress
-            dailyGoalKwh={DAILY_GOAL_KWH}
+            dailyGoalKwh={dailyTargetKwh}
             remaining={stats.remaining}
             progress={stats.progress}
           />

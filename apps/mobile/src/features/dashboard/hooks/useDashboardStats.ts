@@ -3,10 +3,12 @@ import { useDevices } from '@/features/devices/hooks/useDevices'
 import { useEnergyHistory } from '@/features/energy/hooks/useEnergyHistory'
 import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
 import type { DashboardStats } from '../types/dashboard.types'
+import { useGoalsStore } from '@/features/goals/store/goalsStore'
 
 const DAILY_GOAL_KWH = 5
 
 export function useDashboardStats(): DashboardStats & { isLoading: boolean } {
+  const dailyTargetKwh = useGoalsStore((s) => s.dailyTargetKwh)
   const { today, isLoading } = useEnergyHistory()
   const { devices } = useDevices()
 
@@ -15,17 +17,14 @@ export function useDashboardStats(): DashboardStats & { isLoading: boolean } {
   const dailyCostIdr = today?.totalCost ?? 0
 
   // Estimasi harian dari konfigurasi device (hoursPerDay)
-  const estimatedDailyKwh = devices.reduce(
-    (sum, d) => sum + (d.watt * d.hoursPerDay) / 1000,
-    0,
-  )
+  const estimatedDailyKwh = devices.reduce((sum, d) => sum + (d.watt * d.hoursPerDay) / 1000, 0)
 
   // Saved = selisih estimasi vs actual (min 0)
   const savedKwh = Math.max(estimatedDailyKwh - dailyKwh, 0)
   const co2ReducedKg = savedKwh * CARBON_CONFIG.emissionFactor
 
-  const progress = Math.min(dailyKwh / DAILY_GOAL_KWH, 1)
-  const remaining = Math.max(DAILY_GOAL_KWH - dailyKwh, 0)
+  const progress = Math.min(dailyKwh / dailyTargetKwh, 1) // 0–1
+  const remaining = Math.max(dailyTargetKwh - dailyKwh, 0)
 
   return {
     dailyKwh,
