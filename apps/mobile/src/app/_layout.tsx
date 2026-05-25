@@ -1,10 +1,11 @@
+// app/_layout.tsx
 import { initAuthListener } from '@/features/auth/store/authStore'
 import { LoadingProvider } from '@/providers/LoadingProvider'
 import { GeminiChatSheet } from '@/features/chat/components/GeminiChatSheet'
 import { FloatingChatButton } from '@/shared/components/ui/FloatingChatButton'
 import { HamburgerMenu } from '@/shared/components/ui/HamburgerMenu/HamburgerMenu'
 import { useFonts } from 'expo-font'
-import { Stack } from 'expo-router'
+import { Stack, useSegments } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -31,6 +32,9 @@ export default function RootLayout() {
     'Manrope-ExtraBold': require('@/assets/fonts/Manrope-ExtraBold.ttf'),
   })
 
+  const segments = useSegments()
+  const isAppRoute = segments[0] === '(app)'
+
   useEffect(() => {
     const unsubscribe = initAuthListener()
     return () => unsubscribe?.()
@@ -47,9 +51,12 @@ export default function RootLayout() {
       <LoadingProvider>
         <Stack screenOptions={{ headerShown: false }} />
         <Toast />
-        <FloatingChatButton />
-        <GeminiChatSheet />
-        {/* HamburgerMenu harus paling akhir supaya z-index di atas semua */}
+        {isAppRoute && (
+          <>
+            <FloatingChatButton />
+            <GeminiChatSheet />
+          </>
+        )}
         <HamburgerMenu />
       </LoadingProvider>
     </GestureHandlerRootView>
