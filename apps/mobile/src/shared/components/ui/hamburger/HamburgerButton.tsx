@@ -2,7 +2,7 @@
 import React from 'react'
 import { Pressable } from 'react-native'
 import { Menu } from 'lucide-react-native'
-import { useHamburgerStore } from '@/shared/components/ui/HamburgerMenu/HamburgerStore'
+import { useHamburgerStore } from '@/shared/components/ui/hamburger/HamburgerStore'
 
 type HamburgerButtonProps = {
   color?: string

@@ -1,6 +1,6 @@
 import { useAuthStore } from '@/features/auth/store/authStore'
 import { useActiveDeviceTimer } from '@/features/devices/hooks/useActiveDeviceTimer'
-import { useHamburgerStore } from '@/shared/components/ui/HamburgerMenu/HamburgerStore'
+import { useHamburgerStore } from '@/shared/components/ui/hamburger/HamburgerStore'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Menu } from 'lucide-react-native'
 import { Pressable, ScrollView, Text, View } from 'react-native'
@@ -105,15 +105,9 @@ export default function DashboardScreen() {
           {/* MAIN CARD */}
           <View className="mx-5 mt-7 rounded-[32px] bg-white/90 p-5 shadow-sm shadow-black/10">
             <View className="flex-row justify-between gap-4">
-              <DashboardMainStats
-                dailyKwh={stats.dailyKwh}
-                progress={stats.progress}
-              />
+              <DashboardMainStats dailyKwh={stats.dailyKwh} progress={stats.progress} />
 
-              <DashboardDailyImpact
-                savedKwh={stats.savedKwh}
-                co2ReducedKg={stats.co2ReducedKg}
-              />
+              <DashboardDailyImpact savedKwh={stats.savedKwh} co2ReducedKg={stats.co2ReducedKg} />
             </View>
           </View>
 
