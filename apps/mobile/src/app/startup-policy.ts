@@ -7,3 +7,15 @@ export function shouldHideSplashScreen({
 }) {
   return fontsLoaded && !isAuthLoading
 }
+
+export function shouldRenderNonCriticalOverlays({
+  shellReady,
+  hasPainted,
+  isAppRoute,
+}: {
+  shellReady: boolean
+  hasPainted: boolean
+  isAppRoute: boolean
+}) {
+  return shellReady && hasPainted && isAppRoute
+}
