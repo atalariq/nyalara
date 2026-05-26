@@ -1,14 +1,11 @@
 import { usePathname } from 'expo-router'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { Sparkles } from 'lucide-react-native'
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-} from 'react-native-reanimated'
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated'
 import { useChatStore } from '@/features/chat/store/chatStore'
 
 const AUTH_ROUTES = ['/login', '/register', '/onboarding']
+const HIDDEN_ROUTES = ['/goals', '/energy-history']
 
 export function FloatingChatButton({ enabled = true }: { enabled?: boolean }) {
   const pathname = usePathname()
@@ -19,7 +16,7 @@ export function FloatingChatButton({ enabled = true }: { enabled?: boolean }) {
   const animStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }))
-
+  if (HIDDEN_ROUTES.some((r) => pathname.startsWith(r))) return null
   if (AUTH_ROUTES.some((r) => pathname.startsWith(r))) return null
 
   // hide ketika chat sheet terbuka
