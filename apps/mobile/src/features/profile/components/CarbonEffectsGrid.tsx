@@ -1,21 +1,21 @@
-import { Text, View } from "react-native";
-import type { CarbonEffects } from "../types/profile.types";
+import { Text, View } from 'react-native'
+import type { CarbonEffects } from '../types/profile.types'
 
 type StatCardProps = {
-  value: string;
-  label: string;
-  icon: string;
-  accent?: boolean;
-  highlight?: "green" | "orange";
-};
+  value: string
+  label: string
+  icon: string
+  accent?: boolean
+  highlight?: 'green' | 'orange'
+}
 
 function StatCard({ value, label, icon, highlight }: StatCardProps) {
   const valueColor =
-    highlight === "orange"
-      ? "text-[#F59E0B]"
-      : highlight === "green"
-        ? "text-brand"
-        : "text-foreground";
+    highlight === 'orange'
+      ? 'text-[#F59E0B]'
+      : highlight === 'green'
+        ? 'text-brand'
+        : 'text-foreground'
 
   return (
     <View className="flex-1 rounded-3xl bg-surface p-4 items-start">
@@ -23,12 +23,12 @@ function StatCard({ value, label, icon, highlight }: StatCardProps) {
       <Text className={`text-2xl font-extrabold ${valueColor}`}>{value}</Text>
       <Text className="text-xs text-foreground-muted mt-0.5">{label}</Text>
     </View>
-  );
+  )
 }
 
 type Props = {
-  data: CarbonEffects;
-};
+  data: CarbonEffects
+}
 
 export function CarbonEffectsGrid({ data }: Props) {
   return (
@@ -40,7 +40,7 @@ export function CarbonEffectsGrid({ data }: Props) {
         <View className="flex-row gap-3">
           <StatCard
             icon="💨"
-            value={`${data.co2ReductionKg > 0 ? "-" : ""}${Math.abs(data.co2ReductionKg)}kg`}
+            value={`${data.co2ReductionKg > 0 ? '-' : ''}${Math.abs(data.co2ReductionKg)}kg`}
             label="CO2 Reduksi"
             highlight="green"
           />
@@ -66,5 +66,5 @@ export function CarbonEffectsGrid({ data }: Props) {
         </View>
       </View>
     </View>
-  );
+  )
 }

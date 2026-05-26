@@ -1,8 +1,9 @@
 // features/auth/screens/RegisterScreen.tsx
-import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
-import { router } from "expo-router";
-import { ArrowLeft, Lock, Mail, User } from "lucide-react-native";
-import React from "react";
+import { AntDesign, FontAwesome5 } from '@expo/vector-icons'
+import { router } from 'expo-router'
+import { ArrowLeft, Lock, Mail, User } from 'lucide-react-native'
+import React from 'react'
+import { mobileFeatureFlags } from '@/shared/config/mobile-feature-flags'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -11,21 +12,21 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import { FormField } from "../components/FormFields";
-import { useRegisterForm } from "../hooks/useAuthForm";
-import { useGoogleAuth } from "../hooks/useGoogleAuth";
-import { useGuestLogin } from "../hooks/useGuestLogin";
+} from 'react-native'
+import { FormField } from '../components/FormFields'
+import { useRegisterForm } from '../hooks/useAuthForm'
+import { useGoogleAuth } from '../hooks/useGoogleAuth'
+import { useGuestLogin } from '../hooks/useGuestLogin'
 
 export function RegisterScreen() {
-  const { form, onSubmit, error, isLoading } = useRegisterForm();
-  const { promptAsync } = useGoogleAuth();
-  const { loginAsGuest, isLoading: isGuestLoading } = useGuestLogin();
+  const { form, onSubmit, error, isLoading } = useRegisterForm()
+  const { promptAsync } = useGoogleAuth('register')
+  const { loginAsGuest, isLoading: isGuestLoading } = useGuestLogin()
 
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-[#F6F6F6]"
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView
         className="flex-1"
@@ -42,16 +43,14 @@ export function RegisterScreen() {
           className="flex-row items-center gap-2 mt-14 mb-10"
         >
           <ArrowLeft size={18} color="#25CE7F" />
-          <Text className="text-brand font-extrabold text-[22px]">Wattly</Text>
+          <Text className="text-brand font-extrabold text-[22px]">Nyalara</Text>
         </TouchableOpacity>
 
         {/* Hero */}
         <View className="items-center mb-10">
-          <Text className="text-brand text-[44px] font-extrabold leading-none">
-            Join Wattly
-          </Text>
+          <Text className="text-brand text-[44px] font-extrabold leading-none">Join Nyalara</Text>
           <Text className="text-zinc-500 text-center text-[15px] leading-5 mt-4 px-5">
-            Step into the future of sustainable living{"\n"}
+            Step into the future of sustainable living{'\n'}
             with a personal touch.
           </Text>
         </View>
@@ -60,32 +59,32 @@ export function RegisterScreen() {
         <View className="bg-white rounded-[30px] px-5 py-6 border border-zinc-100 shadow-sm">
           {/* Social Buttons */}
           <View className="flex-row gap-3 mb-6">
-            {/* Apple */}
-            <TouchableOpacity className="flex-1 h-11 rounded-full border border-brand items-center justify-center flex-row gap-2">
+            <TouchableOpacity
+              disabled={!mobileFeatureFlags.appleAuth}
+              className="flex-1 h-11 rounded-full border border-brand items-center justify-center flex-row gap-2"
+              style={{ opacity: mobileFeatureFlags.appleAuth ? 1 : 0.45 }}
+            >
               <FontAwesome5 name="apple" size={18} color="#25CE7F" />
-              <Text className="text-brand text-sm font-semibold">
-                Continue with
-              </Text>
+              <Text className="text-brand text-sm font-semibold">Continue with</Text>
+              {!mobileFeatureFlags.appleAuth && (
+                <Text className="text-[10px] text-zinc-500 font-medium">Soon</Text>
+              )}
             </TouchableOpacity>
 
             {/* Google */}
             <TouchableOpacity
               onPress={() => promptAsync()}
-              className="flex-1 h-11 rounded-full border border-brand items-center justify-center flex-row gap-2"
+              className="h-11 rounded-full border border-brand items-center justify-center flex-row gap-2 flex-1"
             >
               <AntDesign name="google" size={18} color="#25CE7F" />
-              <Text className="text-brand text-sm font-semibold">
-                Continue with
-              </Text>
+              <Text className="text-brand text-sm font-semibold">Continue with</Text>
             </TouchableOpacity>
           </View>
 
           {/* Divider */}
           <View className="flex-row items-center gap-3 mb-5">
             <View className="flex-1 h-px bg-zinc-200" />
-            <Text className="text-zinc-400 text-xs font-medium">
-              or with email
-            </Text>
+            <Text className="text-zinc-400 text-xs font-medium">or with email</Text>
             <View className="flex-1 h-px bg-zinc-200" />
           </View>
 
@@ -103,7 +102,7 @@ export function RegisterScreen() {
             label="Email Address"
             icon={Mail}
             placeholder="your@email.com"
-            inputProps={{ keyboardType: "email-address" }}
+            inputProps={{ keyboardType: 'email-address' }}
           />
 
           <FormField
@@ -116,9 +115,7 @@ export function RegisterScreen() {
           />
         </View>
 
-        {error && (
-          <Text className="text-red-500 text-sm text-center mt-4">{error}</Text>
-        )}
+        {error && <Text className="text-red-500 text-sm text-center mt-4">{error}</Text>}
 
         {/* Register Button */}
         <TouchableOpacity
@@ -130,9 +127,7 @@ export function RegisterScreen() {
           {isLoading ? (
             <ActivityIndicator color="#FFFFFF" />
           ) : (
-            <Text className="text-white font-extrabold text-lg">
-              Create An Account
-            </Text>
+            <Text className="text-white font-extrabold text-lg">Create An Account</Text>
           )}
         </TouchableOpacity>
 
@@ -153,28 +148,22 @@ export function RegisterScreen() {
           {isGuestLoading ? (
             <ActivityIndicator color="#25CE7F" />
           ) : (
-            <Text className="text-zinc-500 font-semibold text-base">
-              Continue as Guest
-            </Text>
+            <Text className="text-zinc-500 font-semibold text-base">Continue as Guest</Text>
           )}
         </TouchableOpacity>
 
         <Text className="text-zinc-500 text-base text-center mt-6">
-          Already have an account?{" "}
-          <Text
-            className="text-brand font-bold"
-            onPress={() => router.push("/(auth)/login")}
-          >
+          Already have an account?{' '}
+          <Text className="text-brand font-bold" onPress={() => router.push('/(auth)/login')}>
             Log In
           </Text>
         </Text>
 
         <Text className="text-zinc-400 text-xs text-center mt-4 leading-5 px-5">
-          By signing up, you agree to our{" "}
-          <Text className="text-brand font-semibold">Terms</Text> &{" "}
+          By signing up, you agree to our <Text className="text-brand font-semibold">Terms</Text> &{' '}
           <Text className="text-brand font-semibold">Privacy Policy</Text>
         </Text>
       </ScrollView>
     </KeyboardAvoidingView>
-  );
+  )
 }

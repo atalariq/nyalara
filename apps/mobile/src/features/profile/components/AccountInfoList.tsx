@@ -1,19 +1,19 @@
-import { Building2, Mail, MapPin, User, Users, Zap } from "lucide-react-native";
-import { Text, View } from "react-native";
-import type { AccountInfo } from "../types/profile.types";
+import { Building2, Mail, MapPin, User, Users, Zap } from 'lucide-react-native'
+import { Text, View } from 'react-native'
+import type { AccountInfo } from '../types/profile.types'
 
 type RowProps = {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  last?: boolean;
-};
+  icon: React.ReactNode
+  label: string
+  value: string
+  last?: boolean
+}
 
 function InfoRow({ icon, label, value, last }: RowProps) {
   return (
     <View
       className={`flex-row items-center justify-between py-3.5 ${
-        !last ? "border-b border-border" : ""
+        !last ? 'border-b border-border' : ''
       }`}
     >
       <View className="flex-row items-center gap-3">
@@ -22,47 +22,47 @@ function InfoRow({ icon, label, value, last }: RowProps) {
       </View>
       <Text className="text-sm font-medium text-foreground">{value}</Text>
     </View>
-  );
+  )
 }
 
 type Props = {
-  data: AccountInfo;
-};
+  data: AccountInfo
+}
 
 export function AccountInfoList({ data }: Props) {
   const rows: RowProps[] = [
     {
       icon: <User size={16} color="#8E8E8E" />,
-      label: "Nama",
+      label: 'Nama',
       value: data.name,
     },
     {
       icon: <Mail size={16} color="#8E8E8E" />,
-      label: "Email",
+      label: 'Email',
       value: data.email,
     },
     {
       icon: <Building2 size={16} color="#8E8E8E" />,
-      label: "Residence",
+      label: 'Residence',
       value: data.residence,
     },
     {
       icon: <Users size={16} color="#8E8E8E" />,
-      label: "Residents",
-      value: `${data.residents} People`,
+      label: 'Residents',
+      value: data.residents >= 0 ? `${data.residents} People` : '—',
     },
     {
       icon: <MapPin size={16} color="#8E8E8E" />,
-      label: "City",
+      label: 'City',
       value: data.city,
     },
     {
       icon: <Zap size={16} color="#8E8E8E" />,
-      label: "PLN Rate",
+      label: 'PLN Rate',
       value: data.plnRate,
       last: true,
     },
-  ];
+  ]
 
   return (
     <View className="px-4">
@@ -75,5 +75,5 @@ export function AccountInfoList({ data }: Props) {
         ))}
       </View>
     </View>
-  );
+  )
 }

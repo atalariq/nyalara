@@ -1,11 +1,11 @@
-import { Zap } from "lucide-react-native";
-import { Text, View } from "react-native";
-import type { DeviceListItem } from "../../hooks/useDeviceList";
+import { Zap } from 'lucide-react-native'
+import { Text, View } from 'react-native'
+import type { DeviceListItem } from '../../hooks/useDeviceList'
 
 type StatCardProps = {
-  label: string;
-  deviceName: string;
-};
+  label: string
+  deviceName: string
+}
 
 function StatCard({ label, deviceName }: StatCardProps) {
   return (
@@ -25,22 +25,22 @@ function StatCard({ label, deviceName }: StatCardProps) {
         </Text>
       </View>
     </View>
-  );
+  )
 }
 
 type Props = {
-  highestConsumer: DeviceListItem | null;
-  mostActive: DeviceListItem | null;
-};
+  highestConsumer: DeviceListItem | null
+  mostActive: DeviceListItem | null
+}
 
 export function DeviceStatsRow({ highestConsumer, mostActive }: Props) {
   return (
     <View className="mt-4 flex-row gap-3">
       <StatCard
         label="highest consumer"
-        deviceName={highestConsumer?.name ?? "—"}
+        deviceName={highestConsumer?.name ?? '—'}
       />
-      <StatCard label="most active" deviceName={mostActive?.name ?? "—"} />
+      <StatCard label="most active" deviceName={mostActive?.name ?? '—'} />
     </View>
-  );
+  )
 }

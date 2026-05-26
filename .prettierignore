@@ -1,0 +1,6 @@
+# Ignore artifacts:
+build
+coverage
+apps/api
+.agents/skills
+docs

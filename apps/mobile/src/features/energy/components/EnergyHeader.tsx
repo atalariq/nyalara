@@ -1,15 +1,15 @@
-import { TrendingDown, TrendingUp } from "lucide-react-native";
-import { Text, View } from "react-native";
+import { TrendingDown, TrendingUp } from 'lucide-react-native'
+import { Text, View } from 'react-native'
 
 type Props = {
-  totalKwh: number;
-  comparedToYesterday?: number | null;
-};
+  totalKwh: number
+  comparedToYesterday?: number | null
+}
 
 export function EnergyHeader({ totalKwh, comparedToYesterday }: Props) {
-  const isDown = comparedToYesterday != null && comparedToYesterday <= 0;
+  const isDown = comparedToYesterday != null && comparedToYesterday <= 0
 
-  const hasComparison = comparedToYesterday != null;
+  const hasComparison = comparedToYesterday != null
 
   return (
     <View className="mx-5 mt-5 overflow-hidden rounded-[34px] bg-white px-6 py-7 shadow-sm shadow-black/10">
@@ -54,18 +54,18 @@ export function EnergyHeader({ totalKwh, comparedToYesterday }: Props) {
         {hasComparison && (
           <View className="rounded-full bg-[#2DD881] px-5 py-2">
             <Text className="text-[14px] font-bold text-white">
-              {Math.abs(comparedToYesterday!).toFixed(0)}%{" "}
-              {isDown ? "lower" : "higher"} than yesterday
+              {Math.abs(comparedToYesterday!).toFixed(0)}%{' '}
+              {isDown ? 'lower' : 'higher'} than yesterday
             </Text>
           </View>
         )}
 
         <View className="rounded-full bg-[#F7D7A8] px-5 py-2">
           <Text className="text-[14px] font-bold text-[#5B4631]">
-            {isDown ? "Efficient Energy Pattern" : "Consider reducing usage"}
+            {isDown ? 'Efficient Energy Pattern' : 'Consider reducing usage'}
           </Text>
         </View>
       </View>
     </View>
-  );
+  )
 }

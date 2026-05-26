@@ -1,7 +1,7 @@
 // features/onboarding/screens/IntroScreen.tsx
-import { AppButton } from "@/shared/components/ui/AppButton";
-import { router } from "expo-router";
-import React, { useRef, useState } from "react";
+import { AppButton } from '@/shared/components/ui/AppButton'
+import { router } from 'expo-router'
+import React, { useRef, useState } from 'react'
 import {
   Dimensions,
   FlatList,
@@ -9,31 +9,31 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import { OnboardingSlide } from "../components/OnboardingSlide";
-import { ONBOARDING_SLIDES } from "../data/slides";
-import { OnboardingSlideData } from "../types";
+} from 'react-native'
+import { OnboardingSlide } from '../components/OnboardingSlide'
+import { ONBOARDING_SLIDES } from '../data/slides'
+import { OnboardingSlideData } from '../types'
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 export default function IntroScreen() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const flatListRef = useRef<FlatList>(null);
-  const isLastSlide = activeIndex === ONBOARDING_SLIDES.length - 1;
+  const [activeIndex, setActiveIndex] = useState(0)
+  const flatListRef = useRef<FlatList>(null)
+  const isLastSlide = activeIndex === ONBOARDING_SLIDES.length - 1
 
   const handleNext = () => {
     if (isLastSlide) {
-      router.replace("/(onboarding)/device-setup");
-      return;
+      router.replace('/(onboarding)/device-setup')
+      return
     }
-    const next = activeIndex + 1;
-    flatListRef.current?.scrollToIndex({ index: next, animated: true });
-    setActiveIndex(next);
-  };
+    const next = activeIndex + 1
+    flatListRef.current?.scrollToIndex({ index: next, animated: true })
+    setActiveIndex(next)
+  }
 
   const handleSkip = () => {
-    router.replace("/(onboarding)/device-setup");
-  };
+    router.replace('/(onboarding)/device-setup')
+  }
 
   const renderItem: ListRenderItem<OnboardingSlideData> = ({ item }) => (
     <View
@@ -46,7 +46,7 @@ export default function IntroScreen() {
         activeIndex={activeIndex}
       />
     </View>
-  );
+  )
 
   return (
     <View className="flex-1 bg-[#F8F8F8]">
@@ -76,7 +76,7 @@ export default function IntroScreen() {
       {/* Footer */}
       <View className="px-7 pb-10">
         <AppButton
-          label={isLastSlide ? "Get Started →" : "Next →"}
+          label={isLastSlide ? 'Get Started →' : 'Next →'}
           variant="primary"
           size="lg"
           fullWidth
@@ -84,5 +84,5 @@ export default function IntroScreen() {
         />
       </View>
     </View>
-  );
+  )
 }

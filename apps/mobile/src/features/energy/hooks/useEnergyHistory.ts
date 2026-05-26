@@ -1,83 +1,41 @@
-import { useAuthStore } from "@/features/auth/store/authStore";
-import { useEffect, useState } from "react";
-import { dailyUsageService } from "../services/dailyUsageService";
-import type { DailyUsage } from "../types/dailyUsage.types";
+import { useAuthStore } from '@/features/auth/store/authStore'
+import { useCallback } from 'react'
+import { dailyUsageService } from '../services/dailyUsageService'
+import { useEnergyHistoryStore } from '../store/energyHistoryStore'
+import type { DailyUsage } from '../types/dailyUsage.types'
 
 type EnergyHistoryState = {
-  today: DailyUsage | null;
-  history: DailyUsage[];
-  isLoading: boolean;
-  error: string | null;
-  refetch: () => void;
-};
-
-function sortHistoryByDateAscending(history: DailyUsage[]): DailyUsage[] {
-  return [...history].sort((a, b) => a.date.localeCompare(b.date));
+  today: DailyUsage | null
+  history: DailyUsage[]
+  isLoading: boolean
+  error: string | null
+  refetch: () => void
 }
 
 export function useEnergyHistory(): EnergyHistoryState {
-  const user = useAuthStore((s) => s.user);
-  const isAuthLoading = useAuthStore((s) => s.isLoading);
-  const [today, setToday] = useState<DailyUsage | null>(null);
-  const [history, setHistory] = useState<DailyUsage[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [todayLoaded, setTodayLoaded] = useState(false);
-  const [historyLoaded, setHistoryLoaded] = useState(false);
+  const user = useAuthStore((s) => s.user)
+  const today = useEnergyHistoryStore((s) => s.today)
+  const history = useEnergyHistoryStore((s) => s.history)
+  const isLoading = useEnergyHistoryStore((s) => s.isLoading)
+  const error = useEnergyHistoryStore((s) => s.error)
+  const setToday = useEnergyHistoryStore((s) => s.setToday)
+  const setHistory = useEnergyHistoryStore((s) => s.setHistory)
+  const setError = useEnergyHistoryStore((s) => s.setError)
 
-  async function fetchData() {
-    if (!user?.uid) {
-      setIsLoading(false);
-      return;
-    }
-    setIsLoading(true);
-    setError(null);
+  const refetch = useCallback(async () => {
+    if (!user?.uid) return
+    setError(null)
     try {
       const [todayData, historyData] = await Promise.all([
         dailyUsageService.getByDate(user.uid, new Date()),
         dailyUsageService.getHistory(user.uid, 30),
-      ]);
-      setToday(todayData);
-      setHistory(sortHistoryByDateAscending(historyData));
-    } catch (e) {
-      setError("Gagal memuat data energi");
-    } finally {
-      setIsLoading(false);
+      ])
+      setToday(todayData)
+      setHistory([...historyData].sort((a, b) => a.date.localeCompare(b.date)))
+    } catch {
+      setError('Failed to load energy data')
     }
-  }
+  }, [setError, setHistory, setToday, user?.uid])
 
-  useEffect(() => {
-    if (todayLoaded && historyLoaded) {
-      setIsLoading(false);
-    }
-  }, [todayLoaded, historyLoaded]);
-
-  useEffect(() => {
-    if (isAuthLoading || !user?.uid) return;
-    setError(null);
-    setIsLoading(true);
-    setTodayLoaded(false);
-    setHistoryLoaded(false);
-
-    const unsubscribeToday = dailyUsageService.listenToday(user.uid, (data) => {
-      setToday(data);
-      setTodayLoaded(true);
-    });
-
-    const unsubscribeHistory = dailyUsageService.listenHistory(
-      user.uid,
-      30,
-      (data) => {
-        setHistory(sortHistoryByDateAscending(data));
-        setHistoryLoaded(true);
-      },
-    );
-
-    return () => {
-      unsubscribeToday();
-      unsubscribeHistory();
-    };
-  }, [user?.uid, isAuthLoading]);
-
-  return { today, history, isLoading, error, refetch: fetchData };
+  return { today, history, isLoading, error, refetch }
 }

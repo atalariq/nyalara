@@ -1,17 +1,17 @@
-import { LinearGradient } from "expo-linear-gradient";
-import { Text, View } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient'
+import { Text, View } from 'react-native'
 
 type Props = {
-  totalCount: number;
-  activeCount: number;
-};
+  totalCount: number
+  activeCount: number
+}
 
 export function DeviceScreenHeader({ totalCount, activeCount }: Props) {
   return (
     <View className="mt-4 overflow-hidden rounded-[30px] bg-[#E8FBEE] px-5 py-6">
       <View className="absolute inset-0 opacity-80">
         <LinearGradient
-          colors={["#F4FFF7", "#DDF7E7", "#C8F0D8"]}
+          colors={['#F4FFF7', '#DDF7E7', '#C8F0D8']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           className="h-full w-full"
@@ -42,5 +42,5 @@ export function DeviceScreenHeader({ totalCount, activeCount }: Props) {
         </View>
       </View>
     </View>
-  );
+  )
 }

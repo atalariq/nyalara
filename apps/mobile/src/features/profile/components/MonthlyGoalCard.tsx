@@ -1,14 +1,14 @@
-import { AppButton } from "@/shared/components/ui/AppButton";
-import { Text, View } from "react-native";
-import type { MonthlyGoal } from "../types/profile.types";
+import { AppButton } from '@/shared/components/ui/AppButton'
+import { Text, View } from 'react-native'
+import type { MonthlyGoal } from '../types/profile.types'
 
 type Props = {
-  data: MonthlyGoal;
-  onUpdatePress?: () => void;
-};
+  data: MonthlyGoal
+  onUpdatePress?: () => void
+}
 
 export function MonthlyGoalCard({ data, onUpdatePress }: Props) {
-  const progress = Math.min(data.progressPercent, 100);
+  const progress = Math.min(data.progressPercent, 100)
 
   return (
     <View className="px-4">
@@ -26,13 +26,13 @@ export function MonthlyGoalCard({ data, onUpdatePress }: Props) {
         {/* Baseline / Target */}
         <View className="flex-row gap-4 mt-4">
           <Text className="text-xs text-foreground-muted">
-            Baseline:{" "}
+            Baseline:{' '}
             <Text className="font-semibold text-foreground">
               {data.baselineKwh} kWh
             </Text>
           </Text>
           <Text className="text-xs text-foreground-muted">
-            Target:{" "}
+            Target:{' '}
             <Text className="font-semibold text-brand">
               {data.targetKwh} kWh
             </Text>
@@ -67,5 +67,5 @@ export function MonthlyGoalCard({ data, onUpdatePress }: Props) {
         </View>
       </View>
     </View>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Text, View } from 'react-native'
 
 export function DeviceEmptyState() {
   return (
@@ -10,5 +10,5 @@ export function DeviceEmptyState() {
         Add a device first and it will appear here.
       </Text>
     </View>
-  );
+  )
 }

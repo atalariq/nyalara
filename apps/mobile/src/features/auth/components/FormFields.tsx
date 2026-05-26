@@ -1,16 +1,16 @@
-import { LucideIcon } from "lucide-react-native";
-import React from "react";
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import { Text, TextInput, TextInputProps, View } from "react-native";
+import { LucideIcon } from 'lucide-react-native'
+import React from 'react'
+import { Control, Controller, FieldValues, Path } from 'react-hook-form'
+import { Text, TextInput, TextInputProps, View } from 'react-native'
 
 interface FormFieldProps<T extends FieldValues> {
-  control: Control<T>;
-  name: Path<T>;
-  label: string;
-  icon: LucideIcon;
-  placeholder: string;
-  secureTextEntry?: boolean;
-  inputProps?: TextInputProps;
+  control: Control<T>
+  name: Path<T>
+  label: string
+  icon: LucideIcon
+  placeholder: string
+  secureTextEntry?: boolean
+  inputProps?: TextInputProps
 }
 
 export function FormField<T extends FieldValues>({
@@ -39,9 +39,9 @@ export function FormField<T extends FieldValues>({
           </View>
           <TextInput
             className={`bg-zinc-50 rounded-xl px-4 py-3.5 text-sm font-medium border ${
-              error ? "border-red-400" : "border-zinc-200"
+              error ? 'border-red-400' : 'border-zinc-200'
             }`}
-            style={{ color: "#18181b" }}
+            style={{ color: '#18181b' }}
             placeholder={placeholder}
             placeholderTextColor="#a1a1aa"
             onChangeText={onChange}
@@ -59,5 +59,5 @@ export function FormField<T extends FieldValues>({
         </View>
       )}
     />
-  );
+  )
 }

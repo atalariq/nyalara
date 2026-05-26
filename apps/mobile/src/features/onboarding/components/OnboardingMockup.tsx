@@ -1,11 +1,11 @@
-import { Ionicons } from "@expo/vector-icons";
-import React from "react";
-import { Image, Text, View } from "react-native";
+import { Ionicons } from '@expo/vector-icons'
+import React from 'react'
+import { Image, Text, View } from 'react-native'
 
-import { OnboardingSlideData } from "../types";
+import { OnboardingSlideData } from '../types'
 
 interface Props {
-  slide: OnboardingSlideData;
+  slide: OnboardingSlideData
 }
 
 export const OnboardingMockup = ({ slide }: Props) => {
@@ -24,7 +24,7 @@ export const OnboardingMockup = ({ slide }: Props) => {
           rounded-[28px]
         "
         style={{
-          shadowColor: "#000",
+          shadowColor: '#000',
           shadowOpacity: 0.12,
           shadowRadius: 12,
           shadowOffset: {
@@ -60,7 +60,7 @@ export const OnboardingMockup = ({ slide }: Props) => {
           p-[10px]
         "
         style={{
-          shadowColor: "#000",
+          shadowColor: '#000',
           shadowOpacity: 0.1,
           shadowRadius: 16,
           shadowOffset: {
@@ -72,7 +72,7 @@ export const OnboardingMockup = ({ slide }: Props) => {
       >
         <View className="flex-1 overflow-hidden rounded-[30px]">
           <Image
-            source={require("@/assets/images/onboarding-hero.png")}
+            source={require('@/assets/images/onboarding-hero.png')}
             className="w-full h-full"
             resizeMode="cover"
           />
@@ -93,7 +93,7 @@ export const OnboardingMockup = ({ slide }: Props) => {
           py-4
         "
         style={{
-          shadowColor: "#000",
+          shadowColor: '#000',
           shadowOpacity: 0.16,
           shadowRadius: 10,
           shadowOffset: {
@@ -126,7 +126,7 @@ export const OnboardingMockup = ({ slide }: Props) => {
               font-medium
             "
           >
-            Living{"\n"}Room
+            Living{'\n'}Room
           </Text>
 
           <Text
@@ -141,5 +141,5 @@ export const OnboardingMockup = ({ slide }: Props) => {
         </View>
       </View>
     </View>
-  );
-};
+  )
+}

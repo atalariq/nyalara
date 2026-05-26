@@ -1,35 +1,32 @@
 // features/devices/components/AddDeviceSheet/index.tsx
-import Feather from "@expo/vector-icons/Feather";
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetScrollView,
-} from "@gorhom/bottom-sheet";
-import { useMemo, useRef } from "react";
-import { Controller } from "react-hook-form";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import { useDeviceSetup } from "../../hooks/useDeviceSetup";
-import { CategoryGrid } from "./CategoryGrid";
+import Feather from '@expo/vector-icons/Feather'
+import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet'
+import { useMemo, useRef } from 'react'
+import { Controller } from 'react-hook-form'
+import { Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { useDeviceSetup } from '../../hooks/useDeviceSetup'
+import { CategoryGrid } from './CategoryGrid'
 
 type Props = {
-  visible: boolean;
-  onClose: () => void;
-};
+  visible: boolean
+  onClose: () => void
+}
 
 export function AddDeviceSheet({ visible, onClose }: Props) {
-  const sheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ["60%", "90%"], []);
-  const { form, onSubmit, isSubmitting } = useDeviceSetup("list", onClose);
+  const sheetRef = useRef<BottomSheet>(null)
+  const snapPoints = useMemo(() => ['60%', '90%'], [])
+  const { form, onSubmit, isSubmitting } = useDeviceSetup('list', onClose)
   const {
     control,
     formState: { errors },
-  } = form;
+  } = form
 
-  if (!visible) return null;
+  if (!visible) return null
 
   return (
     <View
       style={{
-        position: "absolute",
+        position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
@@ -48,7 +45,7 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
         android_keyboardInputMode="adjustResize"
         onChange={(index) => {
           if (index === -1) {
-            onClose();
+            onClose()
           }
         }}
         backdropComponent={(backdropProps) => (
@@ -64,15 +61,18 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
         backgroundStyle={{
           borderTopLeftRadius: 28,
           borderTopRightRadius: 28,
-          backgroundColor: "#FFFFFF",
+          backgroundColor: '#FFFFFF',
         }}
         handleIndicatorStyle={{
-          backgroundColor: "#E0E0E0",
+          backgroundColor: '#E0E0E0',
           width: 36,
         }}
       >
         <BottomSheetScrollView
-          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
+          contentContainerStyle={{
+            paddingHorizontal: 20,
+            paddingBottom: 40,
+          }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
@@ -80,9 +80,7 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
           <Controller
             name="deviceType"
             control={control}
-            render={({ field }) => (
-              <CategoryGrid value={field.value} onChange={field.onChange} />
-            )}
+            render={({ field }) => <CategoryGrid value={field.value} onChange={field.onChange} />}
           />
 
           <StepLabel step={2} title="Identity" />
@@ -92,16 +90,20 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
             render={({ field }) => (
               <View
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  backgroundColor: "#F5F5F5",
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: '#F5F5F5',
                   borderRadius: 14,
                   paddingHorizontal: 16,
                   paddingVertical: 14,
                 }}
               >
                 <TextInput
-                  style={{ flex: 1, fontSize: 14, color: "#111" }}
+                  style={{
+                    flex: 1,
+                    fontSize: 14,
+                    color: '#111',
+                  }}
                   placeholder="e.g. Master Bedroom AC"
                   placeholderTextColor="#ABABAB"
                   onChangeText={field.onChange}
@@ -112,7 +114,13 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
             )}
           />
           {errors.name && (
-            <Text style={{ color: "#f87171", fontSize: 12, marginTop: 4 }}>
+            <Text
+              style={{
+                color: '#f87171',
+                fontSize: 12,
+                marginTop: 4,
+              }}
+            >
               {errors.name.message}
             </Text>
           )}
@@ -124,9 +132,9 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
             render={({ field }) => (
               <View
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  backgroundColor: "#F5F5F5",
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: '#F5F5F5',
                   borderRadius: 14,
                   paddingHorizontal: 16,
                   paddingVertical: 14,
@@ -134,17 +142,21 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
                 }}
               >
                 <TextInput
-                  style={{ flex: 1, fontSize: 14, color: "#111" }}
+                  style={{
+                    flex: 1,
+                    fontSize: 14,
+                    color: '#111',
+                  }}
                   placeholder="Wattage (W)"
                   placeholderTextColor="#ABABAB"
                   keyboardType="numeric"
                   onChangeText={(val) => field.onChange(Number(val) || 0)}
-                  value={field.value ? String(field.value) : ""}
+                  value={field.value ? String(field.value) : ''}
                 />
                 <Text
                   style={{
-                    color: "#25CE7F",
-                    fontWeight: "700",
+                    color: '#25CE7F',
+                    fontWeight: '700',
                     fontSize: 14,
                   }}
                 >
@@ -154,7 +166,7 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
             )}
           />
 
-          <View style={{ flexDirection: "row", gap: 10 }}>
+          <View style={{ flexDirection: 'row', gap: 10 }}>
             <Controller
               name="hoursPerDay"
               control={control}
@@ -162,23 +174,34 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
                 <View
                   style={{
                     flex: 1,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    backgroundColor: "#F5F5F5",
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    backgroundColor: '#F5F5F5',
                     borderRadius: 14,
                     paddingHorizontal: 16,
                     paddingVertical: 14,
                   }}
                 >
                   <TextInput
-                    style={{ flex: 1, fontSize: 14, color: "#111" }}
+                    style={{
+                      flex: 1,
+                      fontSize: 14,
+                      color: '#111',
+                    }}
                     placeholder="Hours/day"
                     placeholderTextColor="#ABABAB"
                     keyboardType="numeric"
                     onChangeText={(val) => field.onChange(Number(val) || 0)}
-                    value={field.value ? String(field.value) : ""}
+                    value={field.value ? String(field.value) : ''}
                   />
-                  <Text style={{ color: "#ABABAB", fontSize: 13 }}>h</Text>
+                  <Text
+                    style={{
+                      color: '#ABABAB',
+                      fontSize: 13,
+                    }}
+                  >
+                    h
+                  </Text>
                 </View>
               )}
             />
@@ -189,23 +212,34 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
                 <View
                   style={{
                     flex: 1,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    backgroundColor: "#F5F5F5",
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    backgroundColor: '#F5F5F5',
                     borderRadius: 14,
                     paddingHorizontal: 16,
                     paddingVertical: 14,
                   }}
                 >
                   <TextInput
-                    style={{ flex: 1, fontSize: 14, color: "#111" }}
+                    style={{
+                      flex: 1,
+                      fontSize: 14,
+                      color: '#111',
+                    }}
                     placeholder="Days/month"
                     placeholderTextColor="#ABABAB"
                     keyboardType="numeric"
                     onChangeText={(val) => field.onChange(Number(val) || 30)}
-                    value={field.value ? String(field.value) : ""}
+                    value={field.value ? String(field.value) : ''}
                   />
-                  <Text style={{ color: "#ABABAB", fontSize: 13 }}>d</Text>
+                  <Text
+                    style={{
+                      color: '#ABABAB',
+                      fontSize: 13,
+                    }}
+                  >
+                    d
+                  </Text>
                 </View>
               )}
             />
@@ -216,21 +250,27 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
             disabled={isSubmitting}
             style={{
               marginTop: 28,
-              backgroundColor: "#111111",
+              backgroundColor: '#111111',
               borderRadius: 20,
               paddingVertical: 18,
-              alignItems: "center",
+              alignItems: 'center',
               opacity: isSubmitting ? 0.6 : 1,
             }}
           >
-            <Text style={{ color: "#25CE7F", fontWeight: "700", fontSize: 16 }}>
-              {isSubmitting ? "Adding..." : "Finish Set Up"}
+            <Text
+              style={{
+                color: '#25CE7F',
+                fontWeight: '700',
+                fontSize: 16,
+              }}
+            >
+              {isSubmitting ? 'Adding...' : 'Finish Set Up'}
             </Text>
           </TouchableOpacity>
         </BottomSheetScrollView>
       </BottomSheet>
     </View>
-  );
+  )
 }
 
 function StepLabel({ step, title }: { step: number; title: string }) {
@@ -238,13 +278,13 @@ function StepLabel({ step, title }: { step: number; title: string }) {
     <Text
       style={{
         fontSize: 15,
-        fontWeight: "800",
-        color: "#111",
+        fontWeight: '800',
+        color: '#111',
         marginTop: 24,
         marginBottom: 12,
       }}
     >
       Step {step}: {title}
     </Text>
-  );
+  )
 }

@@ -1,48 +1,47 @@
-import { CalendarDays, SunMedium } from "lucide-react-native";
-import { Image, Text, View } from "react-native";
+import { CalendarDays, SunMedium } from 'lucide-react-native'
+import { Text, View } from 'react-native'
 
 type Props = {
-  displayName: string;
-  dateLabel: string;
-  weatherLabel: string;
-  avatarUri: string;
-};
+  displayName: string
+  dateLabel: string
+}
 
-export function DashboardHeader({
-  displayName,
-  dateLabel,
-  weatherLabel,
-  avatarUri,
-}: Props) {
+export function DashboardHeader({ displayName, dateLabel }: Props) {
+  const initial = displayName.trim().charAt(0).toUpperCase() || 'U'
+
   return (
-    <View className="mx-5 mt-4 rounded-[30px] bg-[#CFF7DF] px-5 py-5 shadow-sm shadow-black/10">
+    <View className="mx-5 rounded-[34px] bg-white/85 px-5 py-5 shadow-sm shadow-black/10">
       <View className="flex-row items-center justify-between">
-        <View className="flex-1 pr-4">
-          <Text className="text-[18px] font-medium text-[#202020]">
-            Good Morning,
-          </Text>
-          <Text className="mt-1 text-[32px] font-black text-[#111]">
-            {displayName}!
+        {/* LEFT CONTENT */}
+        <View className="flex-1">
+          <Text className="text-[22px] font-bold tracking-[-0.5px] text-[#1A1A1A]">
+            Good Morning, {displayName}!
           </Text>
 
-          <View className="mt-2 flex-row flex-wrap items-center gap-3">
-            <View className="flex-row items-center gap-1">
-              <CalendarDays size={14} color="#28C76F" />
-              <Text className="text-[13px] text-[#4A4A4A]">{dateLabel}</Text>
+          <View className="mt-4 flex-row items-center gap-4">
+            {/* DATE */}
+            <View className="flex-row items-center gap-1.5">
+              <CalendarDays size={16} color="#28C76F" strokeWidth={2} />
+
+              <Text className="text-[15px] text-[#404040]">{dateLabel}</Text>
             </View>
 
-            <View className="flex-row items-center gap-1">
-              <SunMedium size={14} color="#28C76F" />
-              <Text className="text-[13px] text-[#4A4A4A]">{weatherLabel}</Text>
+            {/* WEATHER */}
+            <View className="flex-row items-center gap-1.5">
+              <SunMedium size={16} color="#28C76F" strokeWidth={2} />
+
+              <Text className="text-[15px] text-[#404040]">
+                Weather data unavailable
+              </Text>
             </View>
           </View>
         </View>
 
-        <Image
-          source={{ uri: avatarUri }}
-          className="h-[62px] w-[62px] rounded-full"
-        />
+        {/* PROFILE IMAGE */}
+        <View className="h-20 w-20 rounded-full bg-brand-subtle items-center justify-center">
+          <Text className="text-2xl font-extrabold text-brand">{initial}</Text>
+        </View>
       </View>
     </View>
-  );
+  )
 }
