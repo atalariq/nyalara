@@ -12,14 +12,16 @@ import {
   setDoc,
   where,
 } from 'firebase/firestore'
-import type { DailyUsage, DeviceDailyRecord } from '../types/dailyUsage.types'
+import type { DailyUsage, DeviceDailyRecord, DeviceSession } from '../types/dailyUsage.types'
 
 const COLLECTION = 'dailyUsage'
 
 function toDateString(date: Date): string {
-  return date.toISOString().split('T')[0]
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
 }
-
 function docId(userId: string, date: string): string {
   return `${userId}_${date}`
 }
@@ -32,7 +34,21 @@ function toDailyUsage(id: string, data: any): DailyUsage {
     totalKwh: data.totalKwh ?? 0,
     totalEmissions: data.totalEmissions ?? 0,
     totalCost: data.totalCost ?? 0,
-    devices: data.devices ?? {},
+    devices: Object.fromEntries(
+      Object.entries(data.devices ?? {}).map(([deviceId, d]: [string, any]) => [
+        deviceId,
+        {
+          name: d.name ?? '',
+          watt: d.watt ?? 0,
+          durationMinutes: d.durationMinutes ?? 0,
+          kwh: d.kwh ?? 0,
+          sessions: (d.sessions ?? []).map((s: any) => ({
+            startedAt: s.startedAt ?? 0,
+            endedAt: s.endedAt ?? 0,
+          })),
+        },
+      ]),
+    ),
   }
 }
 
@@ -56,10 +72,7 @@ export const dailyUsageService = {
     return snap.docs.map((d) => toDailyUsage(d.id, d.data()))
   },
 
-  listenToday(
-    userId: string,
-    onData: (data: DailyUsage | null) => void,
-  ): () => void {
+  listenToday(userId: string, onData: (data: DailyUsage | null) => void): () => void {
     const dateStr = toDateString(new Date())
     const ref = doc(db, COLLECTION, docId(userId, dateStr))
     return onSnapshot(ref, (snap) => {
@@ -67,11 +80,7 @@ export const dailyUsageService = {
     })
   },
 
-  listenHistory(
-    userId: string,
-    days: number,
-    onData: (data: DailyUsage[]) => void,
-  ): () => void {
+  listenHistory(userId: string, days: number, onData: (data: DailyUsage[]) => void): () => void {
     const q = query(
       collection(db, COLLECTION),
       where('userId', '==', userId),
@@ -87,7 +96,8 @@ export const dailyUsageService = {
     userId: string,
     date: Date,
     deviceId: string,
-    record: DeviceDailyRecord,
+    record: Omit<DeviceDailyRecord, 'sessions'>,
+    session?: DeviceSession,
   ): Promise<void> {
     const dateStr = toDateString(date)
     const id = docId(userId, dateStr)
@@ -96,40 +106,27 @@ export const dailyUsageService = {
 
     const existing: DailyUsage = snap.exists()
       ? toDailyUsage(id, snap.data())
-      : {
-          id,
-          userId,
-          date: dateStr,
-          totalKwh: 0,
-          totalEmissions: 0,
-          totalCost: 0,
-          devices: {},
-        }
+      : { id, userId, date: dateStr, totalKwh: 0, totalEmissions: 0, totalCost: 0, devices: {} }
 
     const prevDevice = existing.devices[deviceId]
+
     const mergedDevice: DeviceDailyRecord = {
       name: record.name,
       watt: record.watt,
-      durationMinutes:
-        (prevDevice?.durationMinutes ?? 0) + record.durationMinutes,
+      durationMinutes: (prevDevice?.durationMinutes ?? 0) + record.durationMinutes,
       kwh: (prevDevice?.kwh ?? 0) + record.kwh,
+      sessions: session ? [...(prevDevice?.sessions ?? []), session] : (prevDevice?.sessions ?? []),
     }
 
     const updatedDevices = { ...existing.devices, [deviceId]: mergedDevice }
-
-    const totalKwh = Object.values(updatedDevices).reduce(
-      (sum, d) => sum + d.kwh,
-      0,
-    )
-    const totalEmissions = totalKwh * CARBON_CONFIG.emissionFactor
-    const totalCost = totalKwh * CARBON_CONFIG.electricityRate
+    const totalKwh = Object.values(updatedDevices).reduce((sum, d) => sum + d.kwh, 0)
 
     await setDoc(ref, {
       userId,
       date: dateStr,
       totalKwh,
-      totalEmissions,
-      totalCost,
+      totalEmissions: totalKwh * CARBON_CONFIG.emissionFactor,
+      totalCost: totalKwh * CARBON_CONFIG.electricityRate,
       devices: updatedDevices,
     })
   },

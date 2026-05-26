@@ -1,6 +1,3 @@
-// app/(app)/energy-history.tsx
-import { useEnergyHistory } from '@/features/energy/hooks/useEnergyHistory'
-
-export default function EnergyHistoryScreen() {
-  return null // placeholder
-}
+// app/(app)/activity-history.tsx
+import { ActivityHistoryScreen } from '@/features/activity/screens/ActivityHistoryScreen'
+export default ActivityHistoryScreen
