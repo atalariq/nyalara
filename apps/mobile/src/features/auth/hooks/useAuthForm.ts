@@ -50,7 +50,7 @@ export const useRegisterForm = () => {
       Toast.show({
         type: 'success',
         text1: 'Account created',
-        text2: 'Welcome to Wattly.',
+        text2: 'Welcome to Nyalara.',
         visibilityTime: 1800,
       })
       setLoading(false)

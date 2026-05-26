@@ -48,14 +48,12 @@ export function LoginScreen() {
         >
           <ArrowLeft size={18} color="#25CE7F" />
 
-          <Text className="text-brand font-extrabold text-[22px]">Wattly</Text>
+          <Text className="text-brand font-extrabold text-[22px]">Nyalara</Text>
         </TouchableOpacity>
 
         {/* Hero */}
         <View className="items-center mb-10">
-          <Text className="text-brand text-[44px] font-extrabold leading-none">
-            Welcome
-          </Text>
+          <Text className="text-brand text-[44px] font-extrabold leading-none">Welcome</Text>
 
           <Text className="text-zinc-500 text-center text-[15px] leading-5 mt-4 px-5">
             Log back into your sustainable living{'\n'}
@@ -73,13 +71,9 @@ export function LoginScreen() {
               style={{ opacity: mobileFeatureFlags.appleAuth ? 1 : 0.45 }}
             >
               <FontAwesome5 name="apple" size={18} color="#25CE7F" />
-              <Text className="text-brand text-sm font-semibold">
-                Continue with
-              </Text>
+              <Text className="text-brand text-sm font-semibold">Continue with</Text>
               {!mobileFeatureFlags.appleAuth && (
-                <Text className="text-[10px] text-zinc-500 font-medium">
-                  Soon
-                </Text>
+                <Text className="text-[10px] text-zinc-500 font-medium">Soon</Text>
               )}
             </TouchableOpacity>
 
@@ -90,9 +84,7 @@ export function LoginScreen() {
             >
               <AntDesign name="google" size={18} color="#25CE7F" />
 
-              <Text className="text-brand text-sm font-semibold">
-                Continue with
-              </Text>
+              <Text className="text-brand text-sm font-semibold">Continue with</Text>
             </TouchableOpacity>
           </View>
 
@@ -100,9 +92,7 @@ export function LoginScreen() {
           <View className="flex-row items-center gap-3 mb-5">
             <View className="flex-1 h-px bg-zinc-200" />
 
-            <Text className="text-zinc-400 text-xs font-medium">
-              or with email
-            </Text>
+            <Text className="text-zinc-400 text-xs font-medium">or with email</Text>
 
             <View className="flex-1 h-px bg-zinc-200" />
           </View>
@@ -128,15 +118,11 @@ export function LoginScreen() {
           />
 
           <TouchableOpacity className="items-end mt-1">
-            <Text className="text-brand text-sm font-semibold">
-              Forgot password?
-            </Text>
+            <Text className="text-brand text-sm font-semibold">Forgot password?</Text>
           </TouchableOpacity>
         </View>
 
-        {error && (
-          <Text className="text-red-500 text-sm text-center mt-4">{error}</Text>
-        )}
+        {error && <Text className="text-red-500 text-sm text-center mt-4">{error}</Text>}
 
         <TouchableOpacity
           onPress={onSubmit}
@@ -166,18 +152,13 @@ export function LoginScreen() {
           {isGuestLoading ? (
             <ActivityIndicator color="#25CE7F" />
           ) : (
-            <Text className="text-zinc-500 font-semibold text-base">
-              Continue as Guest
-            </Text>
+            <Text className="text-zinc-500 font-semibold text-base">Continue as Guest</Text>
           )}
         </TouchableOpacity>
 
         <Text className="text-zinc-500 text-base text-center mt-6">
           Don&apos;t have an account?{' '}
-          <Text
-            className="text-brand font-bold"
-            onPress={() => router.push('/(auth)/register')}
-          >
+          <Text className="text-brand font-bold" onPress={() => router.push('/(auth)/register')}>
             Sign Up
           </Text>
         </Text>

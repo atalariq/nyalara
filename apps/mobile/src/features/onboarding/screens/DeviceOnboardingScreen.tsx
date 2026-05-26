@@ -22,20 +22,15 @@ export function DeviceOnboardingScreen() {
 
         <View className="flex-1 px-8 pt-4">
           {/* Header */}
-          <Pressable
-            onPress={() => router.back()}
-            className="flex-row items-center gap-2 mb-8"
-          >
+          <Pressable onPress={() => router.back()} className="flex-row items-center gap-2 mb-8">
             <ArrowLeft size={18} color="white" />
 
-            <Text className="text-white text-lg font-bold">Wattly</Text>
+            <Text className="text-white text-lg font-bold">Nyalara</Text>
           </Pressable>
 
           {/* Badge */}
           <View className="self-start bg-white px-4 py-1 rounded-full mb-6">
-            <Text className="text-[#25CE7F] text-xs font-bold">
-              Device Onboarding
-            </Text>
+            <Text className="text-[#25CE7F] text-xs font-bold">Device Onboarding</Text>
           </View>
 
           {/* Heading */}
@@ -44,15 +39,15 @@ export function DeviceOnboardingScreen() {
           </Text>
 
           <Text className="text-white/90 text-lg leading-7 max-w-[290px] mb-10">
-            We'll use this information to calculate your electricity usage
-            accurately and help you optimize your home's carbon footprint.
+            We'll use this information to calculate your electricity usage accurately and help you
+            optimize your home's carbon footprint.
           </Text>
 
           {/* Feature Cards */}
           <FeatureCard
             icon={<Bolt size={24} color="white" />}
-            title="Real-time Analysis"
-            desc="Monitor energy spikes as they happen."
+            title="Daily Usage Visibility"
+            desc="See how device usage shapes your electricity patterns."
           />
 
           <FeatureCard
@@ -102,9 +97,7 @@ function FeatureCard({
 
       {/* Text */}
       <View className="flex-1">
-        <Text className="text-[#1E1E1E] text-lg font-semibold mb-1">
-          {title}
-        </Text>
+        <Text className="text-[#1E1E1E] text-lg font-semibold mb-1">{title}</Text>
 
         <Text className="text-[#666] text-sm leading-5">{desc}</Text>
       </View>

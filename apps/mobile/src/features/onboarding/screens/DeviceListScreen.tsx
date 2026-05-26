@@ -2,13 +2,7 @@
 import { router } from 'expo-router'
 import { ArrowLeft, PlusCircle } from 'lucide-react-native'
 import { useState } from 'react'
-import {
-  Pressable,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { AddDeviceSheet } from '../../devices/components/AddDeviceSheet'
 import { DeviceCard } from '../../devices/components/AddDeviceSheet/DeviceCard'
@@ -28,12 +22,9 @@ export function DeviceListScreen() {
       >
         {/* Header */}
         <View className="pt-3 mb-10">
-          <Pressable
-            onPress={() => router.back()}
-            className="flex-row items-center gap-2 mb-8"
-          >
+          <Pressable onPress={() => router.back()} className="flex-row items-center gap-2 mb-8">
             <ArrowLeft size={18} color="#25CE7F" />
-            <Text className="text-[#25CE7F] text-lg font-bold">Wattly</Text>
+            <Text className="text-[#25CE7F] text-lg font-bold">Nyalara</Text>
           </Pressable>
 
           <View className="self-center bg-[#25CE7F] rounded-full px-4 py-1 mb-8">
@@ -46,7 +37,8 @@ export function DeviceListScreen() {
             Set Up{'\n'}Your Devices
           </Text>
           <Text className="text-[#444] text-base text-center leading-6 px-6">
-            Setup your smart monitor for optimal energy tracking.
+            Set up the devices you want to track and build a clearer picture of your household
+            electricity usage.
           </Text>
         </View>
 
@@ -105,22 +97,15 @@ export function DeviceListScreen() {
         {/* Footer */}
         <View className="pb-8 mt-auto">
           <Pressable
-            onPress={() =>
-              router.replace('/(onboarding)/device-setup/complete' as any)
-            }
+            onPress={() => router.replace('/(onboarding)/device-setup/complete' as any)}
             className="bg-[#111111] rounded-full py-4 items-center"
           >
-            <Text className="text-[#25CE7F] text-lg font-semibold">
-              Finish Set Up
-            </Text>
+            <Text className="text-[#25CE7F] text-lg font-semibold">Finish Set Up</Text>
           </Pressable>
         </View>
       </ScrollView>
 
-      <AddDeviceSheet
-        visible={sheetVisible}
-        onClose={() => setSheetVisible(false)}
-      />
+      <AddDeviceSheet visible={sheetVisible} onClose={() => setSheetVisible(false)} />
     </SafeAreaView>
   )
 }

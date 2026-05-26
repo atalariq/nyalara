@@ -43,14 +43,12 @@ export function RegisterScreen() {
           className="flex-row items-center gap-2 mt-14 mb-10"
         >
           <ArrowLeft size={18} color="#25CE7F" />
-          <Text className="text-brand font-extrabold text-[22px]">Wattly</Text>
+          <Text className="text-brand font-extrabold text-[22px]">Nyalara</Text>
         </TouchableOpacity>
 
         {/* Hero */}
         <View className="items-center mb-10">
-          <Text className="text-brand text-[44px] font-extrabold leading-none">
-            Join Wattly
-          </Text>
+          <Text className="text-brand text-[44px] font-extrabold leading-none">Join Nyalara</Text>
           <Text className="text-zinc-500 text-center text-[15px] leading-5 mt-4 px-5">
             Step into the future of sustainable living{'\n'}
             with a personal touch.
@@ -67,13 +65,9 @@ export function RegisterScreen() {
               style={{ opacity: mobileFeatureFlags.appleAuth ? 1 : 0.45 }}
             >
               <FontAwesome5 name="apple" size={18} color="#25CE7F" />
-              <Text className="text-brand text-sm font-semibold">
-                Continue with
-              </Text>
+              <Text className="text-brand text-sm font-semibold">Continue with</Text>
               {!mobileFeatureFlags.appleAuth && (
-                <Text className="text-[10px] text-zinc-500 font-medium">
-                  Soon
-                </Text>
+                <Text className="text-[10px] text-zinc-500 font-medium">Soon</Text>
               )}
             </TouchableOpacity>
 
@@ -83,18 +77,14 @@ export function RegisterScreen() {
               className="h-11 rounded-full border border-brand items-center justify-center flex-row gap-2 flex-1"
             >
               <AntDesign name="google" size={18} color="#25CE7F" />
-              <Text className="text-brand text-sm font-semibold">
-                Continue with
-              </Text>
+              <Text className="text-brand text-sm font-semibold">Continue with</Text>
             </TouchableOpacity>
           </View>
 
           {/* Divider */}
           <View className="flex-row items-center gap-3 mb-5">
             <View className="flex-1 h-px bg-zinc-200" />
-            <Text className="text-zinc-400 text-xs font-medium">
-              or with email
-            </Text>
+            <Text className="text-zinc-400 text-xs font-medium">or with email</Text>
             <View className="flex-1 h-px bg-zinc-200" />
           </View>
 
@@ -125,9 +115,7 @@ export function RegisterScreen() {
           />
         </View>
 
-        {error && (
-          <Text className="text-red-500 text-sm text-center mt-4">{error}</Text>
-        )}
+        {error && <Text className="text-red-500 text-sm text-center mt-4">{error}</Text>}
 
         {/* Register Button */}
         <TouchableOpacity
@@ -139,9 +127,7 @@ export function RegisterScreen() {
           {isLoading ? (
             <ActivityIndicator color="#FFFFFF" />
           ) : (
-            <Text className="text-white font-extrabold text-lg">
-              Create An Account
-            </Text>
+            <Text className="text-white font-extrabold text-lg">Create An Account</Text>
           )}
         </TouchableOpacity>
 
@@ -162,25 +148,19 @@ export function RegisterScreen() {
           {isGuestLoading ? (
             <ActivityIndicator color="#25CE7F" />
           ) : (
-            <Text className="text-zinc-500 font-semibold text-base">
-              Continue as Guest
-            </Text>
+            <Text className="text-zinc-500 font-semibold text-base">Continue as Guest</Text>
           )}
         </TouchableOpacity>
 
         <Text className="text-zinc-500 text-base text-center mt-6">
           Already have an account?{' '}
-          <Text
-            className="text-brand font-bold"
-            onPress={() => router.push('/(auth)/login')}
-          >
+          <Text className="text-brand font-bold" onPress={() => router.push('/(auth)/login')}>
             Log In
           </Text>
         </Text>
 
         <Text className="text-zinc-400 text-xs text-center mt-4 leading-5 px-5">
-          By signing up, you agree to our{' '}
-          <Text className="text-brand font-semibold">Terms</Text> &{' '}
+          By signing up, you agree to our <Text className="text-brand font-semibold">Terms</Text> &{' '}
           <Text className="text-brand font-semibold">Privacy Policy</Text>
         </Text>
       </ScrollView>

@@ -33,11 +33,8 @@ export function DeviceSetupCompleteScreen() {
     <SafeAreaView className="flex-1 bg-[#25CE7F]">
       {/* Nav */}
       <View className="flex-row items-center px-5 pt-2">
-        <Pressable
-          onPress={() => router.back()}
-          className="flex-row items-center gap-1"
-        >
-          <Text className="text-white text-sm font-semibold">← Wattly</Text>
+        <Pressable onPress={() => router.back()} className="flex-row items-center gap-1">
+          <Text className="text-white text-sm font-semibold">← Nyalara</Text>
         </Pressable>
       </View>
 
@@ -59,11 +56,9 @@ export function DeviceSetupCompleteScreen() {
 
         {/* Text */}
         <Animated.View style={{ opacity: fadeAnim }} className="items-center">
-          <Text className="text-white text-4xl font-extrabold mt-6 mb-3">
-            System Ready.
-          </Text>
+          <Text className="text-white text-4xl font-extrabold mt-6 mb-3">System Ready.</Text>
           <Text className="text-white/80 text-sm text-center leading-relaxed mb-8">
-            Your smart energy tracking system is ready.{'\n'}
+            Your Nyalara setup is ready.{'\n'}
             You're all set to start building better energy habits.
           </Text>
 
@@ -107,9 +102,7 @@ export function DeviceSetupCompleteScreen() {
           onPress={() => router.replace('/(app)/dashboard')}
           className="bg-white rounded-full py-4 flex-row items-center justify-center gap-2"
         >
-          <Text className="text-[#0E0E0E] text-base font-semibold">
-            Continue to App
-          </Text>
+          <Text className="text-[#0E0E0E] text-base font-semibold">Continue to App</Text>
           <Text className="text-[#0E0E0E] text-base">→</Text>
         </Pressable>
       </View>

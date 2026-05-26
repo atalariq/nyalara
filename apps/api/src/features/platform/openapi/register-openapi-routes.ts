@@ -32,7 +32,7 @@ export function registerOpenApiRoutes(
   app.doc('/v1/doc', {
     openapi: '3.0.0',
     info: {
-      title: 'Carbon Tracker API',
+      title: 'Nyalara API',
       version: 'v1'
     }
   })
