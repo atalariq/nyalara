@@ -10,8 +10,7 @@ type Props = {
 
 export function DashboardRecommendations({ recommendations, status }: Props) {
   const renderContent = () => {
-    // idle = belum mulai fetch, treat sama seperti loading
-    if (status === 'idle' || status === 'loading') {
+    if (status === 'loading') {
       return (
         <View className="items-center py-8">
           <ActivityIndicator size="small" color="#25CE7F" />
@@ -19,6 +18,14 @@ export function DashboardRecommendations({ recommendations, status }: Props) {
             Generating recommendations...
           </Text>
         </View>
+      )
+    }
+
+    if (status === 'idle') {
+      return (
+        <Text className="mt-4 text-[14px] text-foreground-muted">
+          Track some usage first to unlock recommendations.
+        </Text>
       )
     }
 

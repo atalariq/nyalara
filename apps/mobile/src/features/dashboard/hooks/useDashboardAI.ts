@@ -34,9 +34,21 @@ export function useDashboardAI({
   const totalKwh = today?.totalKwh ?? 0
   const savedKwh = Math.max(estimatedMonthlyKwh - totalKwh, 0)
   const co2ReducedKg = savedKwh * CARBON_CONFIG.emissionFactor
+  const hasMeaningfulUsageData =
+    totalKwh > 0 || Object.keys(today?.devices ?? {}).length > 0
 
   useEffect(() => {
     if (stats.isLoading) return
+
+    if (!hasMeaningfulUsageData) {
+      setInsight({
+        recommendations: [],
+        dailyTip: '',
+        environmentalQuote: '',
+        status: 'idle',
+      })
+      return
+    }
 
     const statsKey = `${stats.dailyKwh.toFixed(1)}-${devices.length}`
     const now = Date.now()
@@ -68,7 +80,7 @@ export function useDashboardAI({
       )
       .catch(() => setInsight((prev) => ({ ...prev, status: 'error' })))
       .finally(() => clearTimeout(timeout))
-  }, [devices, stats, today, co2ReducedKg])
+  }, [devices, hasMeaningfulUsageData, stats, today, co2ReducedKg])
 
   return insight
 }

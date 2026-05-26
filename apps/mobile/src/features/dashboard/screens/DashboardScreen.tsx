@@ -1,5 +1,4 @@
 import { useAuthStore } from '@/features/auth/store/authStore'
-import { useActiveDeviceTimer } from '@/features/devices/hooks/useActiveDeviceTimer'
 import { useDevices } from '@/features/devices/hooks/useDevices'
 import { useEnergyHistory } from '@/features/energy/hooks/useEnergyHistory'
 import { useHamburgerStore } from '@/shared/components/ui/HamburgerMenu/HamburgerStore'
@@ -24,8 +23,6 @@ const DAILY_GOAL_KWH = 5
 export default function DashboardScreen() {
   const user = useAuthStore((s) => s.user)
   const open = useHamburgerStore((s) => s.open)
-
-  useActiveDeviceTimer()
 
   const { devices } = useDevices()
   const { today: todayUsage, isLoading } = useEnergyHistory()
