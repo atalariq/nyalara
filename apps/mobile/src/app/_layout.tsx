@@ -1,8 +1,8 @@
 // app/_layout.tsx
 import { useAuthStore } from '@/features/auth/store/authStore'
 import { initAuthListener } from '@/features/auth/store/authStore'
-import { LoadingProvider } from '@/providers/LoadingProvider'
 import { GeminiChatSheet } from '@/features/chat/components/GeminiChatSheet'
+import { LoadingProvider } from '@/providers/LoadingProvider'
 import { FloatingChatButton } from '@/shared/components/ui/FloatingChatButton'
 import { HamburgerMenu } from '@/shared/components/ui/HamburgerMenu/HamburgerMenu'
 import { mobileFeatureFlags } from '@/shared/config/mobile-feature-flags'
@@ -11,10 +11,7 @@ import { Stack, useSegments } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect, useState } from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import {
-  configureReanimatedLogger,
-  ReanimatedLogLevel,
-} from 'react-native-reanimated'
+import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated'
 import Toast from 'react-native-toast-message'
 import {
   shouldHideSplashScreen,
@@ -23,11 +20,7 @@ import {
 import { markStartup } from './startup-telemetry'
 import '../../global.css'
 
-configureReanimatedLogger({
-  level: ReanimatedLogLevel.warn,
-  strict: false,
-})
-
+configureReanimatedLogger({ level: ReanimatedLogLevel.warn, strict: false })
 SplashScreen.preventAutoHideAsync()
 markStartup('app module initialized')
 

@@ -12,11 +12,14 @@ const TABS = [
   { name: 'profile', Icon: User },
 ]
 
+const HIDDEN_ROUTES = ['energy-history', 'goals']
+
 export function AppTabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets()
-  const isAddDeviceSheetOpen = useAddDeviceSheetStore((state) => state.isOpen)
+  const isAddDeviceSheetOpen = useAddDeviceSheetStore((s) => s.isOpen)
+  const currentRoute = state.routes[state.index]?.name
 
-  if (isAddDeviceSheetOpen) return null
+  if (isAddDeviceSheetOpen || HIDDEN_ROUTES.includes(currentRoute)) return null
 
   return (
     <View
@@ -33,7 +36,6 @@ export function AppTabBar({ state, navigation }: BottomTabBarProps) {
         justifyContent: 'space-between',
         alignItems: 'center',
         zIndex: 10,
-        // Neumorphic shadow
         shadowColor: '#A8B4A0',
         shadowOffset: { width: -4, height: -4 },
         shadowOpacity: 0.6,
@@ -43,7 +45,6 @@ export function AppTabBar({ state, navigation }: BottomTabBarProps) {
     >
       {TABS.map((tab, index) => {
         const isActive = state.index === index
-
         return (
           <Pressable
             key={tab.name}
@@ -55,7 +56,6 @@ export function AppTabBar({ state, navigation }: BottomTabBarProps) {
               alignItems: 'center',
               justifyContent: 'center',
               backgroundColor: isActive ? '#25CE7F' : '#ECECEC',
-              // Active: shadow inset feel via elevation 0
               shadowColor: isActive ? '#1FAC6A' : '#BEBEBE',
               shadowOffset: { width: 2, height: 2 },
               shadowOpacity: isActive ? 0 : 0.5,
@@ -63,11 +63,7 @@ export function AppTabBar({ state, navigation }: BottomTabBarProps) {
               elevation: isActive ? 0 : 3,
             }}
           >
-            <tab.Icon
-              size={22}
-              color={isActive ? '#FFFFFF' : '#25CE7F'}
-              strokeWidth={2}
-            />
+            <tab.Icon size={22} color={isActive ? '#FFFFFF' : '#25CE7F'} strokeWidth={2} />
           </Pressable>
         )
       })}

@@ -1,9 +1,6 @@
 // features/devices/components/AddDeviceSheet/index.tsx
 import Feather from '@expo/vector-icons/Feather'
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetScrollView,
-} from '@gorhom/bottom-sheet'
+import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { useMemo, useRef } from 'react'
 import { Controller } from 'react-hook-form'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native'
@@ -83,9 +80,7 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
           <Controller
             name="deviceType"
             control={control}
-            render={({ field }) => (
-              <CategoryGrid value={field.value} onChange={field.onChange} />
-            )}
+            render={({ field }) => <CategoryGrid value={field.value} onChange={field.onChange} />}
           />
 
           <StepLabel step={2} title="Identity" />

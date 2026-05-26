@@ -7,13 +7,9 @@ type Props = {
   isLoading: boolean
 }
 
-export function EnvironmentalImpact({
-  co2ReducedKg,
-  environmentalQuote,
-  isLoading,
-}: Props) {
+export function EnvironmentalImpact({ co2ReducedKg, environmentalQuote, isLoading }: Props) {
   return (
-    <View className="mx-4 rounded-[34px] border border-black/5 bg-surface px-6 py-7 shadow-sm shadow-black/5">
+    <View className="">
       <Text className="font-bold text-[13px] uppercase tracking-[2px] text-brand">
         Environmental Impact
       </Text>

@@ -6,10 +6,19 @@ import type {
   ElectricityUsageDto,
 } from '@carbon-tracker/shared'
 import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
-import { protectedApiClient } from '@/shared/api/app-protected-api-client'
-import { isProtectedApiAuthError } from '@/shared/api/protected-api-client'
-import { createDraftQueueFlusher } from './draft-queue-flusher'
-import type { DailyUsage, DeviceDailyRecord } from '../types/dailyUsage.types'
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limitToLast,
+  onSnapshot,
+  orderBy,
+  query,
+  setDoc,
+  where,
+} from 'firebase/firestore'
+import type { DailyUsage, DeviceDailyRecord, DeviceSession } from '../types/dailyUsage.types'
 
 const POLL_INTERVAL_MS = 15_000
 const DRAFT_QUEUE_KEY_PREFIX = 'daily-usage-drafts'
@@ -24,9 +33,11 @@ type DailyUsageServiceDependencies = {
 }
 
 function toDateString(date: Date): string {
-  return date.toISOString().split('T')[0]
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
 }
-
 function docId(userId: string, date: string): string {
   return `${userId}_${date}`
 }
@@ -46,9 +57,27 @@ function buildPeriod(date: Date) {
   const daysInMonth = new Date(Date.UTC(year, monthIndex, 0)).getUTCDate()
 
   return {
-    startDate: `${month}-01`,
-    endDate: `${month}-${String(daysInMonth).padStart(2, '0')}`,
-    month,
+    id,
+    userId: data.userId,
+    date: data.date,
+    totalKwh: data.totalKwh ?? 0,
+    totalEmissions: data.totalEmissions ?? 0,
+    totalCost: data.totalCost ?? 0,
+    devices: Object.fromEntries(
+      Object.entries(data.devices ?? {}).map(([deviceId, d]: [string, any]) => [
+        deviceId,
+        {
+          name: d.name ?? '',
+          watt: d.watt ?? 0,
+          durationMinutes: d.durationMinutes ?? 0,
+          kwh: d.kwh ?? 0,
+          sessions: (d.sessions ?? []).map((s: any) => ({
+            startedAt: s.startedAt ?? 0,
+            endedAt: s.endedAt ?? 0,
+          })),
+        },
+      ]),
+    ),
   }
 }
 
@@ -76,50 +105,64 @@ function getMonthSequence(startDate: Date, endDate: Date) {
     cursor.setUTCMonth(cursor.getUTCMonth() + 1)
   }
 
-  return months
-}
+  listenToday(userId: string, onData: (data: DailyUsage | null) => void): () => void {
+    const dateStr = toDateString(new Date())
+    const ref = doc(db, COLLECTION, docId(userId, dateStr))
+    return onSnapshot(ref, (snap) => {
+      onData(snap.exists() ? toDailyUsage(snap.id, snap.data()) : null)
+    })
+  },
 
-function aggregateUsages(userId: string, usages: ElectricityUsageDto[]): DailyUsage[] {
-  const byDate = new Map<string, DailyUsage>()
+  listenHistory(userId: string, days: number, onData: (data: DailyUsage[]) => void): () => void {
+    const q = query(
+      collection(db, COLLECTION),
+      where('userId', '==', userId),
+      orderBy('date', 'asc'),
+      limitToLast(days),
+    )
+    return onSnapshot(q, (snap) => {
+      onData(snap.docs.map((d) => toDailyUsage(d.id, d.data())))
+    })
+  },
 
-  usages.forEach((usage) => {
-    const date = usage.timestamps.usageDate
-    const existing =
-      byDate.get(date) ??
-      ({
-        id: docId(userId, date),
-        userId,
-        date,
-        totalKwh: 0,
-        totalEmissions: 0,
-        totalCost: 0,
-        devices: {},
-      } satisfies DailyUsage)
+  async accumulateDeviceUsage(
+    userId: string,
+    date: Date,
+    deviceId: string,
+    record: Omit<DeviceDailyRecord, 'sessions'>,
+    session?: DeviceSession,
+  ): Promise<void> {
+    const dateStr = toDateString(date)
+    const id = docId(userId, dateStr)
+    const ref = doc(db, COLLECTION, id)
+    const snap = await getDoc(ref)
 
-    existing.totalKwh += usage.calculation.electricityKwh
-    existing.totalEmissions += usage.calculation.totalKgCo2e
-    existing.totalCost +=
-      usage.calculation.electricityKwh * CARBON_CONFIG.electricityRate
+    const existing: DailyUsage = snap.exists()
+      ? toDailyUsage(id, snap.data())
+      : { id, userId, date: dateStr, totalKwh: 0, totalEmissions: 0, totalCost: 0, devices: {} }
 
-    if (usage.inputType === 'device_breakdown') {
-      usage.input.deviceBreakdown.forEach((item) => {
-        const previous = existing.devices[item.deviceId]
-        const merged: DeviceDailyRecord = {
-          name: item.name,
-          watt: item.watt,
-          durationMinutes:
-            (previous?.durationMinutes ?? 0) + item.durationMinutes,
-          kwh: (previous?.kwh ?? 0) + item.electricityKwh,
-        }
+    const prevDevice = existing.devices[deviceId]
 
-        existing.devices[item.deviceId] = merged
-      })
+    const mergedDevice: DeviceDailyRecord = {
+      name: record.name,
+      watt: record.watt,
+      durationMinutes: (prevDevice?.durationMinutes ?? 0) + record.durationMinutes,
+      kwh: (prevDevice?.kwh ?? 0) + record.kwh,
+      sessions: session ? [...(prevDevice?.sessions ?? []), session] : (prevDevice?.sessions ?? []),
     }
 
-    byDate.set(date, existing)
-  })
+    const updatedDevices = { ...existing.devices, [deviceId]: mergedDevice }
+    const totalKwh = Object.values(updatedDevices).reduce((sum, d) => sum + d.kwh, 0)
 
-  return [...byDate.values()].sort((left, right) => left.date.localeCompare(right.date))
+    await setDoc(ref, {
+      userId,
+      date: dateStr,
+      totalKwh,
+      totalEmissions: totalKwh * CARBON_CONFIG.emissionFactor,
+      totalCost: totalKwh * CARBON_CONFIG.electricityRate,
+      devices: updatedDevices,
+    })
+  },
 }
 
 function getDraftQueueKey(userId: string) {

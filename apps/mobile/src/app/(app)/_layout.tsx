@@ -32,14 +32,13 @@ export default function AppLayout() {
   if (!user) return null
 
   return (
-    <Tabs
-      tabBar={(props) => <AppTabBar {...props} />}
-      screenOptions={{ headerShown: false }}
-    >
+    <Tabs tabBar={(props) => <AppTabBar {...props} />} screenOptions={{ headerShown: false }}>
       <Tabs.Screen name="dashboard" />
       <Tabs.Screen name="energy" />
       <Tabs.Screen name="devices" />
       <Tabs.Screen name="profile" />
+      <Tabs.Screen name="energy-history" options={{ href: null }} />
+      <Tabs.Screen name="goals" options={{ href: null }} />
     </Tabs>
   )
 }

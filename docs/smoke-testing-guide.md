@@ -21,15 +21,6 @@ Smoke test these flows:
 - stale insight behavior after usage mutation
 - offline create queue and later sync
 
-## Known caveat
-
-At the time of writing, `pnpm --filter mobile exec tsc --noEmit` still fails because of pre-existing dependency/type issues in the mobile app:
-
-- `firebase/auth` import mismatch around `getReactNativePersistence`
-- missing `@expo/vector-icons` module typings
-
-That does not block manual smoke testing, but it means manual QA matters more than usual.
-
 ## Setup A: Your Machine
 
 Use this when you want to test FE and backend together before or after deploy.

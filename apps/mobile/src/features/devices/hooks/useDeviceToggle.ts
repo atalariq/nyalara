@@ -6,24 +6,22 @@ import type { Device } from '../types/device.types'
 export function useDeviceToggle() {
   const user = useAuthStore((s) => s.user)
 
-  async function flushDeviceUsage(
-    device: Device,
-    until: Date,
-    userId: string,
-  ): Promise<void> {
+  async function flushDeviceUsage(device: Device, until: Date, userId: string): Promise<void> {
     if (!device.activatedAt) return
     const durationMs = until.getTime() - device.activatedAt
     const durationMinutes = durationMs / 1000 / 60
     if (durationMinutes <= 0) return
-    const kwh = (device.watt * (durationMinutes / 60)) / 1000
-    await dailyUsageService.accumulateDeviceUsage(userId, until, device.id, {
-      name: device.name,
-      watt: device.watt,
-      durationMinutes,
-      kwh,
-    })
-  }
 
+    const kwh = (device.watt * (durationMinutes / 60)) / 1000
+
+    await dailyUsageService.accumulateDeviceUsage(
+      userId,
+      until,
+      device.id,
+      { name: device.name, watt: device.watt, durationMinutes, kwh },
+      { startedAt: device.activatedAt, endedAt: until.getTime() }, // ← session
+    )
+  }
   async function toggleDevice(device: Device): Promise<void> {
     if (!user?.uid) return
     const now = new Date()
@@ -45,9 +43,7 @@ export function useDeviceToggle() {
     if (!user?.uid) return
     const now = new Date()
     const activeDevices = devices.filter((d) => d.active && d.activatedAt)
-    await Promise.all(
-      activeDevices.map((d) => flushDeviceUsage(d, now, user.uid!)),
-    )
+    await Promise.all(activeDevices.map((d) => flushDeviceUsage(d, now, user.uid!)))
     await Promise.all(
       activeDevices.map((d) =>
         deviceService.updateDevice(d.id, {
