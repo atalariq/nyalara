@@ -33,7 +33,7 @@ export function useEnergyHistory(): EnergyHistoryState {
       setToday(todayData)
       setHistory([...historyData].sort((a, b) => a.date.localeCompare(b.date)))
     } catch {
-      setError('Gagal memuat data energi')
+      setError('Failed to load energy data')
     }
   }, [setError, setHistory, setToday, user?.uid])
 

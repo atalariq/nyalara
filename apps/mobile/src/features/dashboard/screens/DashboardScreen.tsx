@@ -96,7 +96,7 @@ export default function DashboardScreen() {
             </Pressable>
 
             <View className="h-14 w-14 items-center justify-center rounded-full bg-white/20">
-              <Text className="text-xs text-white">Logo</Text>
+              <Text className="text-base font-extrabold text-white">W</Text>
             </View>
           </View>
 

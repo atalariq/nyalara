@@ -26,7 +26,7 @@ export default function ProfileScreen() {
   if (isLoading) {
     return (
       <SafeAreaView className="flex-1 bg-background items-center justify-center">
-        <AppLoading size="md" label="Memuat profil..." />
+        <AppLoading size="md" label="Loading profile..." />
       </SafeAreaView>
     )
   }
@@ -35,7 +35,7 @@ export default function ProfileScreen() {
     return (
       <SafeAreaView className="flex-1 bg-background items-center justify-center">
         <Text className="text-foreground-muted text-sm">
-          {error ?? 'Profil tidak ditemukan'}
+          {error ?? 'Profile not found'}
         </Text>
       </SafeAreaView>
     )
@@ -51,8 +51,8 @@ export default function ProfileScreen() {
         {error && (
           <View className="px-4 pt-4">
             <Text className="text-sm text-foreground-muted">
-              Profil ditampilkan dari sesi login. Detail tersimpan belum sempat
-              dimuat.
+              Profile is shown from your current session. Stored details could
+              not be loaded yet.
             </Text>
           </View>
         )}

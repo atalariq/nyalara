@@ -49,7 +49,7 @@ export function useProfile(): ProfileState {
         }),
       )
     } catch (e) {
-      setError('Gagal memuat profil')
+      setError('Failed to load profile')
     } finally {
       setIsLoading(false)
     }
