@@ -20,12 +20,12 @@ function getComparedToYesterday(
 }
 
 export function useEnergyScreenData() {
-  useDevices()
+  const { devices } = useDevices()
 
   const { today, history, isLoading, error } = useEnergyHistory()
-  const { co2ReducedKg } = useCarbonSummary(history)
+  const { co2ReducedKg } = useCarbonSummary(history, devices)
   const stats = useDashboardStats()
-  const insight = useDashboardAI(stats)
+  const insight = useDashboardAI({ stats, devices, today })
 
   const todayKwh = today?.totalKwh ?? 0
   const comparedToYesterday = getComparedToYesterday(todayKwh, history)

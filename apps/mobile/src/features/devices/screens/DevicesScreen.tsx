@@ -13,8 +13,8 @@ import {
   DeviceStatsRow,
 } from '../components/DeviceList'
 
-import { useActiveDeviceTimer } from '../hooks/useActiveDeviceTimer'
 import { useDeviceList } from '../hooks/useDeviceList'
+import { useActiveDeviceTimer } from '../hooks/useActiveDeviceTimer'
 import { useAddDeviceSheetStore } from '../store/addDeviceSheetStore'
 
 export default function DevicesScreen() {

@@ -23,10 +23,30 @@ export const useAuthStore = create<AuthState>((set) => ({
   setLoading: (value) => set({ isLoading: value }),
 }))
 
+let initialAuthResolved = false
+let resolveInitialAuth: (() => void) | null = null
+
+const initialAuthPromise = new Promise<void>((resolve) => {
+  resolveInitialAuth = resolve
+})
+
+export function waitForAuthInitialization(): Promise<void> {
+  if (initialAuthResolved) {
+    return Promise.resolve()
+  }
+
+  return initialAuthPromise
+}
+
 // Panggil SEKALI di root layout
 export function initAuthListener() {
   return onAuthStateChanged(auth, (user) => {
     useAuthStore.getState().setUser(user)
     useAuthStore.getState().setLoading(false)
+
+    if (!initialAuthResolved) {
+      initialAuthResolved = true
+      resolveInitialAuth?.()
+    }
   })
 }

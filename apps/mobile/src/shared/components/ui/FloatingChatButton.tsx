@@ -1,5 +1,5 @@
 import { usePathname } from 'expo-router'
-import { Pressable, StyleSheet } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { Sparkles } from 'lucide-react-native'
 import Animated, {
   useSharedValue,
@@ -10,7 +10,7 @@ import { useChatStore } from '@/features/chat/store/chatStore'
 
 const AUTH_ROUTES = ['/login', '/register', '/onboarding']
 
-export function FloatingChatButton() {
+export function FloatingChatButton({ enabled = true }: { enabled?: boolean }) {
   const pathname = usePathname()
   const open = useChatStore((s) => s.open)
   const isOpen = useChatStore((s) => s.isOpen)
@@ -30,11 +30,17 @@ export function FloatingChatButton() {
       <Pressable
         onPressIn={() => (scale.value = withSpring(0.9))}
         onPressOut={() => (scale.value = withSpring(1))}
-        onPress={open}
-        style={styles.button}
+        onPress={enabled ? open : undefined}
+        disabled={!enabled}
+        style={[styles.button, !enabled && styles.buttonDisabled]}
       >
         <Sparkles size={22} color="#fff" strokeWidth={1.8} />
       </Pressable>
+      {!enabled && (
+        <View style={styles.soonBadge}>
+          <Text style={styles.soonText}>Soon</Text>
+        </View>
+      )}
     </Animated.View>
   )
 }
@@ -59,5 +65,24 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.45,
     shadowRadius: 12,
     elevation: 8,
+  },
+  buttonDisabled: {
+    opacity: 0.45,
+  },
+  soonBadge: {
+    position: 'absolute',
+    right: 58,
+    bottom: 6,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderWidth: 1,
+    borderColor: '#D4D4D4',
+  },
+  soonText: {
+    fontSize: 10,
+    color: '#737373',
+    fontFamily: 'Manrope-SemiBold',
   },
 })

@@ -11,13 +11,8 @@ const querySchema = z.object({
 })
 
 const electricityUsageRecordSchema = z.object({
-  inputType: z.enum(['kwh', 'meter_reading']),
-  input: z.object({
-    kwh: z.number().nullable(),
-    meterStart: z.number().nullable(),
-    meterEnd: z.number().nullable(),
-    unit: z.literal('kwh')
-  }),
+  inputType: z.enum(['kwh', 'meter_reading', 'device_breakdown']),
+  input: z.any(),
   period: z.object({
     startDate: z.iso.date(),
     endDate: z.iso.date(),

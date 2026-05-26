@@ -1,6 +1,7 @@
 import { serve } from '@hono/node-server'
 import { createApp } from './app/create-app.js'
 import { createFirebaseAdminAuthVerifier } from './features/auth/firebase-admin-auth.js'
+import { createFirestoreDeviceService } from './features/devices/firestore-device-service.js'
 import { createFirestoreEmissionFactorReader } from './features/emission-factors/firestore-emission-factor-reader.js'
 import { createGeminiEnergyInsightGenerator } from './features/energy-insights/gemini-energy-insight-generator.js'
 import { createFirestoreEnergyInsightService } from './features/energy-insights/firestore-energy-insight-service.js'
@@ -29,6 +30,7 @@ const app = createApp({
   environment: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   auth: createFirebaseAdminAuthVerifier(firebase.auth),
   emissionFactors: createFirestoreEmissionFactorReader(firebase.firestore),
+  devices: createFirestoreDeviceService(firebase.firestore),
   electricityUsages: createFirestoreElectricityUsageService(firebase.firestore),
   energyInsights: createFirestoreEnergyInsightService(
     firebase.firestore,

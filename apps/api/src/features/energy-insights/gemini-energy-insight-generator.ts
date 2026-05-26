@@ -134,7 +134,10 @@ export function createGeminiEnergyInsightGenerator(
       }
 
       return {
-        insight: parsedInsight.data,
+        insight: {
+          ...parsedInsight.data,
+          isStale: false
+        },
         model: {
           provider: 'google',
           name: model,

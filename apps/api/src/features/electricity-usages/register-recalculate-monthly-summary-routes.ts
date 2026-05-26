@@ -13,12 +13,18 @@ const requestSchema = z.object({
 const responseSchema = z.object({
   success: z.literal(true),
   data: z.object({
-    month: z.string().regex(/^\d{4}-\d{2}$/),
-    totalKwh: z.number(),
-    totalKgCo2e: z.number(),
-    averageKwhPerDay: z.number(),
-    averageKgCo2ePerDay: z.number(),
-    usageCount: z.number().int().nonnegative()
+    monthlySummary: z.object({
+      month: z.string().regex(/^\d{4}-\d{2}$/),
+      totalKwh: z.number(),
+      totalKgCo2e: z.number(),
+      averageKwhPerDay: z.number(),
+      averageKgCo2ePerDay: z.number(),
+      usageCount: z.number().int().nonnegative()
+    }),
+    currentStreak: z.object({
+      length: z.number().int().nonnegative(),
+      lastTrackedDate: z.iso.date().nullable()
+    })
   })
 })
 

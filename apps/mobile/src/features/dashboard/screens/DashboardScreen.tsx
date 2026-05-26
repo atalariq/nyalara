@@ -17,6 +17,8 @@ import {
 
 import { useDashboardAI } from '../hooks/useDashboardAI'
 import { useDashboardStats } from '../hooks/useDashboardStats'
+import { useDevices } from '@/features/devices/hooks/useDevices'
+import { useEnergyHistory } from '@/features/energy/hooks/useEnergyHistory'
 
 export default function DashboardScreen() {
   const user = useAuthStore((s) => s.user)
@@ -24,12 +26,14 @@ export default function DashboardScreen() {
   const dailyTargetKwh = useGoalsStore((s) => s.dailyTargetKwh)
 
   useActiveDeviceTimer()
+  const { devices } = useDevices()
+  const { today: todayUsage } = useEnergyHistory()
   const stats = useDashboardStats()
-  const insight = useDashboardAI(stats)
+  const insight = useDashboardAI({ stats, devices, today: todayUsage })
 
   const displayName = user?.displayName?.split(' ')[0] ?? 'User'
 
-  const today = new Date().toLocaleDateString('en-US', {
+  const todayLabel = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'short',
     day: 'numeric',
@@ -94,12 +98,12 @@ export default function DashboardScreen() {
             </Pressable>
 
             <View className="h-14 w-14 items-center justify-center rounded-full bg-white/20">
-              <Text className="text-xs text-white">Logo</Text>
+              <Text className="text-base font-extrabold text-white">W</Text>
             </View>
           </View>
 
           {/* HEADER */}
-          <DashboardHeader displayName={displayName} dateLabel={today} />
+          <DashboardHeader displayName={displayName} dateLabel={todayLabel} />
 
           {/* MAIN CARD */}
           <View className="mx-5 mt-7 rounded-[32px] bg-white/90 p-5 shadow-sm shadow-black/10">

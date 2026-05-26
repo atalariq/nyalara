@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /emission_factors/{factorId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      match /preferences/{doc} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      match /electricity_usages/{usageId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+
+        allow create: if request.auth != null
+          && request.auth.uid == userId
+          && request.resource.data.calculation.status == 'estimated'
+          && request.resource.data.calculation.method != 'server_verified';
+
+        allow update: if request.auth != null
+          && request.auth.uid == userId
+          && request.resource.data.calculation.status == resource.data.calculation.status;
+      }
+
+      match /monthly_summaries/{month} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow write: if false;
+      }
+
+      match /insights/{insightId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow write: if false;
+      }
+    }
+  }
+}

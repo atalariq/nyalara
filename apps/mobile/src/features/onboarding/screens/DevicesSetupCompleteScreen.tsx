@@ -26,7 +26,7 @@ export function DeviceSetupCompleteScreen() {
     ]).start()
   }, [])
 
-  const totalKwh = devices.reduce((sum, d) => sum + d.monthlyKwh, 0)
+  const totalKwh = devices.reduce((sum, d) => sum + (d.monthlyKwh ?? 0), 0)
   const dailyKwh = totalKwh / 30
 
   return (

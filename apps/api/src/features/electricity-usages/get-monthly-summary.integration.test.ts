@@ -45,12 +45,18 @@ describe('GET /v1/monthly-summary', () => {
           expect(month).toBe('2026-05')
 
           return {
-            month: '2026-05',
-            totalKwh: 120,
-            totalKgCo2e: 102,
-            averageKwhPerDay: 120 / 31,
-            averageKgCo2ePerDay: 102 / 31,
-            usageCount: 1
+            monthlySummary: {
+              month: '2026-05',
+              totalKwh: 120,
+              totalKgCo2e: 102,
+              averageKwhPerDay: 120 / 31,
+              averageKgCo2ePerDay: 102 / 31,
+              usageCount: 1
+            },
+            currentStreak: {
+              length: 3,
+              lastTrackedDate: '2026-05-31'
+            }
           }
         },
         listUsages: async () => {
@@ -72,12 +78,18 @@ describe('GET /v1/monthly-summary', () => {
     await expect(response.json()).resolves.toEqual({
       success: true,
       data: {
-        month: '2026-05',
-        totalKwh: 120,
-        totalKgCo2e: 102,
-        averageKwhPerDay: 120 / 31,
-        averageKgCo2ePerDay: 102 / 31,
-        usageCount: 1
+        monthlySummary: {
+          month: '2026-05',
+          totalKwh: 120,
+          totalKgCo2e: 102,
+          averageKwhPerDay: 120 / 31,
+          averageKgCo2ePerDay: 102 / 31,
+          usageCount: 1
+        },
+        currentStreak: {
+          length: 3,
+          lastTrackedDate: '2026-05-31'
+        }
       }
     })
   })

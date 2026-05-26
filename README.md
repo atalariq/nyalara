@@ -1,95 +1,96 @@
-# Carbon Tracker
+# Carbon Tracker Monorepo
 
-Carbon Tracker is an electricity-focused carbon footprint tracker built for mobile-first use. It helps users log household electricity usage, convert kWh into estimated CO2e, review monthly trends, and receive practical energy-saving insights.
+Carbon Tracker is a mobile-first electricity carbon tracking product.
 
-## User Overview
+Users can:
 
-Current MVP scope:
+- sign in (email, Google, or guest)
+- manage device inventory
+- log electricity usage
+- see dashboard/history progress
+- receive practical recommendations
 
-- sign in with Firebase Auth
-- log electricity usage with direct `kwh` input or `meter_reading`
-- calculate electricity emissions from a backend-managed emission factor
-- review usage history and monthly summaries
-- generate energy-saving insights from backend AI workflows
+This repository is a monorepo containing mobile app, backend API, and shared contracts.
 
-This repo is still implementation-first. The source-of-truth product scope lives in [docs/PRD.md](docs/PRD.md).
+## Monorepo Structure
 
-## Repository Overview
+- `apps/mobile` - Expo React Native client
+- `apps/api` - Hono backend API
+- `packages/shared` - shared DTO/types between mobile and backend
 
-This is a monorepo with three main contexts:
+Use [CONTEXT-MAP.md](CONTEXT-MAP.md) to navigate context docs.
 
-- [`apps/mobile`](apps/mobile): Expo mobile client
-- [`apps/api`](apps/api): Hono backend API
-- [`packages/shared`](packages/shared): shared contracts and cross-context types
+## Quick Start
 
-Use [CONTEXT-MAP.md](CONTEXT-MAP.md) to find the right context docs quickly.
-
-## Developer Overview
-
-Before changing code, read:
-
-- [AGENTS.md](AGENTS.md)
-- [CONTEXT-MAP.md](CONTEXT-MAP.md)
-- [docs/PRD.md](docs/PRD.md)
-- [docs/firebase-setup.md](docs/firebase-setup.md)
-
-Backend contributors should also read:
-
-- [apps/api/CONTEXT.md](apps/api/CONTEXT.md)
-- [apps/api/docs/adr/0001-zod-and-hono-zod-openapi.md](apps/api/docs/adr/0001-zod-and-hono-zod-openapi.md)
-- [apps/api/docs/adr/0002-backend-authoritative-writes.md](apps/api/docs/adr/0002-backend-authoritative-writes.md)
-- [apps/api/docs/adr/0003-guest-vs-full-account-policy.md](apps/api/docs/adr/0003-guest-vs-full-account-policy.md)
-- [apps/api/docs/adr/0004-canonical-schema-v1-hard-cutover.md](apps/api/docs/adr/0004-canonical-schema-v1-hard-cutover.md)
-
-## Local Setup
-
-Install dependencies from the repo root:
+1. Clone and install:
 
 ```bash
+git clone <repo-url> carbon-tracker
+cd carbon-tracker
 pnpm install
 ```
 
-Install required CLIs for Firebase-backed local work:
+2. Complete setup:
+
+- Follow [SETUP.md](SETUP.md) for full local onboarding:
+  - Firebase setup
+  - env files
+  - backend deploy
+  - mobile build/test
+
+3. Run locally:
 
 ```bash
-firebase --version
-gcloud --version
+pnpm --filter api dev
+pnpm --filter mobile dev
 ```
 
-Firebase setup is split by app role:
+## Product And Domain References
 
-- Mobile client setup: [docs/firebase-setup.md](docs/firebase-setup.md)
-- Backend Admin SDK setup: [docs/firebase-setup.md](docs/firebase-setup.md)
+- Product scope: [docs/PRD.md](docs/PRD.md)
+- Context map: [CONTEXT-MAP.md](CONTEXT-MAP.md)
+- Mobile domain glossary: [apps/mobile/CONTEXT.md](apps/mobile/CONTEXT.md)
+- Backend domain glossary: [apps/api/CONTEXT.md](apps/api/CONTEXT.md)
+- Shared domain glossary: [packages/shared/CONTEXT.md](packages/shared/CONTEXT.md)
+- ADRs (cross-context): [docs/adr](docs/adr)
 
-Quick entry points:
+## Engineering Commands
 
-- Mobile app: [apps/mobile/README.md](apps/mobile/README.md)
-- Backend API: [apps/api/README.md](apps/api/README.md)
+From repo root:
 
-Environment templates:
+```bash
+pnpm dev
+pnpm dev:api
+pnpm dev:mobile
+pnpm build
+pnpm test
+pnpm typecheck
+```
 
-- Mobile env template: [apps/mobile/.env.example](apps/mobile/.env.example)
-- API env template: [apps/api/.env.example](apps/api/.env.example)
+## Testing And Verification
 
-## Current Backend Surface
+- Smoke tests: [docs/smoke-testing-guide.md](docs/smoke-testing-guide.md)
+- Firebase setup details: [docs/firebase-setup.md](docs/firebase-setup.md)
 
-Implemented backend endpoints under `/v1`:
+## Agentic Workflow (Matt Pocock Skills)
 
-- `GET /v1/health`
-- `GET /v1/emission-factors`
-- `POST /v1/calculate-electricity`
+This repo supports agentic development with local skills in `.agents/skills/`.
 
-The backend uses:
+Read:
 
-- Hono + TypeScript
-- Zod + `@hono/zod-openapi`
-- Firebase Admin SDK for auth verification and Firestore access
-- a uniform JSON error envelope
+- [docs/AGENTIC-WORKFLOW.md](docs/AGENTIC-WORKFLOW.md)
+- [docs/PROMPTS.md](docs/PROMPTS.md)
+- [AGENTS.md](AGENTS.md)
 
-## Documentation
+Recommended workflow:
 
-- Product requirements: [docs/PRD.md](docs/PRD.md)
-- Firebase setup: [docs/firebase-setup.md](docs/firebase-setup.md)
-- Agent workflow: [docs/AGENTIC-WORKFLOW.md](docs/AGENTIC-WORKFLOW.md)
-- Operator prompts: [docs/PROMPTS.md](docs/PROMPTS.md)
-- Repo automation guidance: [docs/agents/domain.md](docs/agents/domain.md)
+1. `grill-with-docs` to clarify decisions against context docs
+2. `to-issues` to create thin vertical slices
+3. `tdd` to implement one behavior at a time
+4. `handoff` to preserve state between sessions
+
+## Notes
+
+- Current MVP scope is electricity tracking only.
+- Treat backend as authority for canonical usage state.
+- Keep secrets out of client bundles and committed files.

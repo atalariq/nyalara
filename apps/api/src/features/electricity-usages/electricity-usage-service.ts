@@ -1,74 +1,17 @@
-export type ElectricityUsageRecord =
-  | {
-      inputType: 'kwh'
-      input: {
-        kwh: number
-        meterStart: null
-        meterEnd: null
-        unit: 'kwh'
-      }
-      period: {
-        startDate: string
-        endDate: string
-        month: string
-      }
-      calculation: {
-        electricityKwh: number
-        emissionFactorId: string
-        emissionFactorKgCo2ePerKwh: number
-        totalKgCo2e: number
-        method: 'server_verified'
-        status: 'verified'
-      }
-      source: {
-        createdFrom: 'mobile'
-        offlineCreated: boolean
-        clientGeneratedId: string
-      }
-      timestamps: {
-        usageDate: string
-        createdAtClient: string
-      }
-    }
-  | {
-      inputType: 'meter_reading'
-      input: {
-        kwh: null
-        meterStart: number
-        meterEnd: number
-        unit: 'kwh'
-      }
-      period: {
-        startDate: string
-        endDate: string
-        month: string
-      }
-      calculation: {
-        electricityKwh: number
-        emissionFactorId: string
-        emissionFactorKgCo2ePerKwh: number
-        totalKgCo2e: number
-        method: 'server_verified'
-        status: 'verified'
-      }
-      source: {
-        createdFrom: 'mobile'
-        offlineCreated: boolean
-        clientGeneratedId: string
-      }
-      timestamps: {
-        usageDate: string
-        createdAtClient: string
-      }
-    }
+import type {
+  CurrentStreakDto,
+  ElectricityUsageDto,
+  ElectricityUsageListItemDto,
+  MonthlySummaryDto
+} from '@carbon-tracker/shared'
 
-export type MonthlySummary = {
-  month: string
-  totalKwh: number
-  totalKgCo2e: number
-  averageKwhPerDay: number
-  averageKgCo2ePerDay: number
-  usageCount: number
+export type ElectricityUsageRecord = ElectricityUsageDto
+export type MonthlySummary = MonthlySummaryDto
+export type CurrentStreak = CurrentStreakDto
+
+export type MonthlySummaryWithCurrentStreak = {
+  monthlySummary: MonthlySummary
+  currentStreak: CurrentStreak
 }
 
 export type CreateElectricityUsageParams = {
@@ -77,10 +20,30 @@ export type CreateElectricityUsageParams = {
   usage: ElectricityUsageRecord
 }
 
+export type UpdateElectricityUsageParams = {
+  userId: string
+  usageId: string
+  usage: ElectricityUsageRecord
+}
+
+export type DeleteElectricityUsageParams = {
+  userId: string
+  usageId: string
+}
+
 export type CreateElectricityUsageResult = {
   usageId: string
   usage: ElectricityUsageRecord
   monthlySummary: MonthlySummary
+  currentStreak: CurrentStreak
+}
+
+export type UpdateElectricityUsageResult = CreateElectricityUsageResult
+
+export type DeleteElectricityUsageResult = {
+  usageId: string
+  monthlySummary: MonthlySummary
+  currentStreak: CurrentStreak
 }
 
 export type GetMonthlySummaryParams = {
@@ -93,11 +56,6 @@ export type ListElectricityUsagesParams = {
   month: string
 }
 
-export type ElectricityUsageListItem = {
-  usageId: string
-  usage: ElectricityUsageRecord
-}
-
 export type RecalculateMonthlySummaryParams = {
   userId: string
   month: string
@@ -107,13 +65,19 @@ export type ElectricityUsageService = {
   createUsage(
     params: CreateElectricityUsageParams
   ): Promise<CreateElectricityUsageResult>
+  updateUsage?(
+    params: UpdateElectricityUsageParams
+  ): Promise<UpdateElectricityUsageResult | null>
+  deleteUsage?(
+    params: DeleteElectricityUsageParams
+  ): Promise<DeleteElectricityUsageResult | null>
   getMonthlySummary(
     params: GetMonthlySummaryParams
-  ): Promise<MonthlySummary | null>
+  ): Promise<MonthlySummaryWithCurrentStreak | null>
   listUsages(
     params: ListElectricityUsagesParams
-  ): Promise<ElectricityUsageListItem[]>
+  ): Promise<ElectricityUsageListItemDto[]>
   recalculateMonthlySummary(
     params: RecalculateMonthlySummaryParams
-  ): Promise<MonthlySummary>
+  ): Promise<MonthlySummaryWithCurrentStreak>
 }

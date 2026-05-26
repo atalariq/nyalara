@@ -71,16 +71,16 @@ Secondary users:
 
 The app focuses on **electricity usage only** for the current sprint.
 
-Users input electricity usage in kWh or meter reading. The system calculates estimated carbon emissions using an emission factor stored in Firestore. The result is saved as a usage record. A monthly summary is generated for dashboard visualization. Gemini provides contextual suggestions based on user preferences and energy usage history.
+Users maintain a device inventory, then log electricity usage through device breakdown, direct kWh input, or meter reading. The mobile app shows an instant estimated preview, while the backend stores canonical usage logs, recalculates monthly summary and current streak, and provides Gemini-powered insight generation based on persisted user data.
 
 ### 3.2 Core Flow
 
 ```txt
 User logs electricity usage
 → App calculates instant estimated CO₂e
-→ Usage record is stored in Firestore
-→ Backend verifies calculation
-→ Monthly summary is updated
+→ App submits the log to backend API
+→ Backend verifies and stores canonical usage log
+→ Monthly summary and streak are updated
 → User views dashboard
 → User requests or receives Gemini-powered insight
 ```
@@ -94,17 +94,17 @@ When offline:
 ```txt
 - User can create electricity usage logs
 - Client calculates estimated CO₂e locally
-- Data is stored in local Firestore cache
+- Data is stored as a local draft queue entry
 - UI marks the record as estimated / pending sync
 ```
 
 When online:
 
 ```txt
-- Firestore syncs the pending write
+- App submits the pending draft to backend when connectivity returns
 - Backend verifies or recalculates the result
 - Record status changes from estimated to verified
-- Monthly summary and insights can be updated
+- Monthly summary and streak can be updated
 ```
 
 ---
@@ -248,7 +248,7 @@ Client must support offline usage logging
 ```txt
 User opens app
 → User signs in with Firebase Auth
-→ App creates or loads user profile
+→ App creates or loads preferences and device inventory context
 → User fills basic preferences
 → App routes user to dashboard
 ```
@@ -265,12 +265,12 @@ User has authenticated account and preference document is available.
 
 ```txt
 User opens Add Usage screen
-→ User selects input type: kWh
-→ User enters electricity usage amount
+→ User selects input type: device breakdown, kWh, or meter reading
+→ User enters electricity usage amount or per-device durations
 → App calculates estimated kg CO₂e
 → User saves the record
 → Record appears in history
-→ Monthly summary updates
+→ Monthly summary and streak update
 ```
 
 Success condition:
@@ -369,16 +369,19 @@ User can still log electricity usage without internet connection.
 |---|---|---|---|---|---|
 | FR-01 | As a user, I want to sign in, so that my electricity usage data is stored under my account. | Given user opens the app, when user signs in successfully, then system creates or loads `users/{userId}`. | P0 | FE/BE | Open |
 | FR-02 | As a user, I want to set basic preferences, so that the app can personalize calculation and insights. | Given user is authenticated, when user saves preferences, then data is stored in `users/{userId}/preferences/main`. | P0 | FE | Open |
-| FR-03 | As a user, I want to log electricity usage in kWh, so that I can track my carbon footprint. | Given user enters a positive kWh value, when user taps save, then the system calculates estimated CO₂e and stores the usage record. | P0 | FE/BE | Open |
+| FR-02a | As a user, I want to manage my device inventory, so that I can log usage from the appliances I actually use. | Given user is authenticated or in a guest session, when user manages devices, then the system stores them under `users/{userId}/devices/{deviceId}` through backend APIs. | P0 | FE/BE | Open |
+| FR-03 | As a user, I want to log electricity usage in kWh, so that I can track my carbon footprint. | Given user enters a positive kWh value, when user taps save, then the system calculates estimated CO₂e and stores the canonical usage log through backend APIs. | P0 | FE/BE | Open |
 | FR-04 | As a user, I want to log electricity usage using meter readings, so that I can calculate usage from meter difference. | Given `meterEnd >= meterStart`, when user saves the record, then system calculates `electricityKwh = meterEnd - meterStart`. | P0 | FE/BE | Open |
+| FR-04a | As a user, I want to log usage from my devices, so that the app feels natural for daily tracking. | Given user selects one or more devices and enters durations, when user saves the record, then backend derives kWh from device wattage and duration before storing the canonical usage log. | P0 | FE/BE | Open |
 | FR-05 | As a user, I want to see calculated kg CO₂e, so that I understand my electricity impact. | Given valid usage input, when calculation runs, then result is shown with 2 decimal precision. | P0 | FE/BE | Open |
 | FR-06 | As a user, I want to view usage history, so that I can review past electricity logs. | Given user has usage records, when user opens History, then app displays records sorted by usage date. | P0 | FE | Open |
 | FR-07 | As a user, I want to view monthly summary, so that I can understand my overall energy footprint. | Given user has usage records for a month, when user opens Dashboard, then app displays total kWh and total kg CO₂e. | P0 | FE/BE | Open |
 | FR-08 | As a user, I want AI-generated suggestions, so that I know how to reduce electricity emissions. | Given user has usage data, when insight is generated, then Gemini returns summary and suggestions saved in Firestore. | P0 | BE | Open |
-| FR-09 | As a user, I want to log electricity usage offline, so that I can keep tracking without internet. | Given user is offline, when user saves a valid usage record, then the app stores it locally and syncs later. | P0 | FE | Open |
+| FR-09 | As a user, I want to log electricity usage offline, so that I can keep tracking without internet. | Given user is offline, when user saves a valid usage record, then the app stores it as a local draft and syncs later through backend APIs. | P0 | FE | Open |
 | FR-10 | As a backend system, I want to verify client calculations, so that stored results are consistent. | Given usage data is received, when backend recalculates it, then calculation status is updated to `verified`. | P1 | BE | Open |
 | FR-11 | As a user, I want to know whether a record is estimated or verified, so that I understand sync state. | Given a usage record exists, when app renders it, then UI displays estimated, verified, or error status. | P1 | FE | Open |
 | FR-12 | As a system, I want emission factors to be updateable, so that calculations are not permanently hardcoded. | Given active emission factor exists, when calculation runs, then system uses active factor from Firestore/backend. | P0 | BE | Open |
+| FR-13 | As a user, I want my streak to reflect my latest persisted logs, so that I can trust the consistency incentive. | Given usage logs are created, edited, or deleted, when backend persists the change, then monthly summary and current streak are recalculated synchronously. | P1 | FE/BE | Open |
 
 ---
 
@@ -395,7 +398,8 @@ Scenario: User logs valid kWh usage
   When the user enters 120 as kWh
   And the user taps Save
   Then the app calculates estimated CO2e
-  And the app stores the usage record under the user's Firestore document
+  And the app submits the usage record to backend APIs
+  And the backend stores the canonical usage log under the user's Firestore document
   And the usage record appears in History
 ```
 
@@ -470,7 +474,7 @@ Scenario: User logs usage while offline
 Scenario: Offline record syncs after reconnecting
   Given the user created a usage record offline
   When the device reconnects to the internet
-  Then Firestore syncs the record
+  Then the app submits the draft to backend APIs
   And backend verifies the calculation
   And the record status becomes verified
 ```
@@ -501,7 +505,9 @@ Scenario: Offline record syncs after reconnecting
 ```txt
 users/{userId}
 
-users/{userId}/preferences/main (Watt x Jam / 1000) x Faktor Emisi Indonesia (0.852 kg CO2e/kWh).
+users/{userId}/preferences/main
+
+users/{userId}/devices/{deviceId}
 
 users/{userId}/electricity_usages/{usageId}
 
@@ -544,29 +550,52 @@ emission_factors/{factorId}
 
 ---
 
-### 11.4 `users/{userId}/electricity_usages/{usageId}`
+### 11.4 `users/{userId}/devices/{deviceId}`
 
 ```json
 {
-  "inputType": "kwh",
+  "name": "Lampu Kamar",
+  "deviceType": "lights",
+  "category": "lighting",
+  "watt": 15,
+  "defaultDurationMinutes": 360,
+  "createdAt": "serverTimestamp",
+  "updatedAt": "serverTimestamp"
+}
+```
+
+---
+
+### 11.5 `users/{userId}/electricity_usages/{usageId}`
+
+```json
+{
+  "inputType": "device_breakdown",
   "period": {
-    "startDate": "2026-05-01",
+    "startDate": "2026-05-31",
     "endDate": "2026-05-31",
     "month": "2026-05"
   },
+  "usageDate": "2026-05-31",
+  "timezoneOffsetMinutes": 420,
   "input": {
-    "kwh": 120,
-    "meterStart": null,
-    "meterEnd": null,
-    "unit": "kwh"
+    "devices": [
+      {
+        "deviceId": "device_001",
+        "nameSnapshot": "Lampu Kamar",
+        "wattSnapshot": 15,
+        "durationMinutes": 960,
+        "electricityKwh": 0.24
+      }
+    ]
   },
   "calculation": {
-    "electricityKwh": 120,
+    "electricityKwh": 0.24,
     "emissionFactorId": "id_pln_grid_v1",
     "emissionFactorKgCo2ePerKwh": 0.85,
-    "totalKgCo2e": 102,
-    "method": "client_estimate",
-    "status": "estimated"
+    "totalKgCo2e": 0.204,
+    "method": "server_verified",
+    "status": "verified"
   },
   "source": {
     "createdFrom": "mobile",
@@ -585,7 +614,7 @@ emission_factors/{factorId}
 
 ---
 
-### 11.5 `users/{userId}/monthly_summaries/{yyyy-mm}`
+### 11.6 `users/{userId}/monthly_summaries/{yyyy-mm}`
 
 ```json
 {
@@ -603,7 +632,7 @@ emission_factors/{factorId}
 
 ---
 
-### 11.6 `users/{userId}/insights/{insightId}`
+### 11.7 `users/{userId}/insights/{insightId}`
 
 ```json
 {
@@ -634,13 +663,14 @@ emission_factors/{factorId}
     "promptVersion": "energy-insight-v1"
   },
   "basedOnUsageIds": ["usage_001"],
+  "isStale": false,
   "createdAt": "serverTimestamp"
 }
 ```
 
 ---
 
-### 11.7 `emission_factors/{factorId}`
+### 11.8 `emission_factors/{factorId}`
 
 ```json
 {
@@ -676,7 +706,16 @@ Minimum endpoints:
 ```txt
 GET  /health
 GET  /emission-factors
+GET  /devices
+POST /devices
+PATCH /devices/:deviceId
+DELETE /devices/:deviceId
 POST /calculate-electricity
+POST /electricity-usages
+GET  /electricity-usages
+PATCH /electricity-usages/:usageId
+DELETE /electricity-usages/:usageId
+GET  /monthly-summary
 POST /generate-energy-insight
 POST /recalculate-monthly-summary
 ```
@@ -773,7 +812,7 @@ Response:
 Validation:
 
 ```txt
-inputType must be "kwh" or "meter_reading"
+inputType must be "device_breakdown", "kwh", or "meter_reading"
 kWh must be greater than 0
 meterEnd must be greater than or equal to meterStart
 unit must be "kwh"
@@ -782,7 +821,55 @@ period.month must follow YYYY-MM format
 
 ---
 
-### 12.5 `POST /generate-energy-insight`
+### 12.5 `POST /electricity-usages`
+
+Purpose:
+
+```txt
+Create a canonical usage log and refresh monthly summary and current streak.
+```
+
+For `device_breakdown`, client submits minimal line items:
+
+```json
+{
+  "inputType": "device_breakdown",
+  "usageDate": "2026-05-31",
+  "timezoneOffsetMinutes": 420,
+  "input": {
+    "devices": [
+      {
+        "deviceId": "device_001",
+        "durationMinutes": 960
+      }
+    ]
+  }
+}
+```
+
+Backend behavior:
+
+```txt
+Verify Firebase ID token
+Resolve devices from canonical inventory
+Build device snapshots
+Derive electricityKwh from watt and duration
+Calculate verified CO2e
+Persist usage log
+Refresh monthly summary and current streak synchronously
+```
+
+Response should include:
+
+```txt
+usage
+monthlySummary
+streak
+```
+
+---
+
+### 12.6 `POST /generate-energy-insight`
 
 Purpose:
 
@@ -829,7 +916,51 @@ Response:
 
 ---
 
-### 12.6 `POST /recalculate-monthly-summary`
+Insight responses should expose a stale signal:
+
+```txt
+isStale = true if persisted usage logs changed after the last insight generation
+```
+
+---
+
+### 12.7 `GET /monthly-summary`
+
+Purpose:
+
+```txt
+Return monthly totals and current streak for dashboard use.
+```
+
+---
+
+### 12.8 `PATCH /electricity-usages/:usageId` and `DELETE /electricity-usages/:usageId`
+
+Purpose:
+
+```txt
+Allow users to correct persisted logs online.
+```
+
+Behavior:
+
+```txt
+PATCH may replace the full valid payload and may switch input type
+DELETE removes the persisted usage log
+Both operations refresh monthly summary and current streak synchronously
+```
+
+Delete response should include:
+
+```txt
+deletedUsageId
+monthlySummary
+streak
+```
+
+---
+
+### 12.9 `POST /recalculate-monthly-summary`
 
 Purpose:
 
@@ -991,8 +1122,8 @@ Keep suggestions practical and household-safe
 | Framework | Expo + React Native |
 | Language | TypeScript |
 | Auth | Firebase Auth |
-| Data access | Firestore client SDK |
-| Offline support | Firestore offline persistence |
+| Data access | Backend API for canonical product data; Firestore client SDK only for `preferences/main` |
+| Offline support | Local draft queue for create flow; persisted-log edit/delete require connectivity |
 | Local calculation | Client calculates estimated CO₂e for instant feedback |
 | Status UI | Show estimated, verified, or error status |
 | Navigation | Expo Router or React Navigation |
@@ -1042,6 +1173,7 @@ Users may only access:
 ```txt
 users/{ownUserId}
 users/{ownUserId}/preferences/main
+users/{ownUserId}/devices/*
 users/{ownUserId}/electricity_usages/*
 users/{ownUserId}/monthly_summaries/*
 users/{ownUserId}/insights/*
@@ -1264,12 +1396,11 @@ graph TD
     C --> D[User inputs electricity usage]
     D --> E[Client validates input]
     E --> F[Client calculates estimated CO2e]
-    F --> G[Save usage to Firestore]
-    G --> H[Backend verifies calculation]
-    H --> I[Update usage status to verified]
-    H --> J[Update monthly summary]
-    J --> K[Dashboard displays monthly summary]
-    K --> L[User requests insight]
+    F --> G[Submit usage to backend API]
+    G --> H[Backend verifies and stores canonical usage log]
+    H --> I[Refresh monthly summary and streak]
+    I --> J[Dashboard displays summary and streak]
+    J --> L[User requests insight]
     L --> M[Backend calls Gemini]
     M --> N[Store insight in Firestore]
     N --> O[App displays energy-saving insight]
@@ -1283,20 +1414,18 @@ graph TD
 sequenceDiagram
     participant U as User
     participant A as Expo App
-    participant L as Local Firestore Cache
-    participant F as Firestore Cloud
+    participant L as Local Draft Queue
     participant B as Cloud Run Backend
 
     U->>A: Input electricity usage offline
     A->>A: Validate input
     A->>A: Calculate estimated CO2e
-    A->>L: Save usage with estimated status
+    A->>L: Save local draft with estimated status
     A->>U: Show pending sync state
     U->>A: Reconnect internet
-    L->>F: Sync usage record
-    F->>B: Backend reads/verifies record
-    B->>F: Update calculation status to verified
-    F->>A: Sync verified record
+    L->>B: Submit usage draft
+    B->>B: Verify and persist record
+    B->>A: Return verified response
     A->>U: Show verified status
 ```
 
@@ -1375,12 +1504,9 @@ Prepare final pitch flow
 
 | ID | Question | Owner | Decision Needed |
 |---|---|---|---|
-| OQ-01 | Should the MVP support only kWh input or also meter reading? | PM/FE/BE | Before Add Usage implementation |
-| OQ-02 | Should insight generation be automatic or button-triggered? | PM/FE/BE | Before Insight screen |
-| OQ-03 | Should monthly summary be updated by client or backend? | BE | Before Dashboard integration |
-| OQ-04 | Should emission factor be seeded manually? | BE | Before calculation implementation |
-| OQ-05 | Should offline records be visually marked in History? | UI/UX/FE | Before History implementation |
-| OQ-06 | Should OCR bill scan be included as stretch goal? | PM | After P0 features are done |
+| OQ-01 | Should the MVP expose a dedicated insight read endpoint in addition to generate? | BE | Before final API contract freeze |
+| OQ-02 | Should device inventory support ordering/grouping beyond CRUD? | PM/FE/BE | After core migration is stable |
+| OQ-03 | Should daily chart aggregation remain FE-only or move to backend later? | FE/BE | After MVP performance review |
 
 ---
 
@@ -1407,7 +1533,8 @@ When implementing frontend:
 ```txt
 Use Expo and TypeScript.
 Use Firebase Auth for authentication.
-Use Firestore SDK for user-owned data.
+Use backend APIs for device inventory, usage logs, summaries, streaks, and insights.
+Use Firestore SDK directly only for `users/{userId}/preferences/main`.
 Support offline usage logging.
 Show calculation preview before save.
 Show validation errors.
@@ -1454,13 +1581,16 @@ The sprint is done when:
 ```txt
 User can authenticate.
 User can set preferences.
+User can manage device inventory.
+User can input electricity usage from device breakdown.
 User can input electricity usage in kWh.
 User can input electricity usage via meter reading.
 App calculates estimated kg CO₂e.
-Usage record is saved to Firestore.
+Usage record is saved through backend APIs as canonical usage log.
 User can view usage history.
 User can view monthly dashboard.
-Backend can verify calculation.
+Dashboard includes current streak.
+Backend can verify calculation and refresh derived data synchronously.
 Gemini can generate energy-saving insight.
 Insight is stored and displayed.
 Offline logging works.
@@ -1476,11 +1606,11 @@ Demo flow is stable.
 1. Open app and sign in.
 2. Show Dashboard empty state.
 3. Open Add Usage.
-4. Input 120 kWh.
-5. Show instant CO₂e calculation.
+4. Show device inventory and choose one or more devices.
+5. Input durations and show instant CO₂e calculation.
 6. Save record.
 7. Open History and show saved usage.
-8. Open Dashboard and show monthly summary.
+8. Open Dashboard and show monthly summary plus current streak.
 9. Generate Gemini insight.
 10. Show practical energy-saving suggestions.
 11. Demonstrate offline logging or explain pending sync state.

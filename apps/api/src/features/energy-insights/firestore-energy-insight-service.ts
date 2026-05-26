@@ -31,6 +31,7 @@ type PersistedInsightRecord = {
   title: string
   summary: string
   suggestions: EnergyInsightSuggestion[]
+  isStale?: boolean
 }
 
 export function createFirestoreEnergyInsightService(
@@ -79,6 +80,7 @@ export function createFirestoreEnergyInsightService(
         title: insight.title,
         summary: insight.summary,
         suggestions: insight.suggestions,
+        isStale: false,
         metrics: {
           totalKwh: monthlySummary.totalKwh,
           totalKgCo2e: monthlySummary.totalKgCo2e,
@@ -242,6 +244,7 @@ function buildInsight(
 
   if (isOverTarget) {
     return {
+      isStale: false,
       title: 'Pemakaian listrik bulan ini melebihi target',
       summary: `Emisi listrik bulan ini mencapai ${formatNumber(monthlySummary.totalKgCo2e)} kg CO2e, melewati target ${formatNumber(targetKgCo2e)} kg CO2e.`,
       suggestions: [
@@ -262,6 +265,7 @@ function buildInsight(
   }
 
   return {
+    isStale: false,
     title: 'Pemakaian listrik bulan ini masih terkendali',
     summary:
       comparedPercent === null
@@ -292,7 +296,8 @@ function toEnergyInsight(
     insightId,
     title: data.title as string,
     summary: data.summary as string,
-    suggestions: (data.suggestions as EnergyInsightSuggestion[]) ?? []
+    suggestions: (data.suggestions as EnergyInsightSuggestion[]) ?? [],
+    isStale: (data.isStale as boolean) ?? false
   }
 }
 

@@ -9,6 +9,7 @@ export type EnergyInsight = {
   title: string
   summary: string
   suggestions: EnergyInsightSuggestion[]
+  isStale: boolean
 }
 
 export type EnergyInsightModel = {

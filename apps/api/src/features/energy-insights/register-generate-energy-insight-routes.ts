@@ -17,6 +17,7 @@ const responseSchema = z.object({
     insightId: z.string(),
     title: z.string(),
     summary: z.string(),
+    isStale: z.boolean(),
     suggestions: z.array(
       z.object({
         title: z.string(),

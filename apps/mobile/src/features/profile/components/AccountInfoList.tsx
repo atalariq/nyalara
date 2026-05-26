@@ -49,7 +49,7 @@ export function AccountInfoList({ data }: Props) {
     {
       icon: <Users size={16} color="#8E8E8E" />,
       label: 'Residents',
-      value: `${data.residents} People`,
+      value: data.residents >= 0 ? `${data.residents} People` : '—',
     },
     {
       icon: <MapPin size={16} color="#8E8E8E" />,

@@ -1,5 +1,5 @@
-import { useDevices } from '@/features/devices/hooks/useDevices'
-import { useEnergyHistory } from '@/features/energy/hooks/useEnergyHistory'
+import type { Device } from '@/features/devices/types/device.types'
+import type { DailyUsage } from '@/features/energy/types/dailyUsage.types'
 import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
 import { useEffect, useRef, useState } from 'react'
 import { fetchAIInsight } from '../api/dashboardApi'
@@ -7,10 +7,15 @@ import type { AIInsight, DashboardStats } from '../types/dashboard.types'
 
 const CACHE_DURATION_MS = 10 * 60 * 1000
 
-export function useDashboardAI(stats: DashboardStats): AIInsight {
-  const { devices } = useDevices()
-  const { today } = useEnergyHistory()
-
+export function useDashboardAI({
+  stats,
+  devices,
+  today,
+}: {
+  stats: DashboardStats
+  devices: Device[]
+  today: DailyUsage | null
+}): AIInsight {
   const [insight, setInsight] = useState<AIInsight>({
     recommendations: [],
     dailyTip: '',
@@ -29,9 +34,21 @@ export function useDashboardAI(stats: DashboardStats): AIInsight {
   const totalKwh = today?.totalKwh ?? 0
   const savedKwh = Math.max(estimatedMonthlyKwh - totalKwh, 0)
   const co2ReducedKg = savedKwh * CARBON_CONFIG.emissionFactor
+  const hasMeaningfulUsageData =
+    totalKwh > 0 || Object.keys(today?.devices ?? {}).length > 0
 
   useEffect(() => {
     if (stats.isLoading) return
+
+    if (!hasMeaningfulUsageData) {
+      setInsight({
+        recommendations: [],
+        dailyTip: '',
+        environmentalQuote: '',
+        status: 'idle',
+      })
+      return
+    }
 
     const statsKey = `${stats.dailyKwh.toFixed(1)}-${devices.length}`
     const now = Date.now()
@@ -63,7 +80,7 @@ export function useDashboardAI(stats: DashboardStats): AIInsight {
       )
       .catch(() => setInsight((prev) => ({ ...prev, status: 'error' })))
       .finally(() => clearTimeout(timeout))
-  }, [stats.dailyKwh, stats.isLoading, devices.length])
+  }, [devices, hasMeaningfulUsageData, stats, today, co2ReducedKg])
 
   return insight
 }
