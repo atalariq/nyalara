@@ -1,287 +1,96 @@
-# Carbon Tracker
+# Carbon Tracker Monorepo
 
-Carbon Tracker is a mobile-first electricity carbon tracking app. Users keep a device inventory, log electricity usage, see monthly energy and CO2e trends, and generate practical energy-saving insight.
+Carbon Tracker is a mobile-first electricity carbon tracking product.
 
-The current MVP is electricity-only. Transport, food, waste, rewards, and marketplace features are out of scope.
+Users can:
 
-The source of truth for product behavior is [docs/PRD.md](docs/PRD.md). The source of truth for engineering vocabulary and boundaries is [CONTEXT-MAP.md](CONTEXT-MAP.md) plus the context docs in each app/package.
+- sign in (email, Google, or guest)
+- manage device inventory
+- log electricity usage
+- see dashboard/history progress
+- receive practical recommendations
 
-## Product Overview
+This repository is a monorepo containing mobile app, backend API, and shared contracts.
 
-### What the app does
+## Monorepo Structure
 
-- lets a user sign in with Firebase Auth
-- lets a user manage a personal device inventory
-- lets a user log electricity usage through `device_breakdown`, direct `kwh`, or `meter_reading`
-- shows instant estimated results on mobile
-- sends canonical usage logs to backend for verified calculation and persistence
-- recalculates monthly summary and current streak on usage-log changes
-- generates backend-owned Gemini insight for full-account users
-- supports offline create through a local draft queue
+- `apps/mobile` - Expo React Native client
+- `apps/api` - Hono backend API
+- `packages/shared` - shared DTO/types between mobile and backend
 
-### Current product model
+Use [CONTEXT-MAP.md](CONTEXT-MAP.md) to navigate context docs.
 
-The repo has moved away from the older root-collection mobile model.
+## Quick Start
 
-Current canonical model:
-
-- `Device` is backend-owned inventory under `users/{userId}/devices/{deviceId}`
-- `Usage Log` is the canonical electricity tracking record
-- `device_breakdown` is the preferred mobile input path
-- monthly summary and current streak are backend-derived
-- insight is backend-generated and may be returned with `isStale`
-- mobile writes directly to Firestore only for `users/{userId}/preferences/main`
-
-## User Flow
-
-### Primary flow
-
-```text
-Create or update device inventory
--> Log electricity usage
--> Mobile shows instant estimated result
--> Backend verifies and stores canonical usage log
--> Backend refreshes monthly summary and current streak
--> User views dashboard/history
--> Full-account user generates or reads insight
-```
-
-### Online interaction diagram
-
-```mermaid
-sequenceDiagram
-    actor User
-    participant Mobile as Mobile App (FE)
-    participant API as Backend API (BE)
-    participant FS as Firestore
-    participant AI as Gemini
-
-    User->>Mobile: Manage devices and submit usage
-    Mobile->>API: Authenticated request with shared DTOs
-    API->>FS: Read devices and active emission factor
-    API->>API: Verify calculation and enrich usage log
-    API->>FS: Write usage log, refresh summary, refresh streak
-    API-->>Mobile: usage + monthlySummary + currentStreak
-    User->>Mobile: Open dashboard or insight
-    Mobile->>API: Read summary/history or generate insight
-    API->>FS: Read canonical persisted state
-    API->>AI: Generate insight when needed
-    AI-->>API: Structured insight
-    API->>FS: Persist insight with stale state
-    API-->>Mobile: Summary, history, or insight response
-```
-
-### Offline create flow
-
-```mermaid
-sequenceDiagram
-    actor User
-    participant Mobile as Mobile App (FE)
-    participant Queue as Local Draft Queue
-    participant API as Backend API (BE)
-
-    User->>Mobile: Create usage while offline
-    Mobile->>Mobile: Calculate estimated result locally
-    Mobile->>Queue: Store pending draft with clientGeneratedId
-    Note over Mobile,Queue: Draft is local only, not canonical yet
-    Mobile-->>User: Show pending / estimated state
-    Mobile->>API: Retry when connectivity returns
-    API-->>Mobile: Verified persisted usage + refreshed derived data
-    Mobile->>Queue: Remove synced draft
-```
-
-## Architecture
-
-### Monorepo layout
-
-- [`apps/mobile`](apps/mobile): Expo client, auth flow, device UX, history/dashboard screens, offline draft handling
-- [`apps/api`](apps/api): Hono API, verified calculation, device CRUD, usage CRUD, monthly summary, streak, insight generation
-- [`packages/shared`](packages/shared): shared backend-mobile API contracts
-
-Use [CONTEXT-MAP.md](CONTEXT-MAP.md) to decide which context doc to read first.
-
-### Context docs
-
-- Mobile: [apps/mobile/CONTEXT.md](apps/mobile/CONTEXT.md)
-- Backend: [apps/api/CONTEXT.md](apps/api/CONTEXT.md)
-- Shared contracts: [packages/shared/CONTEXT.md](packages/shared/CONTEXT.md)
-
-### Data authority
-
-Backend-owned:
-
-- verified calculation fields
-- device inventory CRUD
-- canonical usage logs
-- monthly summaries
-- current streak
-- insights
-- emission factor reads
-
-Mobile-owned:
-
-- form state
-- local estimated preview
-- offline draft queue
-- `preferences/main` Firestore document
-
-## Current API Surface
-
-Implemented or expected MVP routes under `/v1`:
-
-- `GET /health`
-- `GET /emission-factors`
-- `POST /calculate-electricity`
-- `GET /devices`
-- `POST /devices`
-- `PATCH /devices/:deviceId`
-- `DELETE /devices/:deviceId`
-- `GET /electricity-usages?month=YYYY-MM`
-- `POST /electricity-usages`
-- `PATCH /electricity-usages/:usageId`
-- `DELETE /electricity-usages/:usageId`
-- `GET /monthly-summary?month=YYYY-MM`
-- `POST /recalculate-monthly-summary`
-- `POST /generate-energy-insight`
-
-All user-specific routes require Firebase ID token authentication.
-
-## Canonical Data Model
-
-### Key entities
-
-- `Device`: backend-owned appliance inventory item
-- `Usage Log`: canonical tracked electricity record for one `usageDate`
-- `Monthly Summary`: backend-derived aggregate for one `YYYY-MM`
-- `Current Streak`: backend-derived consecutive tracked-day count
-- `Insight`: backend-generated monthly advice document with `isStale`
-
-### Important rules
-
-- one usage log belongs to exactly one `usageDate`
-- a user may have multiple usage logs on the same day
-- `device_breakdown` request items send only `deviceId` and `durationMinutes`
-- backend enriches breakdown snapshots and derives kWh and emissions
-- deleting a device does not rewrite historical usage logs
-- persisted usage edit/delete is online-only
-- unsynced drafts may be edited locally before upload
-- guest users can manage devices and usage logs
-- insight remains full-account-only
-
-## Getting Started
-
-### Prerequisites
-
-- `pnpm`
-- `node`
-- Firebase project access
-- Google Cloud credentials for backend work
-
-Optional but commonly needed:
-
-- `firebase` CLI
-- `gcloud` CLI
-
-### Install dependencies
-
-From repo root:
+1. Clone and install:
 
 ```bash
+git clone <repo-url> carbon-tracker
+cd carbon-tracker
 pnpm install
 ```
 
-### Environment files
+2. Complete setup:
 
-- mobile template: [apps/mobile/.env.example](apps/mobile/.env.example)
-- backend template: [apps/api/.env.example](apps/api/.env.example)
+- Follow [SETUP.md](SETUP.md) for full local onboarding:
+  - Firebase setup
+  - env files
+  - backend deploy
+  - mobile build/test
 
-Read the full Firebase and local environment setup in [docs/firebase-setup.md](docs/firebase-setup.md).
-
-### Run backend locally
+3. Run locally:
 
 ```bash
 pnpm --filter api dev
-```
-
-### Run mobile locally
-
-```bash
 pnpm --filter mobile dev
 ```
 
-The mobile app reads `EXPO_PUBLIC_API_BASE_URL` from env. Use the platform-appropriate local URL documented in [docs/firebase-setup.md](docs/firebase-setup.md).
+## Product And Domain References
 
-## Developer Guide
+- Product scope: [docs/PRD.md](docs/PRD.md)
+- Context map: [CONTEXT-MAP.md](CONTEXT-MAP.md)
+- Mobile domain glossary: [apps/mobile/CONTEXT.md](apps/mobile/CONTEXT.md)
+- Backend domain glossary: [apps/api/CONTEXT.md](apps/api/CONTEXT.md)
+- Shared domain glossary: [packages/shared/CONTEXT.md](packages/shared/CONTEXT.md)
+- ADRs (cross-context): [docs/adr](docs/adr)
 
-### Read this first
-
-Before changing code, read:
-
-- [AGENTS.md](AGENTS.md)
-- [CONTEXT-MAP.md](CONTEXT-MAP.md)
-- [docs/PRD.md](docs/PRD.md)
-- [docs/firebase-setup.md](docs/firebase-setup.md)
-
-Then read the context doc for the area you are touching.
-
-### How to approach changes
-
-1. Start from product language in the PRD and context docs.
-2. If a change spans FE and BE, update `packages/shared` contracts first.
-3. Treat backend as the authority for canonical tracking state.
-4. Avoid introducing new legacy root-collection behavior.
-5. Preserve offline create behavior where required.
-
-### Common commands
+## Engineering Commands
 
 From repo root:
 
 ```bash
+pnpm dev
+pnpm dev:api
+pnpm dev:mobile
 pnpm build
-pnpm typecheck
 pnpm test
-pnpm --filter api test
-pnpm --filter mobile dev
-pnpm --filter api dev
+pnpm typecheck
 ```
 
-### Testing
+## Testing And Verification
 
-Use the smoke-test guide for end-to-end validation:
+- Smoke tests: [docs/smoke-testing-guide.md](docs/smoke-testing-guide.md)
+- Firebase setup details: [docs/firebase-setup.md](docs/firebase-setup.md)
 
-- [docs/smoke-testing-guide.md](docs/smoke-testing-guide.md)
+## Agentic Workflow (Matt Pocock Skills)
 
-That guide covers:
+This repo supports agentic development with local skills in `.agents/skills/`.
 
-- your own local FE + backend setup
-- a remote teammate setup using a shared reachable backend
-- device CRUD
-- usage create/update/delete checks
-- summary/streak refresh
-- insight auth policy
-- offline queue behavior
+Read:
 
-### Current caveat
+- [docs/AGENTIC-WORKFLOW.md](docs/AGENTIC-WORKFLOW.md)
+- [docs/PROMPTS.md](docs/PROMPTS.md)
+- [AGENTS.md](AGENTS.md)
 
-Manual smoke testing is still important because the mobile app has pre-existing dependency/type issues unrelated to the migration work. Do not treat mobile behavior as verified only from API tests.
+Recommended workflow:
 
-## Documentation Index
+1. `grill-with-docs` to clarify decisions against context docs
+2. `to-issues` to create thin vertical slices
+3. `tdd` to implement one behavior at a time
+4. `handoff` to preserve state between sessions
 
-- Product requirements: [docs/PRD.md](docs/PRD.md)
-- Context routing: [CONTEXT-MAP.md](CONTEXT-MAP.md)
-- Firebase setup: [docs/firebase-setup.md](docs/firebase-setup.md)
-- Smoke testing: [docs/smoke-testing-guide.md](docs/smoke-testing-guide.md)
-- Migration plan: [docs/mobile-backend-migration-plan.md](docs/mobile-backend-migration-plan.md)
-- ADRs: [docs/adr](docs/adr)
-- Agent workflow: [docs/AGENTIC-WORKFLOW.md](docs/AGENTIC-WORKFLOW.md)
+## Notes
 
-## Status
-
-This repo is in an active migration from legacy mobile-owned electricity data flows to backend-owned canonical tracking.
-
-If you see a mismatch between code and older documentation, trust these documents in this order:
-
-1. [docs/PRD.md](docs/PRD.md)
-2. relevant `CONTEXT.md`
-3. active ADRs in [docs/adr](docs/adr)
-4. current shared contracts in [packages/shared/src/index.ts](packages/shared/src/index.ts)
+- Current MVP scope is electricity tracking only.
+- Treat backend as authority for canonical usage state.
+- Keep secrets out of client bundles and committed files.
