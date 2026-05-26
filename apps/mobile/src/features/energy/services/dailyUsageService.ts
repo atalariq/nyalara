@@ -7,6 +7,7 @@ import type {
 } from '@carbon-tracker/shared'
 import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
 import { protectedApiClient } from '@/shared/api/app-protected-api-client'
+import { isProtectedApiAuthError } from '@/shared/api/protected-api-client'
 import { createDraftQueueFlusher } from './draft-queue-flusher'
 import type { DailyUsage, DeviceDailyRecord } from '../types/dailyUsage.types'
 
@@ -255,6 +256,10 @@ export function createDailyUsageService({
             onData(today)
           }
         } catch (error) {
+          if (cancelled || isProtectedApiAuthError(error)) {
+            return
+          }
+
           console.error('Failed to fetch today usage from backend', error)
         }
       }
@@ -285,6 +290,10 @@ export function createDailyUsageService({
             onData(history)
           }
         } catch (error) {
+          if (cancelled || isProtectedApiAuthError(error)) {
+            return
+          }
+
           console.error('Failed to fetch energy history from backend', error)
         }
       }
