@@ -17,6 +17,8 @@ import {
 
 import { useDashboardAI } from '../hooks/useDashboardAI'
 import { useDashboardStats } from '../hooks/useDashboardStats'
+import { useDevices } from '@/features/devices/hooks/useDevices'
+import { useEnergyHistory } from '@/features/energy/hooks/useEnergyHistory'
 
 export default function DashboardScreen() {
   const user = useAuthStore((s) => s.user)
@@ -24,8 +26,10 @@ export default function DashboardScreen() {
   const dailyTargetKwh = useGoalsStore((s) => s.dailyTargetKwh)
 
   useActiveDeviceTimer()
+  const { devices } = useDevices()
+  const { today: todayUsage } = useEnergyHistory()
   const stats = useDashboardStats()
-  const insight = useDashboardAI(stats)
+  const insight = useDashboardAI({ stats, devices, today: todayUsage })
 
   const displayName = user?.displayName?.split(' ')[0] ?? 'User'
 

@@ -80,7 +80,7 @@ export function DashboardRecommendations({ recommendations, status }: Props) {
   }
 
   const renderContent = () => {
-    if (status === 'idle' || status === 'loading') {
+    if (status === 'loading') {
       return (
         <View className="items-center py-8">
           <ActivityIndicator size="small" color="#25CE7F" />
