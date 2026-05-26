@@ -19,7 +19,9 @@ export const useDevices = () => {
 
       if (!hasReconciled.current && result.length > 0) {
         hasReconciled.current = true
-        reconcileActiveDevices(result)
+        reconcileActiveDevices(result).then(() => {
+          // timer sudah bisa jalan dengan aman setelah ini
+        })
       }
     })
 

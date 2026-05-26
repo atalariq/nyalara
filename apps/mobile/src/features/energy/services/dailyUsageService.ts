@@ -130,4 +130,32 @@ export const dailyUsageService = {
       devices: updatedDevices,
     })
   },
+
+  async recordSession(
+    userId: string,
+    date: Date,
+    deviceId: string,
+    session: DeviceSession,
+  ): Promise<void> {
+    const dateStr = toDateString(date)
+    const id = docId(userId, dateStr)
+    const ref = doc(db, COLLECTION, id)
+    const snap = await getDoc(ref)
+
+    if (!snap.exists()) return
+    const existing = toDailyUsage(id, snap.data())
+    const prevDevice = existing.devices[deviceId]
+    if (!prevDevice) return
+
+    await setDoc(ref, {
+      ...snap.data(),
+      devices: {
+        ...existing.devices,
+        [deviceId]: {
+          ...prevDevice,
+          sessions: [...(prevDevice.sessions ?? []), session],
+        },
+      },
+    })
+  },
 }
