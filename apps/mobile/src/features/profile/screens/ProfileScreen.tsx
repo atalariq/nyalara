@@ -5,9 +5,6 @@ import { LogOut } from 'lucide-react-native'
 import { Alert, Pressable, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { AccountInfoList } from '../components/AccountInfoList'
-import { AchievementsBadges } from '../components/AchievementsBadges'
-import { CarbonEffectsGrid } from '../components/CarbonEffectsGrid'
-import { MonthlyGoalCard } from '../components/MonthlyGoalCard'
 import { ProfileHeader } from '../components/ProfileHeader'
 import { useProfile } from '../hooks/useProfile'
 
@@ -34,7 +31,7 @@ export default function ProfileScreen() {
     )
   }
 
-  if (error || !profile) {
+  if (!profile) {
     return (
       <SafeAreaView className="flex-1 bg-background items-center justify-center">
         <Text className="text-foreground-muted text-sm">
@@ -51,52 +48,30 @@ export default function ProfileScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ gap: 20, paddingBottom: 140 }}
       >
+        {error && (
+          <View className="px-4 pt-4">
+            <Text className="text-sm text-foreground-muted">
+              Profil ditampilkan dari sesi login. Detail tersimpan belum sempat
+              dimuat.
+            </Text>
+          </View>
+        )}
+
         <ProfileHeader
           name={profile.displayName}
-          level={{ label: 'Eco Warrior', current: 620, target: 1000 }}
           city={profile.city ?? '—'}
           avatarUrl={profile.photoURL}
-          onEditPress={() => {}}
-        />
-
-        <CarbonEffectsGrid
-          data={{
-            co2ReductionKg: 18,
-            energyUsedKwh: 482,
-            streakDays: 21,
-            deviceCount: 12,
-          }}
         />
 
         <AccountInfoList
           data={{
             name: profile.displayName,
-            email: profile.email,
+            email: profile.email || '—',
             residence: profile.residence ?? '—',
-            residents: profile.residents ?? 0,
+            residents: profile.residents ?? -1,
             city: profile.city ?? '—',
             plnRate: `Rp ${profile.electricityRate}/kWh`,
           }}
-        />
-
-        <MonthlyGoalCard
-          data={{
-            title: 'Reduce usage by 20% from last month',
-            description:
-              "You've reached 14% reduction so far. Keep going for that Eco-Badge!",
-            baselineKwh: 520,
-            targetKwh: 416,
-            progressPercent: 70,
-          }}
-          onUpdatePress={() => {}}
-        />
-
-        <AchievementsBadges
-          achievements={[
-            { id: '1', label: 'Eco Starter', emoji: '🌱' },
-            { id: '2', label: 'Zero Waste Hero', emoji: '🏆' },
-            { id: '3', label: 'Early Bird', emoji: '🐦' },
-          ]}
         />
 
         {/* Logout */}
