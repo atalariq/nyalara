@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react'
+import Toast from 'react-native-toast-message'
 import { deviceService } from '../services/deviceService'
 import { updateDevicesAfterToggle } from '../lib/device-toggle-state'
+import { toggleOffWithOptimisticUpdate } from '../lib/toggle-off-optimistic'
 import { useDeviceStore } from '../store/deviceStore'
 import { useTogglingStore } from '../store/togglingStore'
 import type { Device } from '../types/device.types'
@@ -73,15 +75,48 @@ export function useDeviceList() {
           activatedAt: now.getTime(),
         })
         setDevices(updateDevicesAfterToggle(devices, id, now.getTime()))
+        Toast.show({
+          type: 'success',
+          text1: 'Device turned on',
+          text2: device.name,
+          visibilityTime: 1800,
+        })
       } else {
-        setToggling(id, true)
-        setDevices(updateDevicesAfterToggle(devices, id, now.getTime()))
-        await toggleDevice(device)
-        setToggling(id, false)
+        const result = await toggleOffWithOptimisticUpdate({
+          deviceId: id,
+          devices,
+          setDevices,
+          setToggling,
+          persistToggleOff: async () => {
+            await toggleDevice(device)
+          },
+        })
+
+        if (result === 'persisted') {
+          Toast.show({
+            type: 'success',
+            text1: 'Device turned off',
+            text2: device.name,
+            visibilityTime: 1800,
+          })
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: 'Failed to turn off device',
+            text2: 'Restored previous state.',
+            visibilityTime: 2200,
+          })
+        }
       }
     } catch (error) {
       console.error('Failed to update device state:', error)
       setToggling(id, false)
+      Toast.show({
+        type: 'error',
+        text1: 'Device update failed',
+        text2: 'Please try again.',
+        visibilityTime: 2200,
+      })
     }
   }
 
