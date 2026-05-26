@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { router } from 'expo-router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import Toast from 'react-native-toast-message'
 import { z } from 'zod'
 import { authService } from '../services/authService'
 import { useAuthStore } from '../store/authStore'
@@ -46,10 +47,23 @@ export const useRegisterForm = () => {
       setError(null)
       setLoading(true)
       await authService.register(data.email, data.password, data.fullName)
+      Toast.show({
+        type: 'success',
+        text1: 'Account created',
+        text2: 'Welcome to Wattly.',
+        visibilityTime: 1800,
+      })
       setLoading(false)
       router.replace('/(onboarding)/intro')
     } catch (err: any) {
-      setError(parseFirebaseError(err))
+      const message = parseFirebaseError(err)
+      setError(message)
+      Toast.show({
+        type: 'error',
+        text1: 'Sign up failed',
+        text2: message,
+        visibilityTime: 2600,
+      })
       setLoading(false)
     }
   })
@@ -70,10 +84,23 @@ export const useLoginForm = () => {
       setError(null)
       setLoading(true)
       await authService.login(data.email, data.password)
+      Toast.show({
+        type: 'success',
+        text1: 'Logged in',
+        text2: 'Welcome back.',
+        visibilityTime: 1600,
+      })
       setLoading(false)
       router.replace('/(app)/dashboard')
     } catch (err: any) {
-      setError(parseFirebaseError(err))
+      const message = parseFirebaseError(err)
+      setError(message)
+      Toast.show({
+        type: 'error',
+        text1: 'Login failed',
+        text2: message,
+        visibilityTime: 2600,
+      })
       setLoading(false)
     }
   })

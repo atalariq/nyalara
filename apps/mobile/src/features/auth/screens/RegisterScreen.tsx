@@ -61,14 +61,21 @@ export function RegisterScreen() {
         <View className="bg-white rounded-[30px] px-5 py-6 border border-zinc-100 shadow-sm">
           {/* Social Buttons */}
           <View className="flex-row gap-3 mb-6">
-            {mobileFeatureFlags.appleAuth && (
-              <TouchableOpacity className="flex-1 h-11 rounded-full border border-brand items-center justify-center flex-row gap-2">
-                <FontAwesome5 name="apple" size={18} color="#25CE7F" />
-                <Text className="text-brand text-sm font-semibold">
-                  Continue with
+            <TouchableOpacity
+              disabled={!mobileFeatureFlags.appleAuth}
+              className="flex-1 h-11 rounded-full border border-brand items-center justify-center flex-row gap-2"
+              style={{ opacity: mobileFeatureFlags.appleAuth ? 1 : 0.45 }}
+            >
+              <FontAwesome5 name="apple" size={18} color="#25CE7F" />
+              <Text className="text-brand text-sm font-semibold">
+                Continue with
+              </Text>
+              {!mobileFeatureFlags.appleAuth && (
+                <Text className="text-[10px] text-zinc-500 font-medium">
+                  Soon
                 </Text>
-              </TouchableOpacity>
-            )}
+              )}
+            </TouchableOpacity>
 
             {/* Google */}
             <TouchableOpacity

@@ -8,6 +8,7 @@ import {
 import { router } from 'expo-router'
 import { useEffect } from 'react'
 import { Platform } from 'react-native'
+import Toast from 'react-native-toast-message'
 import { auth } from '@/config/firebase'
 import { getPostAuthRoute, type AuthEntryPoint } from '../lib/post-auth-route'
 import { authService } from '../services/authService'
@@ -74,6 +75,12 @@ export function useGoogleAuth(entryPoint: AuthEntryPoint = 'login') {
       const response = await GoogleSignin.signIn()
 
       if (isCancelledResponse(response)) {
+        Toast.show({
+          type: 'info',
+          text1: 'Google sign-in cancelled',
+          text2: 'No changes were made.',
+          visibilityTime: 1800,
+        })
         return
       }
 
@@ -102,23 +109,45 @@ export function useGoogleAuth(entryPoint: AuthEntryPoint = 'login') {
         Boolean(firebaseIdToken),
       )
 
+      Toast.show({
+        type: 'success',
+        text1: 'Signed in with Google',
+        visibilityTime: 1600,
+      })
       router.replace(getPostAuthRoute({ entryPoint }))
     } catch (error: unknown) {
+      let errorText = 'Please try again.'
+
       if (isErrorWithCode(error)) {
         console.log('[auth/google] Native sign-in error code:', error.code)
 
         if (error.code === statusCodes.IN_PROGRESS) {
           console.log('[auth/google] Sign-in already in progress.')
+          errorText = 'A sign-in request is already running.'
         }
 
         if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
           console.log('[auth/google] Google Play Services unavailable.')
+          errorText = 'Google Play Services is unavailable on this device.'
         }
       }
 
       if (error instanceof Error) {
         console.log('[auth/google] Native sign-in error:', error.message)
+        if (
+          error.message.includes('ID token') ||
+          error.message.includes('successful response')
+        ) {
+          errorText = error.message
+        }
       }
+
+      Toast.show({
+        type: 'error',
+        text1: 'Google sign-in failed',
+        text2: errorText,
+        visibilityTime: 2600,
+      })
     } finally {
       setLoading(false)
     }

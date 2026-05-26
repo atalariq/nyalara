@@ -18,10 +18,12 @@ import {
 } from 'react-native'
 import { FormField } from '../components/FormFields'
 import { useLoginForm } from '../hooks/useAuthForm'
+import { useGuestLogin } from '../hooks/useGuestLogin'
 import { useGoogleAuth } from '../hooks/useGoogleAuth'
 
 export function LoginScreen() {
   const { form, onSubmit, error, isLoading } = useLoginForm()
+  const { loginAsGuest, isLoading: isGuestLoading } = useGuestLogin()
 
   const { promptAsync } = useGoogleAuth('login')
 
@@ -65,15 +67,21 @@ export function LoginScreen() {
         <View className="bg-white rounded-[30px] px-5 py-6 border border-zinc-100 shadow-sm">
           {/* Social Buttons */}
           <View className="flex-row gap-3 mb-6">
-            {mobileFeatureFlags.appleAuth && (
-              <TouchableOpacity className="flex-1 h-11 rounded-full border border-brand items-center justify-center flex-row gap-2">
-                <FontAwesome5 name="apple" size={18} color="#25CE7F" />
-
-                <Text className="text-brand text-sm font-semibold">
-                  Continue with
+            <TouchableOpacity
+              disabled={!mobileFeatureFlags.appleAuth}
+              className="flex-1 h-11 rounded-full border border-brand items-center justify-center flex-row gap-2"
+              style={{ opacity: mobileFeatureFlags.appleAuth ? 1 : 0.45 }}
+            >
+              <FontAwesome5 name="apple" size={18} color="#25CE7F" />
+              <Text className="text-brand text-sm font-semibold">
+                Continue with
+              </Text>
+              {!mobileFeatureFlags.appleAuth && (
+                <Text className="text-[10px] text-zinc-500 font-medium">
+                  Soon
                 </Text>
-              </TouchableOpacity>
-            )}
+              )}
+            </TouchableOpacity>
 
             {/* Google */}
             <TouchableOpacity
@@ -132,13 +140,35 @@ export function LoginScreen() {
 
         <TouchableOpacity
           onPress={onSubmit}
-          disabled={isLoading}
+          disabled={isLoading || isGuestLoading}
           className="bg-brand h-14 rounded-full items-center justify-center mt-10"
+          style={{ opacity: isLoading || isGuestLoading ? 0.7 : 1 }}
         >
           {isLoading ? (
             <ActivityIndicator color="#FFFFFF" />
           ) : (
             <Text className="text-white font-extrabold text-lg">Log In</Text>
+          )}
+        </TouchableOpacity>
+
+        <View className="flex-row items-center gap-3 mt-6">
+          <View className="flex-1 h-px bg-zinc-200" />
+          <Text className="text-zinc-400 text-xs font-medium">or</Text>
+          <View className="flex-1 h-px bg-zinc-200" />
+        </View>
+
+        <TouchableOpacity
+          onPress={loginAsGuest}
+          disabled={isLoading || isGuestLoading}
+          className="h-14 rounded-full items-center justify-center mt-4 border border-zinc-200 bg-white"
+          style={{ opacity: isLoading || isGuestLoading ? 0.7 : 1 }}
+        >
+          {isGuestLoading ? (
+            <ActivityIndicator color="#25CE7F" />
+          ) : (
+            <Text className="text-zinc-500 font-semibold text-base">
+              Continue as Guest
+            </Text>
           )}
         </TouchableOpacity>
 
