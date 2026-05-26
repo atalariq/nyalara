@@ -24,6 +24,16 @@ export type ProtectedApiClient = {
   delete: <TResponse>(path: string) => Promise<TResponse>
 }
 
+export const PROTECTED_API_AUTH_REQUIRED_MESSAGE =
+  'Protected API requests require an authenticated Firebase user.'
+
+export function isProtectedApiAuthError(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    error.message === PROTECTED_API_AUTH_REQUIRED_MESSAGE
+  )
+}
+
 export function createProtectedApiClient({
   baseUrl = process.env.EXPO_PUBLIC_API_BASE_URL ?? '',
   fetchImpl = fetch,
@@ -109,17 +119,13 @@ async function request<TResponse>({
   }
 
   if (!currentUser) {
-    throw new Error(
-      'Protected API requests require an authenticated Firebase user.',
-    )
+    throw new Error(PROTECTED_API_AUTH_REQUIRED_MESSAGE)
   }
 
   const idToken = await currentUser.getIdToken?.()
 
   if (!idToken) {
-    throw new Error(
-      'Protected API requests require an authenticated Firebase user.',
-    )
+    throw new Error(PROTECTED_API_AUTH_REQUIRED_MESSAGE)
   }
 
   const response = await fetchImpl(buildUrl(baseUrl, path, query), {

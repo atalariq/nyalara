@@ -1,7 +1,11 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { createProtectedApiClient } from './protected-api-client.ts'
+import {
+  createProtectedApiClient,
+  isProtectedApiAuthError,
+  PROTECTED_API_AUTH_REQUIRED_MESSAGE,
+} from './protected-api-client.ts'
 
 test('protected api client rejects requests when no authenticated Firebase user exists', async () => {
   let fetchCalled = false
@@ -26,6 +30,15 @@ test('protected api client rejects requests when no authenticated Firebase user 
   )
 
   assert.equal(fetchCalled, false)
+})
+
+test('protected api client exposes a stable auth-transition error matcher', () => {
+  assert.equal(
+    isProtectedApiAuthError(new Error(PROTECTED_API_AUTH_REQUIRED_MESSAGE)),
+    true,
+  )
+  assert.equal(isProtectedApiAuthError(new Error('different error')), false)
+  assert.equal(isProtectedApiAuthError('not an error'), false)
 })
 
 test('protected api client waits for auth readiness before reading the Firebase user', async () => {
