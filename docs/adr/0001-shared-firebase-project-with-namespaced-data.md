@@ -1,3 +1,0 @@
-# Shared Firebase Project With Namespaced Data
-
-We use a single shared Firebase/GCP project for both development and production, but isolate canonical Firestore data by explicit environment namespace instead of separate cloud projects. Development writes use `dev_`-prefixed top-level collection families while production uses the unprefixed canonical collections, because this keeps operating cost low while still preventing routine dev/prod data mixing when both mobile and backend are configured correctly. Backend namespace selection is deployment-scoped only, mobile direct canonical writes must follow the same namespace rule, and unsafe namespace configuration must fail fast at startup.

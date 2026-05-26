@@ -34,6 +34,10 @@ When editing mobile code, prefer moves that converge toward the PRD contract and
 
 ## Ubiquitous language
 
+- **Nyalara**: the public product name for the mobile-first, device-centric electricity tracking experience; it carries a local Javanese resonance from `nyala`, emphasizing electricity that is visible, understandable, and directed with intention.
+- **Device-centric tracking experience**: the primary product-facing experience where users understand and manage electricity impact through the appliances and electronics they recognize in daily life.
+- **Platform evolution**: the technical direction that consolidates the product onto backend-verified usage records and derived summaries without replacing the device-centric user story.
+- **Insight-first AI experience**: the public-facing AI capability is embedded recommendations and summaries tied to electricity behavior; conversational chat remains experimental and is not part of the core product narrative.
 - **Estimated value**: client-side provisional result shown instantly.
 - **Verified value**: backend-authoritative calculation state after sync/verification.
 - **Usage log**: user entry for a specific period/month.

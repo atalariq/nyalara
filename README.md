@@ -1,96 +1,74 @@
-# Carbon Tracker Monorepo
+# Nyalara
 
-Carbon Tracker is a mobile-first electricity carbon tracking product.
+Nyalara is a mobile-first electricity tracking app that helps people understand household energy usage through the devices they use every day. It turns device activity into clear daily patterns, estimated impact, and practical recommendations that support better energy habits.
 
-Users can:
+<!--
+## Live Access
 
-- sign in (email, Google, or guest)
-- manage device inventory
-- log electricity usage
-- see dashboard/history progress
-- receive practical recommendations
+- Backend API: https://<public-backend-url>
+- Mobile release: https://github.com/<org>/<repo>/releases
+-->
 
-This repository is a monorepo containing mobile app, backend API, and shared contracts.
+## Why Nyalara
 
-## Monorepo Structure
+Electricity is easy to consume and hard to interpret. Most people know when the bill feels high, but not which devices shape that pattern or how small behavior changes reduce waste. Nyalara makes electricity usage easier to see, track, and improve without requiring users to think in raw technical numbers first.
 
-- `apps/mobile` - Expo React Native client
-- `apps/api` - Hono backend API
-- `packages/shared` - shared DTO/types between mobile and backend
+## Current Demo Highlights
 
-Use [CONTEXT-MAP.md](CONTEXT-MAP.md) to navigate context docs.
+- Email and Google sign-in, with guest access available for exploration
+- Device onboarding and device inventory management
+- Device toggle and monitoring flows for day-to-day electricity tracking
+- Dashboard summaries for daily usage and progress
+- Energy and history views for spotting usage patterns
+- Smart recommendations and AI-powered insights
+- Basic profile and household preference management
 
-## Quick Start
+## Product Direction
 
-1. Clone and install:
+Nyalara is evolving toward a stronger backend-verified platform. The current product experience stays device-centric, while the technical foundation moves toward verified usage records, cleaner synchronization, richer summaries, and more reliable insight generation.
+
+## Simple User Flow
+
+Sign in -> add household devices -> monitor electricity usage -> review daily patterns and history -> receive practical recommendations.
+
+## Simple Data Flow
+
+Mobile app -> Firebase Auth + backend API -> Firestore -> processed summaries and insights returned to the app.
+
+## Core Tech Stack
+
+- Expo and React Native
+- TypeScript
+- Hono
+- Firebase Auth
+- Firestore
+- Google Cloud Run
+- Gemini
+
+## Repository Structure
+
+- `apps/mobile` - Expo app for the Nyalara user experience
+- `apps/api` - backend API for calculations, persistence, and insights
+- `packages/shared` - shared contracts and types between mobile and backend
+
+## For Developers
+
+To get started quickly, install dependencies, follow the local environment setup guide, and run the mobile app together with the API from the repository root.
 
 ```bash
-git clone <repo-url> carbon-tracker
-cd carbon-tracker
 pnpm install
-```
-
-2. Complete setup:
-
-- Follow [SETUP.md](SETUP.md) for full local onboarding:
-  - Firebase setup
-  - env files
-  - backend deploy
-  - mobile build/test
-
-3. Run locally:
-
-```bash
 pnpm --filter api dev
 pnpm --filter mobile dev
 ```
 
-## Product And Domain References
+Continue with [SETUP.md](SETUP.md) for full local onboarding, [CONTRIBUTING.md](CONTRIBUTING.md) for collaboration rules, and [docs/firebase-setup.md](docs/firebase-setup.md) for Firebase-specific details.
 
-- Product scope: [docs/PRD.md](docs/PRD.md)
-- Context map: [CONTEXT-MAP.md](CONTEXT-MAP.md)
-- Mobile domain glossary: [apps/mobile/CONTEXT.md](apps/mobile/CONTEXT.md)
-- Backend domain glossary: [apps/api/CONTEXT.md](apps/api/CONTEXT.md)
-- Shared domain glossary: [packages/shared/CONTEXT.md](packages/shared/CONTEXT.md)
-- ADRs (cross-context): [docs/adr](docs/adr)
+## Further Reading
 
-## Engineering Commands
-
-From repo root:
-
-```bash
-pnpm dev
-pnpm dev:api
-pnpm dev:mobile
-pnpm build
-pnpm test
-pnpm typecheck
-```
-
-## Testing And Verification
-
-- Smoke tests: [docs/smoke-testing-guide.md](docs/smoke-testing-guide.md)
-- Firebase setup details: [docs/firebase-setup.md](docs/firebase-setup.md)
-
-## Agentic Workflow (Matt Pocock Skills)
-
-This repo supports agentic development with local skills in `.agents/skills/`.
-
-Read:
-
-- [docs/AGENTIC-WORKFLOW.md](docs/AGENTIC-WORKFLOW.md)
-- [docs/PROMPTS.md](docs/PROMPTS.md)
-- [AGENTS.md](AGENTS.md)
-
-Recommended workflow:
-
-1. `grill-with-docs` to clarify decisions against context docs
-2. `to-issues` to create thin vertical slices
-3. `tdd` to implement one behavior at a time
-4. `handoff` to preserve state between sessions
-
-## Notes
-
-- Current MVP scope is electricity tracking only.
-- Treat backend as authority for canonical usage state.
-- Keep secrets out of client bundles and committed files.
+- [SETUP.md](SETUP.md)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [docs/PRD.md](docs/PRD.md)
+- [apps/api/README.md](apps/api/README.md)
+- [docs/firebase-setup.md](docs/firebase-setup.md)
+- [docs/smoke-testing-guide.md](docs/smoke-testing-guide.md)
+- [CONTEXT-MAP.md](CONTEXT-MAP.md)
