@@ -9,6 +9,7 @@ import { router } from 'expo-router'
 import { useEffect } from 'react'
 import { Platform } from 'react-native'
 import { auth } from '@/config/firebase'
+import { getPostAuthRoute, type AuthEntryPoint } from '../lib/post-auth-route'
 import { authService } from '../services/authService'
 import { useAuthStore } from '../store/authStore'
 
@@ -45,7 +46,7 @@ function configureGoogleSignIn() {
   googleSignInConfigured = true
 }
 
-export function useGoogleAuth() {
+export function useGoogleAuth(entryPoint: AuthEntryPoint = 'login') {
   const { setLoading } = useAuthStore()
 
   useEffect(() => {
@@ -101,7 +102,7 @@ export function useGoogleAuth() {
         Boolean(firebaseIdToken),
       )
 
-      router.replace('/(app)/dashboard')
+      router.replace(getPostAuthRoute({ entryPoint }))
     } catch (error: unknown) {
       if (isErrorWithCode(error)) {
         console.log('[auth/google] Native sign-in error code:', error.code)

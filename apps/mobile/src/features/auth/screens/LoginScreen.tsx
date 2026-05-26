@@ -6,6 +6,7 @@ import { ArrowLeft, Lock, Mail } from 'lucide-react-native'
 import React from 'react'
 
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons'
+import { mobileFeatureFlags } from '@/shared/config/mobile-feature-flags'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -22,7 +23,7 @@ import { useGoogleAuth } from '../hooks/useGoogleAuth'
 export function LoginScreen() {
   const { form, onSubmit, error, isLoading } = useLoginForm()
 
-  const { promptAsync } = useGoogleAuth()
+  const { promptAsync } = useGoogleAuth('login')
 
   return (
     <KeyboardAvoidingView
@@ -64,19 +65,20 @@ export function LoginScreen() {
         <View className="bg-white rounded-[30px] px-5 py-6 border border-zinc-100 shadow-sm">
           {/* Social Buttons */}
           <View className="flex-row gap-3 mb-6">
-            {/* Apple */}
-            <TouchableOpacity className="flex-1 h-11 rounded-full border border-brand items-center justify-center flex-row gap-2">
-              <FontAwesome5 name="apple" size={18} color="#25CE7F" />
+            {mobileFeatureFlags.appleAuth && (
+              <TouchableOpacity className="flex-1 h-11 rounded-full border border-brand items-center justify-center flex-row gap-2">
+                <FontAwesome5 name="apple" size={18} color="#25CE7F" />
 
-              <Text className="text-brand text-sm font-semibold">
-                Continue with
-              </Text>
-            </TouchableOpacity>
+                <Text className="text-brand text-sm font-semibold">
+                  Continue with
+                </Text>
+              </TouchableOpacity>
+            )}
 
             {/* Google */}
             <TouchableOpacity
               onPress={() => promptAsync()}
-              className="flex-1 h-11 rounded-full border border-brand items-center justify-center flex-row gap-2"
+              className="h-11 rounded-full border border-brand items-center justify-center flex-row gap-2 flex-1"
             >
               <AntDesign name="google" size={18} color="#25CE7F" />
 

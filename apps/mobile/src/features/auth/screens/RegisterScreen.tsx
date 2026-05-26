@@ -3,6 +3,7 @@ import { AntDesign, FontAwesome5 } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { ArrowLeft, Lock, Mail, User } from 'lucide-react-native'
 import React from 'react'
+import { mobileFeatureFlags } from '@/shared/config/mobile-feature-flags'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -19,7 +20,7 @@ import { useGuestLogin } from '../hooks/useGuestLogin'
 
 export function RegisterScreen() {
   const { form, onSubmit, error, isLoading } = useRegisterForm()
-  const { promptAsync } = useGoogleAuth()
+  const { promptAsync } = useGoogleAuth('register')
   const { loginAsGuest, isLoading: isGuestLoading } = useGuestLogin()
 
   return (
@@ -60,18 +61,19 @@ export function RegisterScreen() {
         <View className="bg-white rounded-[30px] px-5 py-6 border border-zinc-100 shadow-sm">
           {/* Social Buttons */}
           <View className="flex-row gap-3 mb-6">
-            {/* Apple */}
-            <TouchableOpacity className="flex-1 h-11 rounded-full border border-brand items-center justify-center flex-row gap-2">
-              <FontAwesome5 name="apple" size={18} color="#25CE7F" />
-              <Text className="text-brand text-sm font-semibold">
-                Continue with
-              </Text>
-            </TouchableOpacity>
+            {mobileFeatureFlags.appleAuth && (
+              <TouchableOpacity className="flex-1 h-11 rounded-full border border-brand items-center justify-center flex-row gap-2">
+                <FontAwesome5 name="apple" size={18} color="#25CE7F" />
+                <Text className="text-brand text-sm font-semibold">
+                  Continue with
+                </Text>
+              </TouchableOpacity>
+            )}
 
             {/* Google */}
             <TouchableOpacity
               onPress={() => promptAsync()}
-              className="flex-1 h-11 rounded-full border border-brand items-center justify-center flex-row gap-2"
+              className="h-11 rounded-full border border-brand items-center justify-center flex-row gap-2 flex-1"
             >
               <AntDesign name="google" size={18} color="#25CE7F" />
               <Text className="text-brand text-sm font-semibold">
