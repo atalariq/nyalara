@@ -1,9 +1,11 @@
 // app/_layout.tsx
+import { useAuthStore } from '@/features/auth/store/authStore'
 import { initAuthListener } from '@/features/auth/store/authStore'
 import { LoadingProvider } from '@/providers/LoadingProvider'
 import { GeminiChatSheet } from '@/features/chat/components/GeminiChatSheet'
 import { FloatingChatButton } from '@/shared/components/ui/FloatingChatButton'
 import { HamburgerMenu } from '@/shared/components/ui/HamburgerMenu/HamburgerMenu'
+import { mobileFeatureFlags } from '@/shared/config/mobile-feature-flags'
 import { useFonts } from 'expo-font'
 import { Stack, useSegments } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
@@ -14,6 +16,7 @@ import {
   ReanimatedLogLevel,
 } from 'react-native-reanimated'
 import Toast from 'react-native-toast-message'
+import { shouldHideSplashScreen } from './startup-policy'
 import '../../global.css'
 
 configureReanimatedLogger({
@@ -24,6 +27,7 @@ configureReanimatedLogger({
 SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
+  const isAuthLoading = useAuthStore((s) => s.isLoading)
   const [fontsLoaded] = useFonts({
     'Manrope-Regular': require('@/assets/fonts/Manrope-Regular.ttf'),
     'Manrope-Medium': require('@/assets/fonts/Manrope-Medium.ttf'),
@@ -41,17 +45,19 @@ export default function RootLayout() {
   }, [])
 
   useEffect(() => {
-    if (fontsLoaded) SplashScreen.hideAsync()
-  }, [fontsLoaded])
+    if (shouldHideSplashScreen({ fontsLoaded, isAuthLoading })) {
+      SplashScreen.hideAsync()
+    }
+  }, [fontsLoaded, isAuthLoading])
 
-  if (!fontsLoaded) return null
+  if (!shouldHideSplashScreen({ fontsLoaded, isAuthLoading })) return null
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <LoadingProvider>
         <Stack screenOptions={{ headerShown: false }} />
         <Toast />
-        {isAppRoute && (
+        {isAppRoute && mobileFeatureFlags.chatbot && (
           <>
             <FloatingChatButton />
             <GeminiChatSheet />
