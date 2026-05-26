@@ -5,6 +5,7 @@ import type {
   UpdateDeviceRequest,
 } from '@carbon-tracker/shared'
 import { protectedApiClient } from '@/shared/api/app-protected-api-client'
+import { isProtectedApiAuthError } from '@/shared/api/protected-api-client'
 import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
 import type { CreateDevicePayload, Device } from '../types/device.types'
 
@@ -123,6 +124,10 @@ export const deviceService = {
           onData(devices)
         }
       } catch (error) {
+        if (cancelled || isProtectedApiAuthError(error)) {
+          return
+        }
+
         console.error('Failed to fetch devices from backend', error)
       }
     }

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { deviceService } from '../services/deviceService'
+import { updateDevicesAfterToggle } from '../lib/device-toggle-state'
 import { useDeviceStore } from '../store/deviceStore'
 import { useTogglingStore } from '../store/togglingStore'
 import type { Device } from '../types/device.types'
@@ -71,19 +72,10 @@ export function useDeviceList() {
           active: true,
           activatedAt: now.getTime(),
         })
-        setDevices(
-          devices.map((item) =>
-            item.id === id
-              ? {
-                  ...item,
-                  active: true,
-                  activatedAt: now.getTime(),
-                }
-              : item,
-          ),
-        )
+        setDevices(updateDevicesAfterToggle(devices, id, now.getTime()))
       } else {
         setToggling(id, true)
+        setDevices(updateDevicesAfterToggle(devices, id, now.getTime()))
         await toggleDevice(device)
         setToggling(id, false)
       }
