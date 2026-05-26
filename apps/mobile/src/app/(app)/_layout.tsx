@@ -1,5 +1,6 @@
 // src/app/(app)/_layout.tsx
 import { useAuthStore } from '@/features/auth/store/authStore'
+import { useActiveDeviceTimer } from '@/features/devices/hooks/useActiveDeviceTimer'
 import { useSyncDevices } from '@/features/devices/hooks/useSyncDevices'
 import { useSyncEnergyHistory } from '@/features/energy/hooks/useSyncEnergyHistory'
 import AppLoading from '@/shared/components/feedback/AppLoading'
@@ -12,6 +13,7 @@ export default function AppLayout() {
   const { user, isLoading } = useAuthStore()
   useSyncDevices()
   useSyncEnergyHistory()
+  useActiveDeviceTimer()
 
   useEffect(() => {
     if (!isLoading && !user) {
