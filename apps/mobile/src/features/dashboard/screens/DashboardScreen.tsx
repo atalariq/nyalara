@@ -20,13 +20,12 @@ import { useDashboardAI } from '../hooks/useDashboardAI'
 import { useDashboardStats } from '../hooks/useDashboardStats'
 import { useDevices } from '@/features/devices/hooks/useDevices'
 import { useEnergyHistory } from '@/features/energy/hooks/useEnergyHistory'
-import { toFiniteNumber } from '../lib/finite-number'
 
 export default function DashboardScreen() {
   const user = useAuthStore((s) => s.user)
   const open = useHamburgerStore((s) => s.open)
   const { monthlyBudgetKwh } = useCarbonBudget()
-  const dailyTargetKwh = toFiniteNumber(monthlyBudgetKwh / 30)
+  const dailyTargetKwh = monthlyBudgetKwh / 30
 
   useActiveDeviceTimer()
   const { devices } = useDevices()

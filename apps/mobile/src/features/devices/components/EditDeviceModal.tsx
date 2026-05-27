@@ -7,14 +7,11 @@ import {
   Modal,
   Platform,
   Pressable,
-  ScrollView,
   Text,
   TextInput,
   View,
   Alert,
 } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { getKeyboardSafeModalLayout } from '@/shared/components/ui/keyboard-safe-modal-layout'
 import { z } from 'zod'
 import type { DeviceListItem } from '../hooks/useDeviceList'
 import { CategoryGrid } from './AddDeviceSheet/CategoryGrid'
@@ -38,8 +35,6 @@ type Props = {
 }
 
 export function EditDeviceModal({ device, visible, onClose, onSave, onDelete }: Props) {
-  const insets = useSafeAreaInsets()
-  const layout = getKeyboardSafeModalLayout('sheet')
   const {
     control,
     handleSubmit,
@@ -92,109 +87,101 @@ export function EditDeviceModal({ device, visible, onClose, onSave, onDelete }: 
         className="flex-1"
       >
         <Pressable
-          className="flex-1 justify-end px-4"
+          className="flex-1 justify-end"
           style={{ backgroundColor: '#00000050' }}
           onPress={onClose}
         >
           <Pressable
             onPress={(e) => e.stopPropagation()}
-            className="bg-white rounded-t-[32px]"
-            style={{ maxHeight: layout.maxHeight, paddingBottom: Math.max(insets.bottom, 16) }}
+            className="bg-white rounded-t-[32px] px-5 pt-6 pb-10 gap-5"
           >
-            <ScrollView
-              keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 24, paddingBottom: 20 }}
-            >
-              {/* Handle */}
-              <View className="w-10 h-1 rounded-full bg-[#E0E0E0] self-center mb-4" />
+            {/* Handle */}
+            <View className="w-10 h-1 rounded-full bg-[#E0E0E0] self-center mb-2" />
 
-              <Text className="text-[18px] font-extrabold text-[#111] mb-5">Edit Device</Text>
+            <Text className="text-[18px] font-extrabold text-[#111]">Edit Device</Text>
 
-              {/* Name */}
-              <View className="mb-5">
-                <Text className="text-xs font-semibold text-[#888] mb-2">DEVICE NAME</Text>
+            {/* Name */}
+            <View>
+              <Text className="text-xs font-semibold text-[#888] mb-2">DEVICE NAME</Text>
+              <Controller
+                name="name"
+                control={control}
+                render={({ field }) => (
+                  <View className="flex-row items-center bg-[#F5F5F5] rounded-2xl px-4 py-3">
+                    <TextInput
+                      className="flex-1 text-[14px] text-[#111]"
+                      value={field.value}
+                      onChangeText={field.onChange}
+                      placeholder="Device name"
+                      placeholderTextColor="#ABABAB"
+                    />
+                  </View>
+                )}
+              />
+              {errors.name && (
+                <Text className="text-[#f87171] text-xs mt-1">{errors.name.message}</Text>
+              )}
+            </View>
+
+            {/* Category */}
+            <View>
+              <Text className="text-xs font-semibold text-[#888] mb-2">CATEGORY</Text>
+              <Controller
+                name="deviceType"
+                control={control}
+                render={({ field }) => (
+                  <CategoryGrid value={field.value} onChange={field.onChange} />
+                )}
+              />
+            </View>
+
+            {/* Watt + Hours */}
+            <View className="flex-row gap-3">
+              <View className="flex-1">
+                <Text className="text-xs font-semibold text-[#888] mb-2">WATTAGE</Text>
                 <Controller
-                  name="name"
+                  name="watt"
                   control={control}
                   render={({ field }) => (
                     <View className="flex-row items-center bg-[#F5F5F5] rounded-2xl px-4 py-3">
                       <TextInput
                         className="flex-1 text-[14px] text-[#111]"
-                        value={field.value}
-                        onChangeText={field.onChange}
-                        placeholder="Device name"
+                        keyboardType="numeric"
+                        value={field.value ? String(field.value) : ''}
+                        onChangeText={(v) => field.onChange(Number(v) || 0)}
+                        placeholder="W"
                         placeholderTextColor="#ABABAB"
                       />
+                      <Text className="text-[#25CE7F] font-bold text-sm">W</Text>
                     </View>
                   )}
                 />
-                {errors.name && (
-                  <Text className="text-[#f87171] text-xs mt-1">{errors.name.message}</Text>
-                )}
               </View>
-
-              {/* Category */}
-              <View className="mb-5">
-                <Text className="text-xs font-semibold text-[#888] mb-2">CATEGORY</Text>
+              <View className="flex-1">
+                <Text className="text-xs font-semibold text-[#888] mb-2">HOURS/DAY</Text>
                 <Controller
-                  name="deviceType"
+                  name="hoursPerDay"
                   control={control}
                   render={({ field }) => (
-                    <CategoryGrid value={field.value} onChange={field.onChange} />
+                    <View className="flex-row items-center bg-[#F5F5F5] rounded-2xl px-4 py-3">
+                      <TextInput
+                        className="flex-1 text-[14px] text-[#111]"
+                        keyboardType="numeric"
+                        value={field.value ? String(field.value) : ''}
+                        onChangeText={(v) => field.onChange(Number(v) || 0)}
+                        placeholder="h"
+                        placeholderTextColor="#ABABAB"
+                      />
+                      <Text className="text-[#ABABAB] text-sm">h</Text>
+                    </View>
                   )}
                 />
               </View>
+            </View>
 
-              {/* Watt + Hours */}
-              <View className="flex-row gap-3">
-                <View className="flex-1">
-                  <Text className="text-xs font-semibold text-[#888] mb-2">WATTAGE</Text>
-                  <Controller
-                    name="watt"
-                    control={control}
-                    render={({ field }) => (
-                      <View className="flex-row items-center bg-[#F5F5F5] rounded-2xl px-4 py-3">
-                        <TextInput
-                          className="flex-1 text-[14px] text-[#111]"
-                          keyboardType="numeric"
-                          value={field.value ? String(field.value) : ''}
-                          onChangeText={(v) => field.onChange(Number(v) || 0)}
-                          placeholder="W"
-                          placeholderTextColor="#ABABAB"
-                        />
-                        <Text className="text-[#25CE7F] font-bold text-sm">W</Text>
-                      </View>
-                    )}
-                  />
-                </View>
-                <View className="flex-1">
-                  <Text className="text-xs font-semibold text-[#888] mb-2">HOURS/DAY</Text>
-                  <Controller
-                    name="hoursPerDay"
-                    control={control}
-                    render={({ field }) => (
-                      <View className="flex-row items-center bg-[#F5F5F5] rounded-2xl px-4 py-3">
-                        <TextInput
-                          className="flex-1 text-[14px] text-[#111]"
-                          keyboardType="numeric"
-                          value={field.value ? String(field.value) : ''}
-                          onChangeText={(v) => field.onChange(Number(v) || 0)}
-                          placeholder="h"
-                          placeholderTextColor="#ABABAB"
-                        />
-                        <Text className="text-[#ABABAB] text-sm">h</Text>
-                      </View>
-                    )}
-                  />
-                </View>
-              </View>
-            </ScrollView>
-
-            <View
-              className="gap-3 border-t border-[#F1F1F1] px-5"
-              style={{ paddingTop: layout.footerTopPadding }}
-            >
+            {/* Buttons */}
+            <View className="gap-3 mt-2">
+              {/* Delete */}
               <Pressable
                 onPress={handleDelete}
                 disabled={isSubmitting}
@@ -203,6 +190,7 @@ export function EditDeviceModal({ device, visible, onClose, onSave, onDelete }: 
                 <Text className="font-semibold text-[#EF4444]">Delete Device</Text>
               </Pressable>
 
+              {/* Cancel + Save */}
               <View className="flex-row gap-3">
                 <Pressable
                   onPress={onClose}

@@ -10,8 +10,6 @@ import {
   View,
 } from 'react-native'
 import { Check, Pencil, Plus, Trash2 } from 'lucide-react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { getKeyboardSafeModalLayout } from '@/shared/components/ui/keyboard-safe-modal-layout'
 import { useGoalsStore } from '../store/goalsStore'
 
 type Props = {
@@ -20,8 +18,6 @@ type Props = {
 }
 
 export function EditTargetsModal({ visible, onClose }: Props) {
-  const insets = useSafeAreaInsets()
-  const layout = getKeyboardSafeModalLayout('dialog')
   const { sustainabilityTargets, addTarget, updateTarget, removeTarget } = useGoalsStore()
   const [newLabel, setNewLabel] = useState('')
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -46,49 +42,46 @@ export function EditTargetsModal({ visible, onClose }: Props) {
         className="flex-1"
       >
         <Pressable
-          className="flex-1 justify-end px-4"
+          className="flex-1 items-center justify-center px-5"
           style={{ backgroundColor: '#00000050' }}
           onPress={onClose}
         >
           <Pressable
             onPress={(e) => e.stopPropagation()}
-            className="w-full rounded-[28px] bg-white"
-            style={{ maxHeight: layout.maxHeight, paddingBottom: Math.max(insets.bottom, 16) }}
+            className="w-full rounded-[28px] bg-white p-6 gap-4"
+            style={{ maxHeight: '80%' }}
           >
+            {/* Header */}
+            <View className="flex-row items-center justify-between">
+              <Text className="text-xl font-bold text-[#111]">Edit Targets</Text>
+              <Pressable onPress={onClose} hitSlop={8}>
+                <Text className="font-semibold text-[#25CE7F]">Done</Text>
+              </Pressable>
+            </View>
+
+            {/* Add new */}
+            <View className="flex-row items-center gap-3 rounded-2xl bg-[#F3F4F6] px-4">
+              <TextInput
+                value={newLabel}
+                onChangeText={setNewLabel}
+                placeholder="Add new target..."
+                placeholderTextColor="#999"
+                className="flex-1 py-4 text-sm text-[#111]"
+                onSubmitEditing={handleAdd}
+                returnKeyType="done"
+              />
+              <Pressable onPress={handleAdd} hitSlop={8}>
+                <Plus size={18} color="#25CE7F" />
+              </Pressable>
+            </View>
+
+            {/* List */}
             <ScrollView
-              keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                gap: 10,
-                paddingHorizontal: 24,
-                paddingTop: 24,
-                paddingBottom: layout.scrollBottomPadding,
-              }}
+              keyboardShouldPersistTaps="handled"
+              style={{ maxHeight: 280 }}
+              contentContainerStyle={{ gap: 10 }}
             >
-              {/* Header */}
-              <View className="flex-row items-center justify-between mb-1">
-                <Text className="text-xl font-bold text-[#111]">Edit Targets</Text>
-                <Pressable onPress={onClose} hitSlop={8}>
-                  <Text className="font-semibold text-[#25CE7F]">Done</Text>
-                </Pressable>
-              </View>
-
-              {/* Add new */}
-              <View className="flex-row items-center gap-3 rounded-2xl bg-[#F3F4F6] px-4">
-                <TextInput
-                  value={newLabel}
-                  onChangeText={setNewLabel}
-                  placeholder="Add new target..."
-                  placeholderTextColor="#999"
-                  className="flex-1 py-4 text-sm text-[#111]"
-                  onSubmitEditing={handleAdd}
-                  returnKeyType="done"
-                />
-                <Pressable onPress={handleAdd} hitSlop={8}>
-                  <Plus size={18} color="#25CE7F" />
-                </Pressable>
-              </View>
-
               {sustainabilityTargets.map((target) => (
                 <View
                   key={target.id}

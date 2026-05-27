@@ -2,16 +2,7 @@
 import { AppButton } from '@/shared/components/ui/AppButton'
 import { router } from 'expo-router'
 import React, { useRef, useState } from 'react'
-import {
-  Dimensions,
-  FlatList,
-  ListRenderItem,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { Dimensions, FlatList, ListRenderItem, Text, TouchableOpacity, View } from 'react-native'
 import { OnboardingSlide } from '../components/OnboardingSlide'
 import { ONBOARDING_SLIDES } from '../data/slides'
 import { OnboardingSlideData } from '../types'
@@ -35,11 +26,6 @@ export default function IntroScreen() {
 
   const handleSkip = () => {
     router.replace('/(onboarding)/house-type')
-  }
-
-  const handleMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const nextIndex = Math.round(event.nativeEvent.contentOffset.x / SCREEN_WIDTH)
-    setActiveIndex(nextIndex)
   }
 
   const renderItem: ListRenderItem<OnboardingSlideData> = ({ item }) => (
@@ -70,9 +56,8 @@ export default function IntroScreen() {
           keyExtractor={(item) => item.id}
           horizontal
           pagingEnabled
-          onMomentumScrollEnd={handleMomentumScrollEnd}
+          scrollEnabled={false}
           showsHorizontalScrollIndicator={false}
-          bounces={false}
         />
       </View>
 

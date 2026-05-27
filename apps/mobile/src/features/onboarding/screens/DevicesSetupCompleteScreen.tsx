@@ -2,7 +2,6 @@ import { router } from 'expo-router'
 import { useEffect, useRef } from 'react'
 import { Animated, Pressable, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { AppBackButton } from '@/shared/components/ui/AppBackButton'
 import { useDeviceStore } from '../../devices/store/deviceStore'
 
 export function DeviceSetupCompleteScreen() {
@@ -34,7 +33,9 @@ export function DeviceSetupCompleteScreen() {
     <SafeAreaView className="flex-1 bg-[#25CE7F]">
       {/* Nav */}
       <View className="flex-row items-center px-5 pt-2">
-        <AppBackButton onPress={() => router.back()} tone="light" />
+        <Pressable onPress={() => router.back()} className="flex-row items-center gap-1">
+          <Text className="text-white text-sm font-semibold">← Nyalara</Text>
+        </Pressable>
       </View>
 
       {/* Checkmark */}

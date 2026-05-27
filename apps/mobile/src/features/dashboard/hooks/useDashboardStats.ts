@@ -5,11 +5,10 @@ import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
 import type { DashboardStats } from '../types/dashboard.types'
 import { useCarbonBudget } from '@/features/carbon-budget/hooks/useCarbonBudget'
 import { useMemo } from 'react'
-import { toFiniteNumber } from '../lib/finite-number'
 
 export function useDashboardStats(): DashboardStats & { isLoading: boolean } {
   const { monthlyBudgetKwh } = useCarbonBudget()
-  const dailyTargetKwh = toFiniteNumber(monthlyBudgetKwh / 30)
+  const dailyTargetKwh = monthlyBudgetKwh / 30
   const { today, isLoading } = useEnergyHistory()
   const { devices } = useDevices()
 
@@ -25,7 +24,7 @@ export function useDashboardStats(): DashboardStats & { isLoading: boolean } {
     const savedKwh = Math.max(estimatedDailyKwh - dailyKwh, 0)
     const co2ReducedKg = savedKwh * CARBON_CONFIG.emissionFactor
 
-    const progress = dailyTargetKwh > 0 ? Math.min(dailyKwh / dailyTargetKwh, 1) : 0
+    const progress = Math.min(dailyKwh / dailyTargetKwh, 1)
     const remaining = Math.max(dailyTargetKwh - dailyKwh, 0)
 
     return {
