@@ -66,9 +66,6 @@ export function RegisterScreen() {
             >
               <FontAwesome5 name="apple" size={18} color="#25CE7F" />
               <Text className="text-brand text-sm font-semibold">Continue with</Text>
-              {!mobileFeatureFlags.appleAuth && (
-                <Text className="text-[10px] text-zinc-500 font-medium">Soon</Text>
-              )}
             </TouchableOpacity>
 
             {/* Google */}
