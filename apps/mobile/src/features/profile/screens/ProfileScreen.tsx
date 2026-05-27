@@ -2,15 +2,21 @@
 import { useLogout } from '@/features/auth/hooks/useLogout'
 import AppLoading from '@/shared/components/feedback/AppLoading'
 import { LogOut } from 'lucide-react-native'
+import { useState } from 'react'
 import { Alert, Pressable, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import Toast from 'react-native-toast-message'
 import { AccountInfoList } from '../components/AccountInfoList'
+import { EditProfileModal } from '../components/EditProfileModal'
 import { ProfileHeader } from '../components/ProfileHeader'
 import { useProfile } from '../hooks/useProfile'
+import { profileService } from '../services/profileService'
 
 export default function ProfileScreen() {
-  const { profile, isLoading, error } = useProfile()
+  const { profile, isLoading, error, refetch } = useProfile()
   const { logout, isLoading: isLoggingOut } = useLogout()
+  const [isEditing, setIsEditing] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
 
   function handleLogout() {
     Alert.alert('Log Out', 'Are you sure you want to log out?', [
@@ -21,6 +27,38 @@ export default function ProfileScreen() {
         onPress: logout,
       },
     ])
+  }
+
+  async function handleSaveProfile(values: {
+    displayName: string
+    residence: string
+    residents: number
+    city: string
+  }) {
+    if (!profile) return
+
+    setIsSaving(true)
+
+    try {
+      await profileService.updateProfile(profile.uid, values)
+      await refetch()
+      setIsEditing(false)
+      Toast.show({
+        type: 'success',
+        text1: 'Profile updated',
+        text2: 'Your preferences were saved.',
+        visibilityTime: 2000,
+      })
+    } catch {
+      Toast.show({
+        type: 'error',
+        text1: 'Save failed',
+        text2: 'Please try again.',
+        visibilityTime: 2600,
+      })
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   if (isLoading) {
@@ -34,9 +72,7 @@ export default function ProfileScreen() {
   if (!profile) {
     return (
       <SafeAreaView className="flex-1 bg-background items-center justify-center">
-        <Text className="text-foreground-muted text-sm">
-          {error ?? 'Profile not found'}
-        </Text>
+        <Text className="text-foreground-muted text-sm">{error ?? 'Profile not found'}</Text>
       </SafeAreaView>
     )
   }
@@ -51,8 +87,7 @@ export default function ProfileScreen() {
         {error && (
           <View className="px-4 pt-4">
             <Text className="text-sm text-foreground-muted">
-              Profile is shown from your current session. Stored details could
-              not be loaded yet.
+              Profile is shown from your current session. Stored details could not be loaded yet.
             </Text>
           </View>
         )}
@@ -64,6 +99,7 @@ export default function ProfileScreen() {
         />
 
         <AccountInfoList
+          onEdit={() => setIsEditing(true)}
           data={{
             name: profile.displayName,
             email: profile.email || '—',
@@ -89,14 +125,24 @@ export default function ProfileScreen() {
             ) : (
               <>
                 <LogOut size={18} color="#EF4444" />
-                <Text className="text-base font-semibold text-red-500">
-                  Log Out
-                </Text>
+                <Text className="text-base font-semibold text-red-500">Log Out</Text>
               </>
             )}
           </Pressable>
         </View>
       </ScrollView>
+
+      <EditProfileModal
+        visible={isEditing}
+        profile={profile}
+        isSaving={isSaving}
+        onClose={() => {
+          if (!isSaving) {
+            setIsEditing(false)
+          }
+        }}
+        onSave={handleSaveProfile}
+      />
     </SafeAreaView>
   )
 }
