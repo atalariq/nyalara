@@ -100,8 +100,23 @@ Device writes use fields such as:
 - `name`
 - `category`
 - `deviceType`
+- `location` optional:
+  - `bedroom`
+  - `bathroom`
+  - `living_room`
+  - `kitchen`
+  - `dining_room`
+  - `other`
 - `watt`
 - `defaultDurationMinutes`
+
+Device responses include `location`.
+
+Compatibility behavior:
+
+- If `location` is not provided on create, backend defaults it to `other`.
+- Legacy device records without stored location are returned as `location: "other"`.
+- `PATCH /v1/devices/{deviceId}` only updates `location` when that field is sent.
 
 ### Calculations
 
