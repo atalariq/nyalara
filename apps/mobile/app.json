@@ -5,11 +5,11 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "carbontracker",
+    "scheme": "nyalara",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
-      "bundleIdentifier": "com.raharinda.carbontracker",
+      "bundleIdentifier": "com.nyalara.mobile",
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": false,
       "infoPlist": {
@@ -25,7 +25,7 @@
       },
       "googleServicesFile": "./google-services.json",
       "predictiveBackGestureEnabled": false,
-      "package": "com.raharinda.carbontracker"
+      "package": "com.nyalara.mobile"
     },
     "web": {
       "output": "static",

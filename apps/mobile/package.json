@@ -15,7 +15,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@carbon-tracker/shared": "workspace:^",
+    "@nyalara/shared": "workspace:^",
     "@expo/vector-icons": "^15.1.1",
     "@gorhom/bottom-sheet": "^5.2.14",
     "@hookform/resolvers": "^5.2.2",

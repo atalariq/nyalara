@@ -8,7 +8,7 @@ function createDecodedIdToken(
   signInProvider: string
 ): DecodedIdToken {
   return {
-    aud: 'carbon-tracker',
+    aud: 'nyalara',
     auth_time: 0,
     exp: 0,
     firebase: {
@@ -16,7 +16,7 @@ function createDecodedIdToken(
       sign_in_provider: signInProvider
     },
     iat: 0,
-    iss: 'https://securetoken.google.com/carbon-tracker',
+    iss: 'https://securetoken.google.com/nyalara',
     sub: uid,
     uid
   } as DecodedIdToken

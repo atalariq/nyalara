@@ -2,7 +2,7 @@ import type {
   CreateDeviceRequest,
   DeviceDto,
   UpdateDeviceRequest
-} from '@carbon-tracker/shared'
+} from '@nyalara/shared'
 
 export type ListDevicesParams = {
   userId: string

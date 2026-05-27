@@ -3,7 +3,7 @@ import type {
   CreateDeviceRequest,
   DeviceDto,
   UpdateDeviceRequest,
-} from '@carbon-tracker/shared'
+} from '@nyalara/shared'
 import { protectedApiClient } from '@/shared/api/app-protected-api-client'
 import { isProtectedApiAuthError } from '@/shared/api/protected-api-client'
 import { CARBON_CONFIG } from '@/shared/config/carbonConfig'

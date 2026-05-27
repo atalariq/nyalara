@@ -1,4 +1,4 @@
-import type { DeviceDto } from '@carbon-tracker/shared'
+import type { DeviceDto } from '@nyalara/shared'
 import { createRoute, z } from '@hono/zod-openapi'
 import type { OpenAPIHono } from '@hono/zod-openapi'
 

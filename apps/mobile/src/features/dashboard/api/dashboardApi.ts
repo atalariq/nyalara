@@ -1,4 +1,4 @@
-import type { ApiResponse, EnergyInsightDto } from '@carbon-tracker/shared'
+import type { ApiResponse, EnergyInsightDto } from '@nyalara/shared'
 import { protectedApiClient } from '@/shared/api/app-protected-api-client'
 import type { DashboardStats } from '../types/dashboard.types'
 
@@ -22,12 +22,12 @@ export async function fetchAIInsight(
   _deviceSummary: string,
   co2ReducedKg: number,
 ): Promise<BackendInsightResponse> {
-  const response = await protectedApiClient.post<
-    { month: string },
-    ApiResponse<EnergyInsightDto>
-  >('/v1/generate-energy-insight', {
-    month: getCurrentMonth(),
-  })
+  const response = await protectedApiClient.post<{ month: string }, ApiResponse<EnergyInsightDto>>(
+    '/v1/generate-energy-insight',
+    {
+      month: getCurrentMonth(),
+    },
+  )
 
   if (!response.success) {
     throw new Error(response.error.message)
