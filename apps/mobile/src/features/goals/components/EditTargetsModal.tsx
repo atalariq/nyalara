@@ -56,6 +56,8 @@ export function EditTargetsModal({ visible, onClose }: Props) {
             style={{ maxHeight: layout.maxHeight, paddingBottom: Math.max(insets.bottom, 16) }}
           >
             <ScrollView
+              automaticallyAdjustKeyboardInsets
+              keyboardDismissMode="interactive"
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{
@@ -65,7 +67,6 @@ export function EditTargetsModal({ visible, onClose }: Props) {
                 paddingBottom: layout.scrollBottomPadding,
               }}
             >
-              {/* Header */}
               <View className="flex-row items-center justify-between mb-1">
                 <Text className="text-xl font-bold text-[#111]">Edit Targets</Text>
                 <Pressable onPress={onClose} hitSlop={8}>
@@ -73,7 +74,6 @@ export function EditTargetsModal({ visible, onClose }: Props) {
                 </Pressable>
               </View>
 
-              {/* Add new */}
               <View className="flex-row items-center gap-3 rounded-2xl bg-[#F3F4F6] px-4">
                 <TextInput
                   value={newLabel}

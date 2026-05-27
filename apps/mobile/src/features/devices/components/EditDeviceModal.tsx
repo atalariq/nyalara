@@ -49,7 +49,6 @@ export function EditDeviceModal({ device, visible, onClose, onSave, onDelete }: 
     resolver: zodResolver(schema),
   })
 
-  // Reset form setiap kali device berubah
   useEffect(() => {
     if (device) {
       reset({
@@ -102,16 +101,16 @@ export function EditDeviceModal({ device, visible, onClose, onSave, onDelete }: 
             style={{ maxHeight: layout.maxHeight, paddingBottom: Math.max(insets.bottom, 16) }}
           >
             <ScrollView
+              automaticallyAdjustKeyboardInsets
+              keyboardDismissMode="interactive"
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 24, paddingBottom: 20 }}
             >
-              {/* Handle */}
               <View className="w-10 h-1 rounded-full bg-[#E0E0E0] self-center mb-4" />
 
               <Text className="text-[18px] font-extrabold text-[#111] mb-5">Edit Device</Text>
 
-              {/* Name */}
               <View className="mb-5">
                 <Text className="text-xs font-semibold text-[#888] mb-2">DEVICE NAME</Text>
                 <Controller
@@ -134,7 +133,6 @@ export function EditDeviceModal({ device, visible, onClose, onSave, onDelete }: 
                 )}
               </View>
 
-              {/* Category */}
               <View className="mb-5">
                 <Text className="text-xs font-semibold text-[#888] mb-2">CATEGORY</Text>
                 <Controller
@@ -146,7 +144,6 @@ export function EditDeviceModal({ device, visible, onClose, onSave, onDelete }: 
                 />
               </View>
 
-              {/* Watt + Hours */}
               <View className="flex-row gap-3">
                 <View className="flex-1">
                   <Text className="text-xs font-semibold text-[#888] mb-2">WATTAGE</Text>
