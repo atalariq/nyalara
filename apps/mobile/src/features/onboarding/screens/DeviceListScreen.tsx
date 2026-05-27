@@ -100,7 +100,7 @@ export function DeviceListScreen() {
             onPress={() => router.replace('/(onboarding)/device-setup/complete' as any)}
             className="bg-[#111111] rounded-full py-4 items-center"
           >
-            <Text className="text-[#25CE7F] text-lg font-semibold">Finish Set Up</Text>
+            <Text className="text-[#25CE7F] text-lg font-semibold">Continue to App</Text>
           </Pressable>
         </View>
       </ScrollView>
