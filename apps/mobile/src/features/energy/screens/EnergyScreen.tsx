@@ -192,6 +192,7 @@ export default function EnergyScreen() {
                 co2ReducedKg={co2ReducedKg}
                 environmentalQuote={insight.environmentalQuote}
                 isLoading={insight.status === 'loading'}
+                hasDevices={devices.length > 0}
               />
             </View>
           </View>

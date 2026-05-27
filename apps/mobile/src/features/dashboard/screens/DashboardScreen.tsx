@@ -130,6 +130,7 @@ export default function DashboardScreen() {
           <DashboardRecommendations
             recommendations={insight.recommendations}
             status={insight.status}
+            hasDevices={devices.length > 0}
           />
         </ScrollView>
       </SafeAreaView>

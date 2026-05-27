@@ -16,6 +16,7 @@ const ROOM_CONFIG: Record<LocationType, { label: string; image: ImageSourcePropT
 export function RoomAssetsRow() {
   const { devices } = useDevices()
 
+  // Group devices by location
   const grouped = devices.reduce<Partial<Record<LocationType, typeof devices>>>((acc, device) => {
     const key = (device.location ?? 'other') as LocationType
     if (!acc[key]) acc[key] = []
@@ -23,19 +24,25 @@ export function RoomAssetsRow() {
     return acc
   }, {})
 
-  const rooms = Object.entries(grouped) as [LocationType, typeof devices][]
-
-  if (rooms.length === 0) return null
+  // Tampilkan semua room dari config, bukan dari devices
+  const rooms = Object.keys(ROOM_CONFIG) as LocationType[]
 
   return (
     <View className="mb-6">
+      <View className="mb-3 flex-row items-center justify-between">
+        <Text className="text-[16px] font-extrabold text-[#111]">Device Room Monitoring</Text>
+      </View>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ gap: 16, paddingRight: 24 }}
       >
-        {rooms.map(([location, items]) => (
-          <RoomCard key={location} location={location} devices={items} />
+        {rooms.map((location) => (
+          <RoomCard
+            key={location}
+            location={location}
+            devices={grouped[location] ?? []} // ← fallback array kosong
+          />
         ))}
       </ScrollView>
     </View>

@@ -10,6 +10,7 @@ type Status = 'idle' | 'loading' | 'success' | 'error'
 type Props = {
   recommendations: string[]
   status: Status
+  hasDevices: boolean
 }
 
 type RecommendationItemProps = {
@@ -66,7 +67,7 @@ function RecommendationItem({ item, checked, onToggle }: RecommendationItemProps
   )
 }
 
-export function DashboardRecommendations({ recommendations, status }: Props) {
+export function DashboardRecommendations({ recommendations, status, hasDevices }: Props) {
   const [checkedItems, setCheckedItems] = useState<string[]>([])
 
   const toggleItem = (item: string) => {
@@ -80,6 +81,15 @@ export function DashboardRecommendations({ recommendations, status }: Props) {
   }
 
   const renderContent = () => {
+    if (!hasDevices) {
+      return (
+        <View className="mt-4 items-center py-4">
+          <Text className="text-[14px] text-foreground-muted text-center">
+            Add your devices first to unlock smart recommendations.
+          </Text>
+        </View>
+      )
+    }
     if (status === 'loading') {
       return (
         <View className="items-center py-8">
