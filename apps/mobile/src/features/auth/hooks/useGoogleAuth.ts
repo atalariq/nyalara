@@ -10,9 +10,11 @@ import { useEffect } from 'react'
 import { Platform } from 'react-native'
 import Toast from 'react-native-toast-message'
 import { auth } from '@/config/firebase'
+import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
 import { getPostAuthRoute, type AuthEntryPoint } from '../lib/post-auth-route'
 import { setupStatusService } from '../services/app-setup-status-service'
 import { authService } from '../services/authService'
+import { profileService } from '@/features/profile/services/profileService'
 import { useAuthStore } from '../store/authStore'
 
 let googleSignInConfigured = false
@@ -96,27 +98,34 @@ export function useGoogleAuth(entryPoint: AuthEntryPoint = 'login') {
       console.log('[auth/google] Firebase ID token exists:', Boolean(firebaseIdToken))
 
       const status = await setupStatusService.getStatus(user.uid)
+
+      if (!status.hasProfile) {
+        try {
+          await profileService.createProfile({
+            uid: user.uid,
+            displayName: user.displayName ?? '',
+            email: user.email ?? '',
+            electricityRate: CARBON_CONFIG.electricityRate,
+            emissionFactor: CARBON_CONFIG.emissionFactor,
+          })
+        } catch (profileErr) {
+          console.warn(
+            '[auth/google] Profile creation failed; user can retry from profile screen:',
+            profileErr,
+          )
+        }
+      }
+
       const next = getPostAuthRoute({
         entryPoint,
-        hasProfile: status.hasProfile,
-        deviceCount: status.deviceCount,
+        hasProfile: true,
       })
 
-      if (next.action === 'reject') {
-        await authService.logout()
-        Toast.show({
-          type: 'error',
-          text1: 'Account not found',
-          text2: 'Please register first before logging in with Google.',
-          visibilityTime: 2600,
-        })
-      } else {
-        Toast.show({
-          type: 'success',
-          text1: 'Signed in with Google',
-          visibilityTime: 1600,
-        })
-      }
+      Toast.show({
+        type: 'success',
+        text1: entryPoint === 'register' ? 'Account created' : 'Signed in with Google',
+        visibilityTime: 1800,
+      })
 
       router.replace(next.route)
     } catch (error: unknown) {

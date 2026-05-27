@@ -59,6 +59,8 @@ export default function AppLayout() {
         }
 
         router.replace('/(onboarding)/intro')
+      } catch {
+        // On failure, allow access to avoid trapping users in onboarding loop
       } finally {
         if (active) {
           setIsCheckingSetup(false)

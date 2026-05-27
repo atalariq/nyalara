@@ -5,11 +5,9 @@ type PostAuthRoute = '/(auth)/register' | '/(onboarding)/intro' | '/(app)/dashbo
 export function getPostAuthRoute({
   entryPoint,
   hasProfile,
-  deviceCount = 0,
 }: {
   entryPoint: AuthEntryPoint
   hasProfile?: boolean
-  deviceCount?: number
 }) {
   if (entryPoint === 'register') {
     return {
@@ -25,13 +23,8 @@ export function getPostAuthRoute({
     }
   }
 
-  if (deviceCount < 1) {
-    return {
-      action: 'allow' as const,
-      route: '/(onboarding)/intro' as PostAuthRoute,
-    }
-  }
-
+  // A setup-complete account (hasProfile) always goes to dashboard,
+  // regardless of device count (CONTEXT.md allows empty device inventory)
   return {
     action: 'allow' as const,
     route: '/(app)/dashboard' as PostAuthRoute,

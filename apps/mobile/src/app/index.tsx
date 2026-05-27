@@ -21,11 +21,18 @@ export default function Index() {
         return
       }
 
-      const status = await setupStatusService.getStatus(user.uid)
+      try {
+        const status = await setupStatusService.getStatus(user.uid)
 
-      if (!active) return
+        if (!active) return
 
-      setRoute(status.isSetupComplete ? '/(app)/dashboard' : '/(onboarding)/intro')
+        setRoute(status.isSetupComplete ? '/(app)/dashboard' : '/(onboarding)/intro')
+      } catch {
+        if (!active) return
+        // On failure, assume setup complete for authenticated users
+        // to avoid trapping them in an onboarding loop
+        setRoute('/(app)/dashboard')
+      }
     }
 
     void resolveRoute()

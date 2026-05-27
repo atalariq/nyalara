@@ -9,12 +9,14 @@ import {
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
+  type User,
 } from 'firebase/auth'
 
 export const authService = {
-  async register(email: string, password: string, fullName: string): Promise<void> {
+  async register(email: string, password: string, fullName: string): Promise<User> {
     const { user } = await createUserWithEmailAndPassword(auth, email, password)
     await updateProfile(user, { displayName: fullName })
+    return user as User
   },
 
   async login(email: string, password: string): Promise<void> {
