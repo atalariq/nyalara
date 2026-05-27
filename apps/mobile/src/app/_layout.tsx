@@ -1,11 +1,8 @@
 // app/_layout.tsx
 import { useAuthStore } from '@/features/auth/store/authStore'
 import { initAuthListener } from '@/features/auth/store/authStore'
-import { GeminiChatSheet } from '@/features/chat/components/GeminiChatSheet'
 import { LoadingProvider } from '@/providers/LoadingProvider'
-import { FloatingChatButton } from '@/shared/components/ui/FloatingChatButton'
 import { HamburgerMenu } from '@/shared/components/ui/hamburger/HamburgerMenu'
-import { mobileFeatureFlags } from '@/shared/config/mobile-feature-flags'
 import { useFonts } from 'expo-font'
 import { Stack, useSegments } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
@@ -78,12 +75,6 @@ export default function RootLayout() {
       <LoadingProvider>
         <Stack screenOptions={{ headerShown: false }} />
         <Toast />
-        {shouldRenderOverlays && (
-          <>
-            <FloatingChatButton enabled={mobileFeatureFlags.chatbot} />
-            {mobileFeatureFlags.chatbot && <GeminiChatSheet />}
-          </>
-        )}
         {shouldRenderOverlays && <HamburgerMenu />}
       </LoadingProvider>
     </GestureHandlerRootView>

@@ -1,9 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { auth } from '@/config/firebase'
 import { router } from 'expo-router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Toast from 'react-native-toast-message'
 import { z } from 'zod'
+import { getPostAuthRoute } from '../lib/post-auth-route'
+import { setupStatusService } from '../services/app-setup-status-service'
 import { authService } from '../services/authService'
 import { useAuthStore } from '../store/authStore'
 import type { LoginFormData, RegisterFormData } from '../types/auth.types'
@@ -84,6 +87,13 @@ export const useLoginForm = () => {
       setError(null)
       setLoading(true)
       await authService.login(data.email, data.password)
+      const user = auth.currentUser
+      const status = user ? await setupStatusService.getStatus(user.uid) : null
+      const next = getPostAuthRoute({
+        entryPoint: 'login',
+        hasProfile: status?.hasProfile ?? false,
+        deviceCount: status?.deviceCount ?? 0,
+      })
       Toast.show({
         type: 'success',
         text1: 'Logged in',
@@ -91,7 +101,7 @@ export const useLoginForm = () => {
         visibilityTime: 1600,
       })
       setLoading(false)
-      router.replace('/(app)/dashboard')
+      router.replace(next.route)
     } catch (err: any) {
       const message = parseFirebaseError(err)
       setError(message)
