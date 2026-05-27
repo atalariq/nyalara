@@ -73,6 +73,8 @@ In non-production environments, generated docs are available at:
   - calculations
   - electricity usages
   - monthly summaries
+  - profile
+  - user-data cleanup
 - Full-account only:
   - `POST /v1/generate-energy-insight`
 
@@ -132,6 +134,31 @@ Compatibility behavior:
 - Legacy device records without stored location are returned as `location: "other"`.
 - `PATCH /v1/devices/{deviceId}` only updates `location` when that field is sent.
 
+### Profile
+
+- `GET /v1/profile`
+- `POST /v1/profile`
+- `PATCH /v1/profile`
+
+Profile reads and writes target `users/{userId}/preferences/main` through the backend.
+
+Profile fields include:
+
+- `displayName`
+- `email`
+- `electricityRate`
+- `emissionFactor`
+- `photoURL` optional
+- `residence` optional
+- `residents` optional
+- `city` optional
+
+Notes:
+
+- `GET /v1/profile` returns `data: null` when no stored profile exists yet.
+- `PATCH /v1/profile` is merge-style and only updates sent fields.
+- Preference fields not owned by the mobile profile surface, such as insight-target values, remain preserved in Firestore because updates use merge semantics.
+
 ### Calculations
 
 - `POST /v1/calculate-electricity`
@@ -181,6 +208,17 @@ These routes return:
 
 - `monthlySummary`
 - `currentStreak`
+
+### User Data Cleanup
+
+- `DELETE /v1/user-data`
+
+This route deletes the authenticated user's mobile-owned data through the backend, including:
+
+- legacy root collections used before hard cutover (`devices`, `dailyUsage`)
+- canonical user-scoped collections under `users/{userId}/...`
+
+This exists so the mobile app does not read or write Firestore directly during guest cleanup flows.
 
 ### Energy Insights
 
