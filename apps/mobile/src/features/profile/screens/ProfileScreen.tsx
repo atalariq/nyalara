@@ -106,7 +106,7 @@ export default function ProfileScreen() {
             residence: profile.residence ?? '—',
             residents: profile.residents ?? -1,
             city: profile.city ?? '—',
-            plnRate: `Rp ${profile.electricityRate}/kWh`,
+            electricityRateLabel: `Rp ${profile.electricityRate}/kWh`,
           }}
         />
 
