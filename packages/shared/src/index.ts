@@ -1,353 +1,345 @@
 export type ApiSuccess<T> = {
-  success: true;
-  data: T;
-};
+  success: true
+  data: T
+}
 
 export type ApiError = {
-  success: false;
+  success: false
   error: {
-    code: string;
-    message: string;
-  };
-};
+    code: string
+    message: string
+  }
+}
 
-export type ApiResponse<T> = ApiSuccess<T> | ApiError;
+export type ApiResponse<T> = ApiSuccess<T> | ApiError
 
-export type IsoDateString = string;
-export type IsoDateTimeString = string;
-export type MonthString = string;
+export type IsoDateString = string
+export type IsoDateTimeString = string
+export type MonthString = string
 
 export type ElectricityPeriod = {
-  startDate: IsoDateString;
-  endDate: IsoDateString;
-  month: MonthString;
-};
+  startDate: IsoDateString
+  endDate: IsoDateString
+  month: MonthString
+}
 
 export type CreateDeviceBreakdownItemRequest = {
-  deviceId: string;
-  durationMinutes: number;
-};
+  deviceId: string
+  durationMinutes: number
+}
 
-export type DeviceCategory =
-  | "electronics"
-  | "appliances"
-  | "lighting"
-  | "other";
+export type DeviceCategory = 'electronics' | 'appliances' | 'lighting' | 'other'
 
-export type DeviceType =
-  | "ac"
-  | "tv"
-  | "washer"
-  | "fridge"
-  | "lights"
-  | "other";
+export type DeviceType = 'ac' | 'tv' | 'washer' | 'fridge' | 'lights' | 'other'
+
+export type LocationType =
+  | 'bedroom'
+  | 'bathroom'
+  | 'living_room'
+  | 'kitchen'
+  | 'dining_room'
+  | 'other'
 
 export type DeviceDto = {
-  id: string;
-  name: string;
-  category: DeviceCategory;
-  deviceType: DeviceType;
-  watt: number;
-  defaultDurationMinutes: number;
-  active: boolean;
-  activatedAt: number | null;
-  createdAt: IsoDateTimeString;
-  updatedAt: IsoDateTimeString;
-};
+  id: string
+  name: string
+  category: DeviceCategory
+  deviceType: DeviceType
+  location?: LocationType
+  watt: number
+  defaultDurationMinutes: number
+  active: boolean
+  activatedAt: number | null
+  createdAt: IsoDateTimeString
+  updatedAt: IsoDateTimeString
+}
 
 export type CreateDeviceRequest = {
-  name: string;
-  category: DeviceCategory;
-  deviceType: DeviceType;
-  watt: number;
-  defaultDurationMinutes: number;
-  active?: boolean;
-  activatedAt?: number | null;
-};
+  name: string
+  category: DeviceCategory
+  deviceType: DeviceType
+  location?: LocationType
+  watt: number
+  defaultDurationMinutes: number
+  active?: boolean
+  activatedAt?: number | null
+}
 
-export type UpdateDeviceRequest = Partial<CreateDeviceRequest>;
+export type UpdateDeviceRequest = Partial<CreateDeviceRequest>
 
-export type ListDevicesResponse = ApiSuccess<DeviceDto[]>;
-export type CreateDeviceResponse = ApiSuccess<DeviceDto>;
-export type UpdateDeviceResponse = ApiSuccess<DeviceDto>;
+export type ListDevicesResponse = ApiSuccess<DeviceDto[]>
+export type CreateDeviceResponse = ApiSuccess<DeviceDto>
+export type UpdateDeviceResponse = ApiSuccess<DeviceDto>
 export type DeleteDeviceResponse = ApiSuccess<{
-  deviceId: string;
-}>;
+  deviceId: string
+}>
 
 export type CalculateElectricityKwhRequest = {
-  inputType: "kwh";
-  timezoneOffsetMinutes: number;
+  inputType: 'kwh'
+  timezoneOffsetMinutes: number
   input: {
-    kwh: number;
-    meterStart: null;
-    meterEnd: null;
-    unit: "kwh";
-  };
-  period: ElectricityPeriod;
-};
+    kwh: number
+    meterStart: null
+    meterEnd: null
+    unit: 'kwh'
+  }
+  period: ElectricityPeriod
+}
 
 export type CalculateElectricityMeterReadingRequest = {
-  inputType: "meter_reading";
-  timezoneOffsetMinutes: number;
+  inputType: 'meter_reading'
+  timezoneOffsetMinutes: number
   input: {
-    kwh: null;
-    meterStart: number;
-    meterEnd: number;
-    unit: "kwh";
-  };
-  period: ElectricityPeriod;
-};
+    kwh: null
+    meterStart: number
+    meterEnd: number
+    unit: 'kwh'
+  }
+  period: ElectricityPeriod
+}
 
 export type CalculateElectricityRequest =
   | CalculateElectricityKwhRequest
-  | CalculateElectricityMeterReadingRequest;
+  | CalculateElectricityMeterReadingRequest
 
 export type VerifiedElectricityCalculation = {
-  electricityKwh: number;
-  emissionFactorId: string;
-  emissionFactorKgCo2ePerKwh: number;
-  totalKgCo2e: number;
-  method: "server_verified";
-  status: "verified";
-};
+  electricityKwh: number
+  emissionFactorId: string
+  emissionFactorKgCo2ePerKwh: number
+  totalKgCo2e: number
+  method: 'server_verified'
+  status: 'verified'
+}
 
-export type CalculateElectricitySuccessResponse =
-  ApiSuccess<VerifiedElectricityCalculation>;
+export type CalculateElectricitySuccessResponse = ApiSuccess<VerifiedElectricityCalculation>
 
 export type UsageSourceDto = {
-  createdFrom: "mobile";
-  offlineCreated: boolean;
-  clientGeneratedId: string;
-};
+  createdFrom: 'mobile'
+  offlineCreated: boolean
+  clientGeneratedId: string
+}
 
 export type UsageTimestampsDto = {
-  usageDate: IsoDateString;
-  createdAtClient: IsoDateTimeString;
-};
+  usageDate: IsoDateString
+  createdAtClient: IsoDateTimeString
+}
 
 export type CreateElectricityUsageKwhRequest = {
-  clientGeneratedId: string;
-  inputType: "kwh";
+  clientGeneratedId: string
+  inputType: 'kwh'
   input: {
-    kwh: number;
-    meterStart: null;
-    meterEnd: null;
-    unit: "kwh";
-  };
-  period: ElectricityPeriod;
+    kwh: number
+    meterStart: null
+    meterEnd: null
+    unit: 'kwh'
+  }
+  period: ElectricityPeriod
   source: {
-    createdFrom: "mobile";
-    offlineCreated: boolean;
-  };
-  timestamps: UsageTimestampsDto;
-};
+    createdFrom: 'mobile'
+    offlineCreated: boolean
+  }
+  timestamps: UsageTimestampsDto
+}
 
 export type CreateElectricityUsageMeterReadingRequest = {
-  clientGeneratedId: string;
-  inputType: "meter_reading";
+  clientGeneratedId: string
+  inputType: 'meter_reading'
   input: {
-    kwh: null;
-    meterStart: number;
-    meterEnd: number;
-    unit: "kwh";
-  };
-  period: ElectricityPeriod;
+    kwh: null
+    meterStart: number
+    meterEnd: number
+    unit: 'kwh'
+  }
+  period: ElectricityPeriod
   source: {
-    createdFrom: "mobile";
-    offlineCreated: boolean;
-  };
-  timestamps: UsageTimestampsDto;
-};
+    createdFrom: 'mobile'
+    offlineCreated: boolean
+  }
+  timestamps: UsageTimestampsDto
+}
 
 export type CreateElectricityUsageDeviceBreakdownRequest = {
-  clientGeneratedId: string;
-  inputType: "device_breakdown";
+  clientGeneratedId: string
+  inputType: 'device_breakdown'
   input: {
-    deviceBreakdown: CreateDeviceBreakdownItemRequest[];
-    unit: "minutes";
-  };
-  period: ElectricityPeriod;
+    deviceBreakdown: CreateDeviceBreakdownItemRequest[]
+    unit: 'minutes'
+  }
+  period: ElectricityPeriod
   source: {
-    createdFrom: "mobile";
-    offlineCreated: boolean;
-  };
-  timestamps: UsageTimestampsDto;
-};
+    createdFrom: 'mobile'
+    offlineCreated: boolean
+  }
+  timestamps: UsageTimestampsDto
+}
 
 export type CreateElectricityUsageRequest =
   | CreateElectricityUsageKwhRequest
   | CreateElectricityUsageMeterReadingRequest
-  | CreateElectricityUsageDeviceBreakdownRequest;
+  | CreateElectricityUsageDeviceBreakdownRequest
 
 export type UpdateElectricityUsageKwhRequest = Omit<
   CreateElectricityUsageKwhRequest,
-  "clientGeneratedId"
->;
+  'clientGeneratedId'
+>
 
 export type UpdateElectricityUsageMeterReadingRequest = Omit<
   CreateElectricityUsageMeterReadingRequest,
-  "clientGeneratedId"
->;
+  'clientGeneratedId'
+>
 
 export type UpdateElectricityUsageDeviceBreakdownRequest = Omit<
   CreateElectricityUsageDeviceBreakdownRequest,
-  "clientGeneratedId"
->;
+  'clientGeneratedId'
+>
 
 export type UpdateElectricityUsageRequest =
   | UpdateElectricityUsageKwhRequest
   | UpdateElectricityUsageMeterReadingRequest
-  | UpdateElectricityUsageDeviceBreakdownRequest;
+  | UpdateElectricityUsageDeviceBreakdownRequest
 
 export type PersistedDeviceBreakdownItemDto = {
-  deviceId: string;
-  name: string;
-  category: DeviceCategory;
-  deviceType: DeviceType;
-  watt: number;
-  durationMinutes: number;
-  electricityKwh: number;
-  totalKgCo2e: number;
-};
+  deviceId: string
+  name: string
+  category: DeviceCategory
+  deviceType: DeviceType
+  watt: number
+  durationMinutes: number
+  electricityKwh: number
+  totalKgCo2e: number
+}
 
 export type ElectricityUsageDto =
   | {
-      inputType: "kwh";
+      inputType: 'kwh'
       input: {
-        kwh: number;
-        meterStart: null;
-        meterEnd: null;
-        unit: "kwh";
-      };
-      period: ElectricityPeriod;
-      calculation: VerifiedElectricityCalculation;
-      source: UsageSourceDto;
-      timestamps: UsageTimestampsDto;
+        kwh: number
+        meterStart: null
+        meterEnd: null
+        unit: 'kwh'
+      }
+      period: ElectricityPeriod
+      calculation: VerifiedElectricityCalculation
+      source: UsageSourceDto
+      timestamps: UsageTimestampsDto
     }
   | {
-      inputType: "meter_reading";
+      inputType: 'meter_reading'
       input: {
-        kwh: null;
-        meterStart: number;
-        meterEnd: number;
-        unit: "kwh";
-      };
-      period: ElectricityPeriod;
-      calculation: VerifiedElectricityCalculation;
-      source: UsageSourceDto;
-      timestamps: UsageTimestampsDto;
+        kwh: null
+        meterStart: number
+        meterEnd: number
+        unit: 'kwh'
+      }
+      period: ElectricityPeriod
+      calculation: VerifiedElectricityCalculation
+      source: UsageSourceDto
+      timestamps: UsageTimestampsDto
     }
   | {
-      inputType: "device_breakdown";
+      inputType: 'device_breakdown'
       input: {
-        deviceBreakdown: PersistedDeviceBreakdownItemDto[];
-        unit: "minutes";
-      };
-      period: ElectricityPeriod;
-      calculation: VerifiedElectricityCalculation;
-      source: UsageSourceDto;
-      timestamps: UsageTimestampsDto;
-    };
+        deviceBreakdown: PersistedDeviceBreakdownItemDto[]
+        unit: 'minutes'
+      }
+      period: ElectricityPeriod
+      calculation: VerifiedElectricityCalculation
+      source: UsageSourceDto
+      timestamps: UsageTimestampsDto
+    }
 
 export type ElectricityUsageListItemDto = {
-  usageId: string;
-  usage: ElectricityUsageDto;
-};
+  usageId: string
+  usage: ElectricityUsageDto
+}
 
 export type CurrentStreakDto = {
-  length: number;
-  lastTrackedDate: IsoDateString | null;
-};
+  length: number
+  lastTrackedDate: IsoDateString | null
+}
 
 export type MonthlySummaryDto = {
-  month: MonthString;
-  totalKwh: number;
-  totalKgCo2e: number;
-  averageKwhPerDay: number;
-  averageKgCo2ePerDay: number;
-  usageCount: number;
-};
+  month: MonthString
+  totalKwh: number
+  totalKgCo2e: number
+  averageKwhPerDay: number
+  averageKgCo2ePerDay: number
+  usageCount: number
+}
 
 export type CreateElectricityUsageResponse = ApiSuccess<{
-  usageId: string;
-  usage: ElectricityUsageDto;
-  monthlySummary: MonthlySummaryDto;
-  currentStreak: CurrentStreakDto;
-}>;
+  usageId: string
+  usage: ElectricityUsageDto
+  monthlySummary: MonthlySummaryDto
+  currentStreak: CurrentStreakDto
+}>
 
-export type UpdateElectricityUsageResponse =
-  CreateElectricityUsageResponse;
+export type UpdateElectricityUsageResponse = CreateElectricityUsageResponse
 
 export type DeleteElectricityUsageResponse = ApiSuccess<{
-  usageId: string;
-  monthlySummary: MonthlySummaryDto;
-  currentStreak: CurrentStreakDto;
-}>;
+  usageId: string
+  monthlySummary: MonthlySummaryDto
+  currentStreak: CurrentStreakDto
+}>
 
-export type ListElectricityUsagesResponse = ApiSuccess<
-  ElectricityUsageListItemDto[]
->;
+export type ListElectricityUsagesResponse = ApiSuccess<ElectricityUsageListItemDto[]>
 
 export type GetMonthlySummaryResponse = ApiSuccess<{
-  monthlySummary: MonthlySummaryDto;
-  currentStreak: CurrentStreakDto;
-}>;
+  monthlySummary: MonthlySummaryDto
+  currentStreak: CurrentStreakDto
+}>
 
-export type RecalculateMonthlySummaryResponse = GetMonthlySummaryResponse;
+export type RecalculateMonthlySummaryResponse = GetMonthlySummaryResponse
 
 export type EnergyInsightSuggestion = {
-  title: string;
-  description: string;
-  estimatedImpactKgCo2e: number;
-};
+  title: string
+  description: string
+  estimatedImpactKgCo2e: number
+}
 
 export type GenerateEnergyInsightRequest = {
-  month: MonthString;
-  force?: boolean;
-};
+  month: MonthString
+  force?: boolean
+}
 
 export type EnergyInsightDto = {
-  insightId: string;
-  title: string;
-  summary: string;
-  suggestions: EnergyInsightSuggestion[];
-  isStale: boolean;
-};
+  insightId: string
+  title: string
+  summary: string
+  suggestions: EnergyInsightSuggestion[]
+  isStale: boolean
+}
 
-export type GenerateEnergyInsightResponse = ApiSuccess<EnergyInsightDto>;
+export type GenerateEnergyInsightResponse = ApiSuccess<EnergyInsightDto>
 
 export type EmissionFactorDto = {
-  id: string;
-  country: string;
-  region: string;
-  unit: "kwh";
-  kgCo2ePerKwh: number;
-  version: string;
-  active: true;
-};
+  id: string
+  country: string
+  region: string
+  unit: 'kwh'
+  kgCo2ePerKwh: number
+  version: string
+  active: true
+}
 
-export type ListEmissionFactorsResponse = ApiSuccess<EmissionFactorDto[]>;
+export type ListEmissionFactorsResponse = ApiSuccess<EmissionFactorDto[]>
 
 export type AuthUser = {
-  uid: string;
-  email: string | null;
-  displayName: string | null;
-  photoURL: string | null;
-};
+  uid: string
+  email: string | null
+  displayName: string | null
+  photoURL: string | null
+}
 
-export type CarbonActivityCategory =
-  | "transport"
-  | "electricity"
-  | "food"
-  | "waste";
+export type CarbonActivityCategory = 'transport' | 'electricity' | 'food' | 'waste'
 
 export type CarbonActivity = {
-  id: string;
-  userId: string;
-  category: CarbonActivityCategory;
-  amount: number;
-  unit: string;
-  co2Kg: number;
-  createdAt: string;
-  updatedAt: string;
-};
+  id: string
+  userId: string
+  category: CarbonActivityCategory
+  amount: number
+  unit: string
+  co2Kg: number
+  createdAt: string
+  updatedAt: string
+}

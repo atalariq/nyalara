@@ -11,6 +11,16 @@ const deviceSchema = z.object({
   name: z.string(),
   category: z.enum(['electronics', 'appliances', 'lighting', 'other']),
   deviceType: z.enum(['ac', 'tv', 'washer', 'fridge', 'lights', 'other']),
+  location: z
+    .enum([
+      'bedroom',
+      'bathroom',
+      'living_room',
+      'kitchen',
+      'dining_room',
+      'other'
+    ])
+    .optional(),
   watt: z.number(),
   defaultDurationMinutes: z.number().nonnegative(),
   active: z.boolean(),
@@ -23,6 +33,17 @@ const deviceRequestSchema = z.object({
   name: z.string().min(1),
   category: z.enum(['electronics', 'appliances', 'lighting', 'other']),
   deviceType: z.enum(['ac', 'tv', 'washer', 'fridge', 'lights', 'other']),
+  location: z
+    .enum([
+      'bedroom',
+      'bathroom',
+      'living_room',
+      'kitchen',
+      'dining_room',
+      'other'
+    ])
+    .optional()
+    .default('other'),
   watt: z.number().positive(),
   defaultDurationMinutes: z.number().nonnegative(),
   active: z.boolean().optional().default(false),

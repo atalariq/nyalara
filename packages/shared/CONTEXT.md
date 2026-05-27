@@ -34,6 +34,7 @@ For current MVP work, prefer electricity-first shared contracts and avoid wideni
 - **Canonical Contract v1**: PRD-aligned electricity API contracts used by current backend/mobile integration.
 - **Canonical usage-log DTO**: the mobile-facing contract for the authoritative electricity tracking record that downstream summaries, insights, and streaks derive from.
 - **Device DTO**: the mobile-facing API contract for a user-owned electrical device record managed through backend endpoints.
+- **Device location DTO field**: the shared optional enum-like field on device create/request contracts that classifies device room (`bedroom`, `bathroom`, `living_room`, `kitchen`, `dining_room`, `other`); backend may default it to `other` for compatibility.
 - **Canonical device DTO**: the shared contract for device inventory managed under the user-scoped canonical backend path rather than a legacy root collection.
 - **Device CRUD DTOs**: the shared request and response contracts that support listing, creating, updating, and deleting device inventory through backend APIs.
 - **Hard-delete device rule**: deleting a device removes the inventory item itself and does not rewrite historical usage-log payloads.

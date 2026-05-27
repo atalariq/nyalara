@@ -57,7 +57,7 @@ function RoomCard({ location, devices }: RoomCardProps) {
   return (
     <Pressable
       className="relative h-[160px] w-[270px] overflow-hidden rounded-[24px]"
-      onPress={() => router.push(`/(app)/room/${location}`)}
+      onPress={() => router.push(`/(app)/room/${location}` as never)}
     >
       <Image source={config.image} resizeMode="cover" className="absolute h-full w-full" />
 

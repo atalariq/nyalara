@@ -30,6 +30,7 @@ Out of scope in this context:
 - **Usage record**: a user-owned electricity usage entry for a specific period.
 - **Canonical record**: the backend-authoritative record type used as the source of truth for downstream calculations and derived views; usage records are canonical for electricity tracking.
 - **Device**: a user-owned inventory record for an electrical appliance or electronics item; it is managed separately from usage records and may be referenced by them.
+- **Device location**: the room classification stored on each device (`bedroom`, `bathroom`, `living_room`, `kitchen`, `dining_room`, `other`); create requests may omit it and backend defaults to `other`.
 - **Canonical device path**: the backend-owned storage path for device inventory is `users/{userId}/devices/{deviceId}` within canonical schema v1.
 - **Device inventory CRUD**: device inventory is a mutable user-owned collection with backend-supported create, read, update, and delete operations in MVP.
 - **Hard device delete**: deleting a device removes the inventory record itself rather than archiving it; historical usage records remain valid because they preserve their own snapshots.

@@ -43,22 +43,11 @@ export interface CreateDevicePayload {
   name: string
   category: DeviceCategory
   deviceType: DeviceType
+  location: LocationType
   watt: number
   hoursPerDay: number
   daysPerMonth: number
   active?: boolean
-  monthlyKwh?: number
-  monthlyCost?: number
-  monthlyEmissions?: number
-}
-
-export interface CreateDevicePayload {
-  name: string
-  category: DeviceCategory
-  deviceType: DeviceType
-  watt: number
-  hoursPerDay: number
-  daysPerMonth: number
   monthlyKwh?: number
   monthlyCost?: number
   monthlyEmissions?: number

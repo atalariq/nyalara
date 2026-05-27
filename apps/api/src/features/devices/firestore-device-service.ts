@@ -1,6 +1,7 @@
 import type {
   CreateDeviceRequest,
   DeviceDto,
+  LocationType,
   UpdateDeviceRequest
 } from '@carbon-tracker/shared'
 import { FieldValue, type Firestore } from 'firebase-admin/firestore'
@@ -127,6 +128,7 @@ function toFirestoreCreateDevice(device: CreateDeviceRequest) {
     name: device.name,
     category: device.category,
     deviceType: device.deviceType,
+    location: device.location ?? 'other',
     watt: device.watt,
     defaultDurationMinutes: device.defaultDurationMinutes,
     active: device.active ?? false,
@@ -145,6 +147,9 @@ function toFirestoreUpdateDevice(device: UpdateDeviceRequest) {
   }
   if (device.deviceType !== undefined) {
     result.deviceType = device.deviceType
+  }
+  if (device.location !== undefined) {
+    result.location = device.location
   }
   if (device.watt !== undefined) {
     result.watt = device.watt
@@ -171,6 +176,7 @@ function toDeviceDto(
     name: data.name as DeviceDto['name'],
     category: data.category as DeviceDto['category'],
     deviceType: data.deviceType as DeviceDto['deviceType'],
+    location: ((data.location as DeviceDto['location']) ?? 'other') as LocationType,
     watt: data.watt as number,
     defaultDurationMinutes: (data.defaultDurationMinutes as number) ?? 0,
     active: (data.active as boolean) ?? false,

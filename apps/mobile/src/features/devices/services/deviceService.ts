@@ -35,7 +35,7 @@ function toDevice(dto: DeviceDto): Device {
     monthlyEmissions,
     monthlyCost,
     createdAt: Date.parse(dto.createdAt),
-    location: (dto as any).location ?? 'other',
+    location: dto.location ?? 'other',
   }
 }
 
@@ -44,6 +44,7 @@ function toCreateDeviceRequest(payload: CreateDevicePayload): CreateDeviceReques
     name: payload.name,
     category: payload.category,
     deviceType: payload.deviceType,
+    location: payload.location,
     watt: payload.watt,
     defaultDurationMinutes: Math.round(payload.hoursPerDay * 60),
     active: payload.active ?? false,
@@ -64,6 +65,9 @@ function toUpdateDeviceRequest(
   }
   if (payload.deviceType !== undefined) {
     request.deviceType = payload.deviceType
+  }
+  if (payload.location !== undefined) {
+    request.location = payload.location
   }
   if (payload.watt !== undefined) {
     request.watt = payload.watt
