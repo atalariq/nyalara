@@ -1,7 +1,8 @@
 // features/devices/components/RoomAssetsRow.tsx
 import { useDevices } from '../hooks/useDevices'
 import type { LocationType } from '../types/device.types'
-import { Image, ImageSourcePropType, ScrollView, Text, View } from 'react-native'
+import { Image, ImageSourcePropType, Pressable, ScrollView, Text, View } from 'react-native'
+import { useRouter } from 'expo-router'
 
 const ROOM_CONFIG: Record<LocationType, { label: string; image: ImageSourcePropType }> = {
   bedroom: { label: 'Bedroom', image: require('@/assets/images/room/bedroom.png') },
@@ -50,12 +51,17 @@ type RoomCardProps = {
 }
 
 function RoomCard({ location, devices }: RoomCardProps) {
+  const router = useRouter()
+
   const config = ROOM_CONFIG[location]
   const activeCount = devices.filter((d) => d.active).length
   const totalKwh = devices.reduce((sum, d) => sum + (d.monthlyKwh ?? 0), 0)
 
   return (
-    <View className="relative h-[160px] w-[270px] overflow-hidden rounded-[24px]">
+    <Pressable
+      className="relative h-[160px] w-[270px] overflow-hidden rounded-[24px]"
+      onPress={() => router.push(`/(app)/room/${location}`)}
+    >
       <Image source={config.image} resizeMode="cover" className="absolute h-full w-full" />
 
       {/* Top row */}
@@ -77,6 +83,6 @@ function RoomCard({ location, devices }: RoomCardProps) {
           Device Active
         </Text>
       </View>
-    </View>
+    </Pressable>
   )
 }

@@ -5,7 +5,7 @@ import { updateDevicesAfterToggle } from '../lib/device-toggle-state'
 import { toggleOffWithOptimisticUpdate } from '../lib/toggle-off-optimistic'
 import { useDeviceStore } from '../store/deviceStore'
 import { useTogglingStore } from '../store/togglingStore'
-import type { Device } from '../types/device.types'
+import type { Device, LocationType } from '../types/device.types'
 import { useDevices } from './useDevices'
 import { useDeviceToggle } from './useDeviceToggle'
 
@@ -17,6 +17,7 @@ export type DeviceListItem = {
   usageLabel: string
   active: boolean
   activatedAt?: number | null
+  location: LocationType
 }
 
 export type DeviceFilter = 'all' | 'active'
@@ -43,6 +44,7 @@ export function useDeviceList() {
         usageLabel: toUsageLabel(device),
         active: device.active,
         activatedAt: device.activatedAt,
+        location: device.location ?? 'other',
       })),
     [devices],
   )
@@ -59,9 +61,7 @@ export function useDeviceList() {
     : null
 
   const mostActive = allItems.length
-    ? allItems.reduce((best, d) =>
-        d.usageLabel.localeCompare(best.usageLabel) > 0 ? d : best,
-      )
+    ? allItems.reduce((best, d) => (d.usageLabel.localeCompare(best.usageLabel) > 0 ? d : best))
     : null
 
   async function toggleActive(id: string) {
