@@ -3,12 +3,12 @@ import { Pressable, Text, View } from 'react-native'
 import type { LocationType } from '../../types/device.types'
 
 const LOCATIONS = [
-  { value: 'bedroom', label: 'Bedroom', emoji: '🛏️' },
-  { value: 'living_room', label: 'Living Room', emoji: '🛋️' },
-  { value: 'kitchen', label: 'Kitchen', emoji: '🍳' },
-  { value: 'bathroom', label: 'Bathroom', emoji: '🚿' },
-  { value: 'dining_room', label: 'Dining Room', emoji: '🍽️' },
-  { value: 'other', label: 'Other', emoji: '📦' },
+  { value: 'bedroom', label: 'Bedroom' },
+  { value: 'living_room', label: 'Living Room' },
+  { value: 'kitchen', label: 'Kitchen' },
+  { value: 'bathroom', label: 'Bathroom' },
+  { value: 'dining_room', label: 'Dining Room' },
+  { value: 'other', label: 'Other' },
 ] as const
 
 interface Props {
@@ -37,7 +37,7 @@ export function LocationGrid({ value, onChange }: Props) {
               borderColor: isSelected ? '#25CE7F' : '#F5F5F5',
             }}
           >
-            <Text style={{ fontSize: 14 }}>{loc.emoji}</Text>
+            <Text style={{ fontSize: 14 }}></Text>
             <Text
               style={{
                 fontSize: 13,

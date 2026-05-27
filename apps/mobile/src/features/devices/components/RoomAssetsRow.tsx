@@ -29,9 +29,6 @@ export function RoomAssetsRow() {
 
   return (
     <View className="mb-6">
-      <View className="mb-3 flex-row items-center justify-between">
-        <Text className="text-[16px] font-extrabold text-[#111]">Room Assets</Text>
-      </View>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}

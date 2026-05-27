@@ -1,6 +1,6 @@
 import AppLoading from '@/shared/components/feedback/AppLoading'
 import { LinearGradient } from 'expo-linear-gradient'
-import { ScrollView, Text, View } from 'react-native'
+import { ImageBackground, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { ActiveDevicesList } from '../components/ActiveDevicesList'
@@ -18,15 +18,6 @@ const EFFICIENCY_STYLES: Record<EfficiencyLevel, { bg: string; text: string }> =
   efficient: { bg: 'bg-brand', text: 'text-white' },
   moderate: { bg: 'bg-[#F3D3B7]', text: 'text-[#6A4A2F]' },
   inefficient: { bg: 'bg-red-100', text: 'text-red-700' },
-}
-
-const LOCATION_LABELS: Record<LocationType, string> = {
-  bedroom: '🛏️ Bedroom',
-  living_room: '🛋️ Living Room',
-  kitchen: '🍳 Kitchen',
-  bathroom: '🚿 Bathroom',
-  dining_room: '🍽️ Dining Room',
-  other: '📦 Other',
 }
 
 export default function EnergyScreen() {
@@ -70,22 +61,16 @@ export default function EnergyScreen() {
 
   return (
     <View className="flex-1 bg-brand">
-      <LinearGradient
-        colors={['#1FDD7A', '#45E39F']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
-      />
-
-      <View
+      <ImageBackground
+        source={require('@/assets/images/screen/hero-energy.png')}
+        resizeMode="cover"
         style={{
           position: 'absolute',
-          top: -100,
-          right: -70,
-          width: 240,
-          height: 240,
-          borderRadius: 999,
-          backgroundColor: 'rgba(255,255,255,0.1)',
+          top: 0,
+          right: -100,
+          width: 500,
+          height: 400,
+          opacity: 0.9,
         }}
       />
 

@@ -39,24 +39,42 @@ export function RoomDetailScreen() {
   const filtered = filter === 'active' ? roomDevices.filter((d) => d.active) : roomDevices
 
   return (
-    <View className="flex-1 bg-[#F0F7F2]">
+    <View className="flex-1 bg-[#28D67B]">
       <SafeAreaView edges={['top']} className="flex-1">
+        {/* BACKGROUND BLOBS */}
+        <View
+          style={{
+            position: 'absolute',
+            top: 80,
+            left: -90,
+            width: 240,
+            height: 240,
+            borderRadius: 999,
+            backgroundColor: 'rgba(255,255,255,0.15)',
+          }}
+        />
+        <View
+          style={{
+            position: 'absolute',
+            top: 40,
+            right: -100,
+            width: 280,
+            height: 280,
+            borderRadius: 999,
+            backgroundColor: 'rgba(255,255,255,0.12)',
+          }}
+        />
+
+        {/* ROOM LABEL */}
+        <View className="px-4 pt-4">
+          <View className="bg-[#1d1d1d] py-3 rounded-full items-center">
+            <Text className="text-[15px] font-bold text-white">{config.label}</Text>
+          </View>
+        </View>
+
+        {/* HERO IMAGE */}
         <View className="relative mx-4 mt-4 h-[180px] overflow-hidden rounded-[24px]">
           <Image source={config.image} resizeMode="cover" className="absolute h-full w-full" />
-
-          <Pressable
-            onPress={() => router.back()}
-            className="absolute left-4 top-4 h-9 w-9 items-center justify-center rounded-full bg-black/30"
-          >
-            <ChevronLeft size={20} color="#fff" />
-          </Pressable>
-
-          <View className="absolute left-0 right-0 top-4 items-center">
-            <View className="rounded-full bg-black/30 px-6 py-2">
-              <Text className="text-[15px] font-bold text-white">{config.label}</Text>
-            </View>
-          </View>
-
           <View className="absolute bottom-4 left-5 right-5 flex-row items-end justify-between">
             <Text className="text-[22px] font-bold text-white">{totalKwh.toFixed(0)} KWH</Text>
             <View className="items-end">
@@ -68,39 +86,50 @@ export function RoomDetailScreen() {
           </View>
         </View>
 
-        <View className="mx-4 mt-4 flex-row items-center gap-3">
-          <View className="flex-1 flex-row rounded-full bg-white p-1 shadow-sm shadow-black/5">
-            {(['all', 'active'] as DeviceFilter[]).map((f) => (
-              <Pressable
-                key={f}
-                onPress={() => setFilter(f)}
-                className={`flex-1 items-center justify-center rounded-full px-4 py-3 ${
-                  filter === f ? 'bg-[#25CE7F]' : 'bg-transparent'
-                }`}
-              >
-                <Text className={`font-semibold ${filter === f ? 'text-white' : 'text-[#4B5563]'}`}>
-                  {f === 'all' ? 'All' : 'Active'}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-        </View>
-
-        <ScrollView
-          className="mt-4 flex-1"
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 120, gap: 12 }}
-          showsVerticalScrollIndicator={false}
-        >
-          {filtered.length === 0 ? (
-            <View className="mt-8 items-center">
-              <Text className="text-[#888]">No devices in this room.</Text>
+        {/* CARD PUTIH — device list di dalam */}
+        <View className="mt-4 flex-1 rounded-t-[36px] bg-white px-4 pt-6">
+          {/* FILTER BAR */}
+          <View className="mb-4 flex-row items-center gap-3">
+            <View className="flex-1 flex-row rounded-full bg-[#F5F5F5] p-1">
+              {(['all', 'active'] as DeviceFilter[]).map((f) => (
+                <Pressable
+                  key={f}
+                  onPress={() => setFilter(f)}
+                  className={`flex-1 items-center justify-center rounded-full px-4 py-3 ${
+                    filter === f ? 'bg-[#25CE7F]' : 'bg-transparent'
+                  }`}
+                >
+                  <Text
+                    className={`font-semibold ${filter === f ? 'text-white' : 'text-[#4B5563]'}`}
+                  >
+                    {f === 'all' ? 'All' : 'Active'}
+                  </Text>
+                </Pressable>
+              ))}
             </View>
-          ) : (
-            filtered.map((device) => (
-              <DeviceCard key={device.id} device={device} now={now} onToggle={toggleActive} />
-            ))
-          )}
-        </ScrollView>
+
+            <Pressable className="h-12 w-32 flex-row items-center justify-center gap-1 rounded-full border border-[#25CE7F]">
+              <Text className="text-[20px] text-[#25CE7F]">+</Text>
+              <Text className="text-[13px] font-semibold text-[#25CE7F]">Add Device</Text>
+            </Pressable>
+          </View>
+
+          {/* LIST */}
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ gap: 12, paddingBottom: 120 }}
+          >
+            {filtered.length === 0 ? (
+              <View className="mt-8 items-center">
+                <Text className="text-[#888]">No devices in this room.</Text>
+              </View>
+            ) : (
+              filtered.map((device) => (
+                <DeviceCard key={device.id} device={device} now={now} onToggle={toggleActive} />
+              ))
+            )}
+          </ScrollView>
+        </View>
       </SafeAreaView>
     </View>
   )
