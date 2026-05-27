@@ -2,8 +2,8 @@
 import { useRouter } from 'expo-router'
 import { Image, Pressable, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { ArrowLeft, ChevronLeft } from 'lucide-react-native'
 import { useState } from 'react'
+import { AppBackButton } from '@/shared/components/ui/AppBackButton'
 import { HOUSE_CONFIG, type HouseType } from '@/shared/config/carbonBudget'
 import { useCarbonBudgetStore } from '../../carbon-budget/store/carbonBudgetStore'
 import { AppButton } from '@/shared/components/ui/AppButton'
@@ -29,12 +29,7 @@ export function HouseTypeScreen() {
     <SafeAreaView className="flex-1 bg-white">
       {/* HEADER */}
       <View className="flex-row items-center gap-3 px-4 py-3">
-        <Pressable onPress={() => router.back()} hitSlop={12}>
-          <ArrowLeft size={18} color="#25CE7F" />
-        </Pressable>
-        <View className="flex-row items-center gap-1">
-          <Text className="text-[18px] font-bold text-[#25CE7F]">Nyalara</Text>
-        </View>
+        <AppBackButton onPress={() => router.back()} />
       </View>
 
       <ScrollView
