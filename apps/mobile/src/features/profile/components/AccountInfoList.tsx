@@ -59,8 +59,8 @@ export function AccountInfoList({ data, onEdit }: Props) {
     },
     {
       icon: <Zap size={16} color="#8E8E8E" />,
-      label: 'PLN Rate',
-      value: data.plnRate,
+      label: 'Electricity Rate',
+      value: data.electricityRateLabel,
       last: true,
     },
   ]

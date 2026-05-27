@@ -35,7 +35,7 @@ export type AccountInfo = {
   residence: string
   residents: number
   city: string
-  plnRate: string
+  electricityRateLabel: string
 }
 
 export type MonthlyGoal = {
