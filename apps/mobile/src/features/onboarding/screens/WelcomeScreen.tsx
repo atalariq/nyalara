@@ -1,31 +1,27 @@
 import { AppButton } from '@/shared/components/ui/AppButton'
-import { LinearGradient } from 'expo-linear-gradient'
 import { router } from 'expo-router'
-import { Text, View } from 'react-native'
+import { Image, ImageBackground, Text, View } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function WelcomeScreen() {
   const insets = useSafeAreaInsets()
-
   return (
-    <LinearGradient
-      colors={['#FFFFFF', '#F7FFFA', '#E8FFF2']}
-      locations={[0, 0.45, 1]}
-      start={{ x: 0.5, y: 0 }}
-      end={{ x: 0.5, y: 1 }}
+    <ImageBackground
+      source={require('@/assets/images/onboarding-bg.png')}
       className="flex-1"
+      resizeMode="cover"
     >
       <SafeAreaView edges={['top']} className="flex-1">
         {/* Hero */}
-        <View className="flex-1 items-center justify-center px-8">
-          <Orb />
-          <Text className="mt-20 text-center text-brand font-extrabold text-4xl leading-tight">
-            Understand your{'\n'}electricity usage.
-          </Text>
-          <Text className="pt-8 text-center text-foreground font-medium text-base opacity-70 leading-7">
-            Track devices in real time, reduce energy{'\n'}
-            waste, and build smarter habits{'\n'}effortlessly.
-          </Text>
+        <View className="flex-1 items-center px-8">
+          <View className="flex-1 justify-center items-center">
+            <Orb />
+            <Wordmark />
+          </View>
+
+          <View className="pb-12">
+            <Subtitle />
+          </View>
         </View>
 
         {/* Bottom Card */}
@@ -53,15 +49,32 @@ export default function WelcomeScreen() {
           />
         </View>
       </SafeAreaView>
-    </LinearGradient>
+    </ImageBackground>
   )
 }
 
 function Orb() {
   return (
     <View className="items-center justify-center">
-      <View className="absolute w-52 h-52 rounded-full bg-zinc-200/40" />
-      <View className="w-28 h-28 rounded-full bg-brand-subtle" />
+      <Image
+        source={require('@/assets/images/hero-orb.png')}
+        className="w-48 h-48"
+        resizeMode="contain"
+      />
     </View>
+  )
+}
+
+function Wordmark() {
+  return (
+    <Text className="mt-4 text-[40px] font-extrabold tracking-[2px] text-[#FBFBFB]">nyalara</Text>
+  )
+}
+
+function Subtitle() {
+  return (
+    <Text className=" text-left text-2xl font-semibold text-white">
+      Track devices in real time, reduce energy waste, and build smarter habits effortlessly.
+    </Text>
   )
 }
