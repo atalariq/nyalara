@@ -60,6 +60,8 @@ export function EditDailyTargetModal({ visible, currentValue, onSave, onClose }:
             style={{ maxHeight: layout.maxHeight, paddingBottom: Math.max(insets.bottom, 16) }}
           >
             <ScrollView
+              automaticallyAdjustKeyboardInsets
+              keyboardDismissMode="interactive"
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 20 }}

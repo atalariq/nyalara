@@ -2,6 +2,8 @@ import { AppButton } from '@/shared/components/ui/AppButton'
 import { router } from 'expo-router'
 import { Image, ImageBackground, Text, View } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
+import { OnboardingDots } from '../components/OnboardingDots'
+import { ONBOARDING_SLIDES } from '../data/slides'
 
 export default function WelcomeScreen() {
   const insets = useSafeAreaInsets()
@@ -33,6 +35,9 @@ export default function WelcomeScreen() {
             borderTopRightRadius: 54,
           }}
         >
+          <View className="mb-3 items-center">
+            <OnboardingDots total={ONBOARDING_SLIDES.length} activeIndex={0} />
+          </View>
           <AppButton
             label="Get Started"
             variant="primary"
