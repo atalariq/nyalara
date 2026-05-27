@@ -1,4 +1,5 @@
 import { Text, View } from 'react-native'
+import { toFiniteNumber } from '../lib/finite-number'
 
 type Props = {
   dailyKwh: number
@@ -6,20 +7,21 @@ type Props = {
 }
 
 export function DashboardMainStats({ dailyKwh = 0, progress = 0 }: Props) {
+  const safeDailyKwh = toFiniteNumber(dailyKwh)
+  const safeProgress = toFiniteNumber(progress)
+
   return (
     <View className="flex-1 items-center justify-center">
       <View className="flex-row items-baseline gap-2">
         <Text className="text-[58px] font-black text-[#27C76F] leading-none">
-          {dailyKwh.toFixed(1)}
+          {safeDailyKwh.toFixed(1)}
         </Text>
         <Text className="text-[24px] font-semibold text-[#68B98B]">kWh</Text>
       </View>
       <Text className="mt-10 text-center text-[22px] font-black text-[#27C76F]">
-        {Math.round(progress * 100)}%
+        {Math.round(safeProgress * 100)}%
       </Text>
-      <Text className="text-[14px] font-bold tracking-[2px] text-[#27C76F]">
-        DAILY GOAL
-      </Text>
+      <Text className="text-[14px] font-bold tracking-[2px] text-[#27C76F]">DAILY GOAL</Text>
     </View>
   )
 }
