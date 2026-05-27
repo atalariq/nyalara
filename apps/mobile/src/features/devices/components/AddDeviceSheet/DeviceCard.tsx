@@ -20,9 +20,7 @@ export function DeviceCard({ device }: Props) {
         elevation: 3,
       }}
     >
-      <Text style={{ fontSize: 16, fontWeight: '700', color: '#111' }}>
-        {device.name}
-      </Text>
+      <Text style={{ fontSize: 16, fontWeight: '700', color: '#111' }}>{device.name}</Text>
       <Text style={{ marginTop: 4, color: '#666', fontSize: 14 }}>
         {device.category} • {device.deviceType}
       </Text>

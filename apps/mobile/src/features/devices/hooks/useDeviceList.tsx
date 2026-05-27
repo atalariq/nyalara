@@ -8,6 +8,8 @@ import { useTogglingStore } from '../store/togglingStore'
 import type { Device, LocationType } from '../types/device.types'
 import { useDevices } from './useDevices'
 import { useDeviceToggle } from './useDeviceToggle'
+import { DEVICE_TYPE_TO_CATEGORY } from '../types/device.types'
+import type { DeviceType } from '../types/device.types'
 
 export type DeviceListItem = {
   id: string
@@ -120,6 +122,65 @@ export function useDeviceList() {
     }
   }
 
+  async function editDevice(
+    id: string,
+    values: { name: string; deviceType: DeviceType; watt: number; hoursPerDay: number },
+  ) {
+    const device = devices.find((d) => d.id === id)
+    if (!device) return
+
+    const monthlyKwh = (values.watt * values.hoursPerDay * 30) / 1000
+
+    try {
+      await deviceService.updateDevice(id, {
+        name: values.name,
+        deviceType: values.deviceType,
+        category: DEVICE_TYPE_TO_CATEGORY[values.deviceType],
+        watt: values.watt,
+        hoursPerDay: values.hoursPerDay,
+        monthlyKwh,
+      })
+
+      const updated = await deviceService.getUserDevices(device.userId ?? '')
+      setDevices(updated)
+
+      Toast.show({
+        type: 'success',
+        text1: 'Device updated',
+        text2: values.name,
+        visibilityTime: 1800,
+      })
+    } catch (error) {
+      console.error('Failed to edit device:', error)
+      Toast.show({
+        type: 'error',
+        text1: 'Update failed',
+        text2: 'Please try again.',
+        visibilityTime: 2200,
+      })
+    }
+  }
+
+  async function deleteDevice(id: string) {
+    try {
+      await deviceService.deleteDevice(id)
+      setDevices(devices.filter((d) => d.id !== id))
+      Toast.show({
+        type: 'success',
+        text1: 'Device deleted',
+        visibilityTime: 1800,
+      })
+    } catch (error) {
+      console.error('Failed to delete device:', error)
+      Toast.show({
+        type: 'error',
+        text1: 'Delete failed',
+        text2: 'Please try again.',
+        visibilityTime: 2200,
+      })
+    }
+  }
+
   return {
     allItems,
     filteredItems,
@@ -129,5 +190,7 @@ export function useDeviceList() {
     highestConsumer,
     mostActive,
     toggleActive,
+    editDevice,
+    deleteDevice,
   }
 }

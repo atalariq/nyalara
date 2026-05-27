@@ -2,12 +2,11 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Image, Pressable, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useDevices } from '../hooks/useDevices'
 import type { LocationType } from '../types/device.types'
 import { DeviceCard } from '../components/DeviceList/DeviceCard'
+import { EditDeviceModal } from '../components/EditDeviceModal'
 import { useState, useEffect } from 'react'
-import { ChevronLeft } from 'lucide-react-native'
-import { useDeviceList } from '../hooks/useDeviceList'
+import { useDeviceList, type DeviceListItem } from '../hooks/useDeviceList'
 
 const ROOM_CONFIG: Record<LocationType, { label: string; image: any }> = {
   bedroom: { label: 'Bedroom', image: require('@/assets/images/room/bedroom.png') },
@@ -22,10 +21,11 @@ type DeviceFilter = 'all' | 'active'
 
 export function RoomDetailScreen() {
   const { location } = useLocalSearchParams<{ location: LocationType }>()
-  const { allItems, toggleActive } = useDeviceList()
+  const { allItems, toggleActive, editDevice, deleteDevice } = useDeviceList()
   const router = useRouter()
   const [filter, setFilter] = useState<DeviceFilter>('all')
   const [now, setNow] = useState(Date.now())
+  const [editingDevice, setEditingDevice] = useState<DeviceListItem | null>(null)
 
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 1000)
@@ -86,7 +86,7 @@ export function RoomDetailScreen() {
           </View>
         </View>
 
-        {/* CARD PUTIH — device list di dalam */}
+        {/* CARD PUTIH */}
         <View className="mt-4 flex-1 rounded-t-[36px] bg-white px-4 pt-6">
           {/* FILTER BAR */}
           <View className="mb-4 flex-row items-center gap-3">
@@ -125,11 +125,26 @@ export function RoomDetailScreen() {
               </View>
             ) : (
               filtered.map((device) => (
-                <DeviceCard key={device.id} device={device} now={now} onToggle={toggleActive} />
+                <DeviceCard
+                  key={device.id}
+                  device={device}
+                  now={now}
+                  onToggle={toggleActive}
+                  onEdit={(id) => setEditingDevice(allItems.find((d) => d.id === id) ?? null)}
+                />
               ))
             )}
           </ScrollView>
         </View>
+
+        {/* EDIT MODAL */}
+        <EditDeviceModal
+          device={editingDevice}
+          visible={!!editingDevice}
+          onClose={() => setEditingDevice(null)}
+          onSave={editDevice}
+          onDelete={deleteDevice}
+        />
       </SafeAreaView>
     </View>
   )

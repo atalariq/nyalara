@@ -6,9 +6,11 @@ import type { DailyUsage } from '@/features/energy/types/dailyUsage.types'
 import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
 import type { DashboardStats } from '../types/dashboard.types'
 import { useGoalsStore } from '@/features/goals/store/goalsStore'
+import { useCarbonBudget } from '@/features/carbon-budget/hooks/useCarbonBudget'
 
 export function useDashboardStats(): DashboardStats & { isLoading: boolean } {
-  const dailyTargetKwh = useGoalsStore((s) => s.dailyTargetKwh)
+  const { monthlyBudgetKwh } = useCarbonBudget()
+  const dailyTargetKwh = monthlyBudgetKwh / 30
   const { today, isLoading } = useEnergyHistory()
   const { devices } = useDevices()
 

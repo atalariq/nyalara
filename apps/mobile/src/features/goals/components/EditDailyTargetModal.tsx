@@ -50,7 +50,9 @@ export function EditDailyTargetModal({ visible, currentValue, onSave, onClose }:
             <Text className="text-xl font-bold text-[#111]">Edit Daily Target</Text>
 
             <View className="gap-2">
-              <Text className="text-xs font-semibold tracking-widest text-[#888]">DAILY LIMIT</Text>
+              <Text className="text-xs font-semibold tracking-widest text-[#888]">
+                CARBON BUDGET
+              </Text>
 
               <View className="rounded-2xl bg-[#F3F4F6] px-4 py-3 flex-row items-center">
                 <TextInput

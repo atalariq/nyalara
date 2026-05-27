@@ -4,6 +4,8 @@ import { ScrollView, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { AddDeviceSheet } from '../components/AddDeviceSheet'
+import { EditDeviceModal } from '../components/EditDeviceModal'
+import type { DeviceListItem } from '../hooks/useDeviceList'
 
 import {
   DeviceCard,
@@ -19,6 +21,7 @@ import { useAddDeviceSheetStore } from '../store/addDeviceSheetStore'
 
 export default function DevicesScreen() {
   useActiveDeviceTimer()
+  const [editingDevice, setEditingDevice] = useState<DeviceListItem | null>(null)
 
   const [now, setNow] = useState(Date.now())
 
@@ -41,6 +44,8 @@ export default function DevicesScreen() {
     highestConsumer,
     mostActive,
     toggleActive,
+    editDevice,
+    deleteDevice,
   } = useDeviceList()
 
   return (
@@ -112,7 +117,13 @@ export default function DevicesScreen() {
               <DeviceEmptyState />
             ) : (
               filteredItems.map((device) => (
-                <DeviceCard key={device.id} device={device} now={now} onToggle={toggleActive} />
+                <DeviceCard
+                  key={device.id}
+                  device={device}
+                  now={now}
+                  onToggle={toggleActive}
+                  onEdit={(id) => setEditingDevice(allItems.find((d) => d.id === id) ?? null)}
+                />
               ))
             )}
           </View>
@@ -120,6 +131,13 @@ export default function DevicesScreen() {
 
         {/* SHEET */}
         <AddDeviceSheet visible={isAddSheetVisible} onClose={() => setIsAddSheetVisible(false)} />
+        <EditDeviceModal
+          device={editingDevice}
+          visible={!!editingDevice}
+          onClose={() => setEditingDevice(null)}
+          onSave={editDevice}
+          onDelete={deleteDevice}
+        />
       </SafeAreaView>
     </View>
   )
