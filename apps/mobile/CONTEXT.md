@@ -83,6 +83,7 @@ When editing mobile code, prefer moves that converge toward the PRD contract and
 - **API-contract-first migration**: the frontend migration approach where mobile features integrate through backend route DTOs first and only touch canonical Firestore documents directly for explicitly allowed cases such as `preferences/main`.
 - **Guest session**: authenticated session using Firebase anonymous auth; can manage device inventory and usage logs for core tracking flows, but cannot access insight features.
 - **Full account session**: authenticated session using permanent identity (email/social); required for account-bound insight features, including reading and generating insights.
+- **Setup-complete account**: a signed-in account that has already completed the onboarding flow and has at least one device in inventory; accounts that fail this condition must be routed back into onboarding instead of entering the main app shell.
 
 ## Invariants and rules
 
