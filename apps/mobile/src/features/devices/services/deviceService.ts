@@ -8,7 +8,9 @@ import { protectedApiClient } from '@/shared/api/app-protected-api-client'
 import { isProtectedApiAuthError } from '@/shared/api/protected-api-client'
 import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
 import type { CreateDevicePayload, Device } from '../types/device.types'
+import { mockDeviceService } from './deviceServices.mock'
 
+const USE_MOCK = !process.env.EXPO_PUBLIC_API_BASE_URL
 const POLL_INTERVAL_MS = 15_000
 
 function toDevice(dto: DeviceDto): Device {
@@ -33,6 +35,7 @@ function toDevice(dto: DeviceDto): Device {
     monthlyEmissions,
     monthlyCost,
     createdAt: Date.parse(dto.createdAt),
+    location: (dto as any).location ?? 'other',
   }
 }
 
@@ -79,8 +82,7 @@ function toUpdateDeviceRequest(
 }
 
 async function listDevices(): Promise<Device[]> {
-  const response =
-    await protectedApiClient.get<ApiResponse<DeviceDto[]>>('/v1/devices')
+  const response = await protectedApiClient.get<ApiResponse<DeviceDto[]>>('/v1/devices')
 
   if (!response.success) {
     throw new Error(response.error.message)
@@ -89,20 +91,15 @@ async function listDevices(): Promise<Device[]> {
   return response.data.map(toDevice)
 }
 
-export const deviceService = {
-  async addDevice(
-    _userId: string,
-    payload: CreateDevicePayload,
-  ): Promise<Device> {
-    const response = await protectedApiClient.post<
-      CreateDeviceRequest,
-      ApiResponse<DeviceDto>
-    >('/v1/devices', toCreateDeviceRequest(payload))
-
+const realDeviceService = {
+  async addDevice(_userId: string, payload: CreateDevicePayload): Promise<Device> {
+    const response = await protectedApiClient.post<CreateDeviceRequest, ApiResponse<DeviceDto>>(
+      '/v1/devices',
+      toCreateDeviceRequest(payload),
+    )
     if (!response.success) {
       throw new Error(response.error.message)
     }
-
     return toDevice(response.data)
   },
 
@@ -110,16 +107,11 @@ export const deviceService = {
     return listDevices()
   },
 
-  listenUserDevices(
-    _userId: string,
-    onData: (devices: Device[]) => void,
-  ): () => void {
+  listenUserDevices(_userId: string, onData: (devices: Device[]) => void): () => void {
     let cancelled = false
-
     const emit = async () => {
       try {
         const devices = await listDevices()
-
         if (!cancelled) {
           onData(devices)
         }
@@ -127,16 +119,13 @@ export const deviceService = {
         if (cancelled || isProtectedApiAuthError(error)) {
           return
         }
-
         console.error('Failed to fetch devices from backend', error)
       }
     }
-
     void emit()
     const interval = setInterval(() => {
       void emit()
     }, POLL_INTERVAL_MS)
-
     return () => {
       cancelled = true
       clearInterval(interval)
@@ -147,24 +136,23 @@ export const deviceService = {
     deviceId: string,
     payload: Partial<Omit<Device, 'id' | 'userId' | 'createdAt'>>,
   ): Promise<void> {
-    const response = await protectedApiClient.patch<
-      UpdateDeviceRequest,
-      ApiResponse<DeviceDto>
-    >(`/v1/devices/${deviceId}`, toUpdateDeviceRequest(payload))
-
+    const response = await protectedApiClient.patch<UpdateDeviceRequest, ApiResponse<DeviceDto>>(
+      `/v1/devices/${deviceId}`,
+      toUpdateDeviceRequest(payload),
+    )
     if (!response.success) {
       throw new Error(response.error.message)
     }
   },
 
   async deleteDevice(deviceId: string): Promise<void> {
-    const response =
-      await protectedApiClient.delete<ApiResponse<{ deviceId: string }>>(
-        `/v1/devices/${deviceId}`,
-      )
-
+    const response = await protectedApiClient.delete<ApiResponse<{ deviceId: string }>>(
+      `/v1/devices/${deviceId}`,
+    )
     if (!response.success) {
       throw new Error(response.error.message)
     }
   },
 }
+
+export const deviceService = USE_MOCK ? mockDeviceService : realDeviceService

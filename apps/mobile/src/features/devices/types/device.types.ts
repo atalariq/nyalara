@@ -13,6 +13,14 @@ export const DEVICE_TYPE_TO_CATEGORY: Record<DeviceType, DeviceCategory> = {
   other: 'other',
 }
 
+export type LocationType =
+  | 'bedroom'
+  | 'bathroom'
+  | 'living_room'
+  | 'kitchen'
+  | 'dining_room'
+  | 'other'
+
 export interface Device {
   id: string
   userId: string
@@ -28,6 +36,7 @@ export interface Device {
   monthlyCost?: number
   monthlyEmissions?: number
   createdAt: number
+  location: LocationType
 }
 
 export interface CreateDevicePayload {

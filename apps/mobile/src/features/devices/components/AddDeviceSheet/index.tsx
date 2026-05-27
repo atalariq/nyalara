@@ -6,6 +6,7 @@ import { Controller } from 'react-hook-form'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useDeviceSetup } from '../../hooks/useDeviceSetup'
 import { CategoryGrid } from './CategoryGrid'
+import { LocationGrid } from './LocationGrid'
 
 type Props = {
   visible: boolean
@@ -83,7 +84,14 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
             render={({ field }) => <CategoryGrid value={field.value} onChange={field.onChange} />}
           />
 
-          <StepLabel step={2} title="Identity" />
+          <StepLabel step={2} title="Location" />
+          <Controller
+            name="location"
+            control={control}
+            render={({ field }) => <LocationGrid value={field.value} onChange={field.onChange} />}
+          />
+
+          <StepLabel step={3} title="Identity" />
           <Controller
             name="name"
             control={control}
@@ -125,7 +133,7 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
             </Text>
           )}
 
-          <StepLabel step={3} title="Energy Consumption" />
+          <StepLabel step={4} title="Energy Consumption" />
           <Controller
             name="watt"
             control={control}

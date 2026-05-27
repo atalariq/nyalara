@@ -9,6 +9,10 @@ import { EnergyStatusPill } from '../components/EnergyStatusPill'
 import { EnvironmentalImpact } from '../components/EnvironmentalImpact'
 import { useEnergyScreenData } from '../hooks/useEnergyScreenData'
 import type { EfficiencyLevel } from '../utils/energyEfficiency'
+import { useDevices } from '@/features/devices/hooks/useDevices'
+import type { LocationType } from '@/features/devices/types/device.types'
+import { DeviceCard } from '@/features/devices/components/AddDeviceSheet/DeviceCard'
+import { RoomAssetsRow } from '@/features/devices/components/RoomAssetsRow'
 
 const EFFICIENCY_STYLES: Record<EfficiencyLevel, { bg: string; text: string }> = {
   efficient: { bg: 'bg-brand', text: 'text-white' },
@@ -16,8 +20,24 @@ const EFFICIENCY_STYLES: Record<EfficiencyLevel, { bg: string; text: string }> =
   inefficient: { bg: 'bg-red-100', text: 'text-red-700' },
 }
 
+const LOCATION_LABELS: Record<LocationType, string> = {
+  bedroom: '🛏️ Bedroom',
+  living_room: '🛋️ Living Room',
+  kitchen: '🍳 Kitchen',
+  bathroom: '🚿 Bathroom',
+  dining_room: '🍽️ Dining Room',
+  other: '📦 Other',
+}
+
 export default function EnergyScreen() {
   const insets = useSafeAreaInsets()
+  const { devices } = useDevices()
+  const grouped = devices.reduce<Partial<Record<LocationType, typeof devices>>>((acc, device) => {
+    const key = device.location ?? 'other'
+    if (!acc[key]) acc[key] = []
+    acc[key]!.push(device)
+    return acc
+  }, {})
   const {
     today,
     history,
@@ -130,7 +150,7 @@ export default function EnergyScreen() {
               </Text>
               <Text className="font-semibold text-[18px] text-foreground-secondary">View All</Text>
             </View>
-
+            <RoomAssetsRow />
             <View
               className="mt-7 rounded-[34px] bg-white p-5"
               style={{
