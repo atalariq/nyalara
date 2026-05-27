@@ -74,6 +74,39 @@ export type DeleteDeviceResponse = ApiSuccess<{
   deviceId: string
 }>
 
+export type UserProfileDto = {
+  displayName: string
+  email: string
+  electricityRate: number
+  emissionFactor: number
+  photoURL?: string
+  residence?: string
+  residents?: number
+  city?: string
+  createdAt: IsoDateTimeString
+  updatedAt: IsoDateTimeString
+}
+
+export type CreateUserProfileRequest = {
+  displayName: string
+  email: string
+  electricityRate: number
+  emissionFactor: number
+  photoURL?: string
+  residence?: string
+  residents?: number
+  city?: string
+}
+
+export type UpdateUserProfileRequest = Partial<CreateUserProfileRequest>
+
+export type GetUserProfileResponse = ApiSuccess<UserProfileDto | null>
+export type CreateUserProfileResponse = ApiSuccess<UserProfileDto>
+export type UpdateUserProfileResponse = ApiSuccess<UserProfileDto>
+export type DeleteUserDataResponse = ApiSuccess<{
+  deleted: true
+}>
+
 export type CalculateElectricityKwhRequest = {
   inputType: 'kwh'
   timezoneOffsetMinutes: number

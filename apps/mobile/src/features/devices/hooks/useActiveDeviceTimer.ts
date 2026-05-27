@@ -1,5 +1,5 @@
 import { useAuthStore } from '@/features/auth/store/authStore'
-import { dailyUsageService } from '@/features/energy/services/dailyUsageService'
+import { energyHistoryService } from '@/features/energy/services/energyHistoryService'
 import { useEffect, useRef } from 'react'
 import { useDeviceStore } from '../store/deviceStore'
 import { createActiveDeviceFlushRuntime } from '../lib/active-device-flush-runtime'
@@ -12,25 +12,13 @@ export function useActiveDeviceTimer() {
   const runtimeRef = useRef(
     createActiveDeviceFlushRuntime({
       intervalMs: FLUSH_INTERVAL_MS,
-      async flushUsage({
-        userId,
-        deviceId,
-        name,
-        watt,
-        durationMinutes,
-        kwh,
-      }) {
-        await dailyUsageService.accumulateDeviceUsage(
-          userId,
-          new Date(),
-          deviceId,
-          {
-            name,
-            watt,
-            durationMinutes,
-            kwh,
-          },
-        )
+      async flushUsage({ userId, deviceId, name, watt, durationMinutes, kwh }) {
+        await energyHistoryService.accumulateDeviceUsage(userId, new Date(), deviceId, {
+          name,
+          watt,
+          durationMinutes,
+          kwh,
+        })
       },
     }),
   )

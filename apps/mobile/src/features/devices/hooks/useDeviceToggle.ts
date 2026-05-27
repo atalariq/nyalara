@@ -1,5 +1,5 @@
 import { useAuthStore } from '@/features/auth/store/authStore'
-import { dailyUsageService } from '@/features/energy/services/dailyUsageService'
+import { energyHistoryService } from '@/features/energy/services/energyHistoryService'
 import { deviceService } from '../services/deviceService'
 import type { Device } from '../types/device.types'
 
@@ -16,12 +16,6 @@ export function useDeviceToggle() {
         activatedAt: now.getTime(),
       })
     } else {
-      if (device.activatedAt) {
-        await dailyUsageService.recordSession(user.uid, now, device.id, {
-          startedAt: device.activatedAt,
-          endedAt: now.getTime(),
-        })
-      }
       await deviceService.updateDevice(device.id, {
         active: false,
         activatedAt: null,
@@ -42,7 +36,7 @@ export function useDeviceToggle() {
         const kwh = (d.watt * (durationMinutes / 60)) / 1000
 
         if (durationMinutes > 0) {
-          await dailyUsageService.accumulateDeviceUsage(user.uid!, now, d.id, {
+          await energyHistoryService.accumulateDeviceUsage(user.uid!, now, d.id, {
             name: d.name,
             watt: d.watt,
             durationMinutes,

@@ -1,10 +1,10 @@
 import { useAuthStore } from '@/features/auth/store/authStore'
 import { useEffect, useRef } from 'react'
-import { dailyUsageService } from '../services/dailyUsageService'
+import { energyHistoryService } from '../services/energyHistoryService'
 import { useEnergyHistoryStore } from '../store/energyHistoryStore'
-import type { DailyUsage } from '../types/dailyUsage.types'
+import type { DailyEnergyUsage } from '../types/energyHistory.types'
 
-function sortHistoryByDateAscending(history: DailyUsage[]): DailyUsage[] {
+function sortHistoryByDateAscending(history: DailyEnergyUsage[]): DailyEnergyUsage[] {
   return [...history].sort((a, b) => a.date.localeCompare(b.date))
 }
 
@@ -41,12 +41,12 @@ export function useSyncEnergyHistory() {
     setError(null)
     loadedCountRef.current = 0
 
-    const unsubscribeToday = dailyUsageService.listenToday(user.uid, (data) => {
+    const unsubscribeToday = energyHistoryService.listenToday(user.uid, (data) => {
       setToday(data)
       markOneLoaded()
     })
 
-    const unsubscribeHistory = dailyUsageService.listenHistory(user.uid, 30, (data) => {
+    const unsubscribeHistory = energyHistoryService.listenHistory(user.uid, 30, (data) => {
       setHistory(sortHistoryByDateAscending(data))
       markOneLoaded()
     })

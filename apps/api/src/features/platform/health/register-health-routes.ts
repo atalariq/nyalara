@@ -14,7 +14,7 @@ const healthRoute = createRoute({
             success: z.literal(true),
             data: z.object({
               status: z.literal('ok'),
-              service: z.literal('carbon-tracker-backend')
+              service: z.literal('nyalara-backend')
             })
           })
         }
@@ -29,7 +29,7 @@ export function registerHealthRoutes(app: OpenAPIHono) {
       success: true,
       data: {
         status: 'ok',
-        service: 'carbon-tracker-backend'
+        service: 'nyalara-backend'
       }
     })
   })

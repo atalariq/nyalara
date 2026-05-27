@@ -3,7 +3,6 @@ import { getApp, getApps, initializeApp } from 'firebase/app'
 import { Auth, getAuth, initializeAuth } from 'firebase/auth'
 // @ts-ignore React Native persistence exists at runtime but is missing from the resolved firebase/auth typings.
 import { getReactNativePersistence } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -28,4 +27,3 @@ const initAuth = (): Auth => {
 }
 
 export const auth: Auth = initAuth()
-export const db = getFirestore(app)

@@ -3,7 +3,7 @@ import type {
   ElectricityUsageDto,
   ElectricityUsageListItemDto,
   MonthlySummaryDto
-} from '@carbon-tracker/shared'
+} from '@nyalara/shared'
 import { FieldValue, type Firestore } from 'firebase-admin/firestore'
 
 import { AppError } from '../platform/http/errors.js'

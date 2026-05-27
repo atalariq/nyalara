@@ -28,6 +28,6 @@ describe('shouldLoadLocalEnv', () => {
   })
 
   it('does not load local env files on Cloud Run', () => {
-    expect(shouldLoadLocalEnv({ K_SERVICE: 'carbon-tracker-api' })).toBe(false)
+    expect(shouldLoadLocalEnv({ K_SERVICE: 'nyalara-api' })).toBe(false)
   })
 })

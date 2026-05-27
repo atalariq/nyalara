@@ -29,8 +29,8 @@ gcloud --version
 ## Clone And Install
 
 ```bash
-git clone <your-fork-or-repo-url> carbon-tracker
-cd carbon-tracker
+git clone <your-fork-or-repo-url> nyalara
+cd nyalara
 pnpm install
 ```
 
@@ -188,7 +188,7 @@ Example deploy flow:
 gcloud auth login
 gcloud config set project <your-project-id>
 gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com
-gcloud run deploy carbon-tracker-api \
+gcloud run deploy nyalara-api \
   --source apps/api \
   --region <your-region> \
   --allow-unauthenticated \

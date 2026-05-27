@@ -30,7 +30,7 @@ The mobile app reads Firebase config from environment variables in [`apps/mobile
 
 Start from [`apps/mobile/.env.example`](../apps/mobile/.env.example) and copy it to a local `.env` file for the mobile app.
 
-The local auth integration target for this repo is the Firebase project `carbon-tracker-c1925`.
+The local auth integration target for this repo is the Firebase project `nyalara`.
 The local protected mobile API target is `EXPO_PUBLIC_API_BASE_URL=http://10.0.2.2:3000`.
 
 Required variables:
@@ -38,9 +38,9 @@ Required variables:
 ```bash
 EXPO_PUBLIC_API_BASE_URL=http://10.0.2.2:3000
 EXPO_PUBLIC_FIREBASE_API_KEY=...
-EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=carbon-tracker-c1925.firebaseapp.com
-EXPO_PUBLIC_FIREBASE_PROJECT_ID=carbon-tracker-c1925
-EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=carbon-tracker-c1925.firebasestorage.app
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=nyalara.firebaseapp.com
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=nyalara
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=nyalara.firebasestorage.app
 EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
 EXPO_PUBLIC_FIREBASE_APP_ID=...
 ```
@@ -79,7 +79,7 @@ That script defaults to `apps/mobile/.env`, uses the Firebase web API key plus p
 Example output:
 
 ```json
-{"projectId":"carbon-tracker-c1925","uid":"guest-uid","isAnonymous":true,"idToken":"<firebase-id-token>"}
+{"projectId":"nyalara","uid":"guest-uid","isAnonymous":true,"idToken":"<firebase-id-token>"}
 ```
 
 Use the returned `idToken` as a bearer token for the first protected backend smoke test:
@@ -129,7 +129,7 @@ That means credentials come from Application Default Credentials.
 
 Start from [`apps/api/.env.example`](../apps/api/.env.example) and copy it to a local `.env` file for the API app.
 
-For this slice, the backend must use Admin credentials for the same Firebase project, `carbon-tracker-c1925`, and use Firestore in that project as its local data target.
+For this slice, the backend must use Admin credentials for the same Firebase project, `nyalara`, and use Firestore in that project as its local data target.
 
 ### Local backend runs
 
@@ -142,7 +142,7 @@ cp apps/api/.env.example apps/api/.env
 export GOOGLE_APPLICATION_CREDENTIALS=/absolute/path/to/service-account.json
 ```
 
-Keep `GOOGLE_CLOUD_PROJECT=carbon-tracker-c1925` in `apps/api/.env` and make sure the service account file also belongs to `carbon-tracker-c1925`.
+Keep `GOOGLE_CLOUD_PROJECT=nyalara` in `apps/api/.env` and make sure the service account file also belongs to `nyalara`.
 
 In that case, `service-account.json` is required locally, but it should stay outside the repo or be gitignored. Do not commit service account credentials.
 
@@ -198,11 +198,11 @@ gcloud auth application-default login
 3. Create or select a Google Cloud / Firebase project:
 
 ```bash
-gcloud config set project carbon-tracker-c1925
-firebase use carbon-tracker-c1925
+gcloud config set project nyalara
+firebase use nyalara
 ```
 
-4. Enable Firebase Auth and Firestore for `carbon-tracker-c1925`.
+4. Enable Firebase Auth and Firestore for `nyalara`.
 5. Register the mobile app in Firebase so you can obtain the client config values.
 6. Copy `apps/mobile/.env.example` to `apps/mobile/.env` and fill in the Firebase web config.
 7. Create or use a service account for local backend development.

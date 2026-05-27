@@ -3,7 +3,7 @@ import type {
   ElectricityUsageDto,
   ElectricityUsageListItemDto,
   MonthlySummaryDto
-} from '@carbon-tracker/shared'
+} from '@nyalara/shared'
 
 export type ElectricityUsageRecord = ElectricityUsageDto
 export type MonthlySummary = MonthlySummaryDto

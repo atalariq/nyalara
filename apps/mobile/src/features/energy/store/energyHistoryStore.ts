@@ -1,13 +1,13 @@
 import { create } from 'zustand'
-import type { DailyUsage } from '../types/dailyUsage.types'
+import type { DailyEnergyUsage } from '../types/energyHistory.types'
 
 type EnergyHistoryState = {
-  today: DailyUsage | null
-  history: DailyUsage[]
+  today: DailyEnergyUsage | null
+  history: DailyEnergyUsage[]
   isLoading: boolean
   error: string | null
-  setToday: (today: DailyUsage | null) => void
-  setHistory: (history: DailyUsage[]) => void
+  setToday: (today: DailyEnergyUsage | null) => void
+  setHistory: (history: DailyEnergyUsage[]) => void
   setLoading: (isLoading: boolean) => void
   setError: (error: string | null) => void
   reset: () => void

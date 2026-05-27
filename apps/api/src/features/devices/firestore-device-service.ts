@@ -3,7 +3,7 @@ import type {
   DeviceDto,
   LocationType,
   UpdateDeviceRequest
-} from '@carbon-tracker/shared'
+} from '@nyalara/shared'
 import { FieldValue, type Firestore } from 'firebase-admin/firestore'
 
 import type {

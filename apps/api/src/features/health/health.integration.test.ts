@@ -37,7 +37,7 @@ describe('GET /v1/health', () => {
       success: true,
       data: {
         status: 'ok',
-        service: 'carbon-tracker-backend'
+        service: 'nyalara-backend'
       }
     })
   })

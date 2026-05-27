@@ -13,4 +13,6 @@ coverage
 !.env.example
 
 .DS_Store
-apps/api/carbon-tracker-c1925-firebase-adminsdk-fbsvc-ff52647ef6.json
+service-account.json
+google-services.json
+GoogleService-Info.plist
