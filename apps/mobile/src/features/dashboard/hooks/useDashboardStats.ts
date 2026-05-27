@@ -2,7 +2,7 @@
 import { useDevices } from '@/features/devices/hooks/useDevices'
 import { useEnergyHistory } from '@/features/energy/hooks/useEnergyHistory'
 import type { Device } from '@/features/devices/types/device.types'
-import type { DailyUsage } from '@/features/energy/types/dailyUsage.types'
+import type { DailyEnergyUsage } from '@/features/energy/types/energyHistory.types'
 import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
 import type { DashboardStats } from '../types/dashboard.types'
 import { useGoalsStore } from '@/features/goals/store/goalsStore'

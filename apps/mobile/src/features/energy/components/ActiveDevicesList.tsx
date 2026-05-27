@@ -3,10 +3,10 @@ import { useTogglingStore } from '@/features/devices/store/togglingStore'
 import { Plug, Zap } from 'lucide-react-native'
 import { useEffect, useRef, useState } from 'react'
 import { Text, View } from 'react-native'
-import type { DailyUsage, DeviceDailyRecord } from '../types/dailyUsage.types'
+import type { DailyEnergyUsage, DeviceEnergyRecord } from '../types/energyHistory.types'
 
 type Props = {
-  today: DailyUsage | null
+  today: DailyEnergyUsage | null
 }
 
 export function ActiveDevicesList({ today }: Props) {
@@ -42,7 +42,7 @@ export function ActiveDevicesList({ today }: Props) {
     })
   }, [devices])
 
-  const allEntries: [string, DeviceDailyRecord | null][] = [
+  const allEntries: [string, DeviceEnergyRecord | null][] = [
     ...firestoreEntries,
     ...liveOnlyDevices.map((d) => [d.id, null] as [string, null]),
   ]

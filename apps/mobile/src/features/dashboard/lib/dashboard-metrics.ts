@@ -1,12 +1,12 @@
 import type { Device } from '../../devices/types/device.types'
-import type { DailyUsage } from '../../energy/types/dailyUsage.types'
+import type { DailyEnergyUsage } from '../../energy/types/energyHistory.types'
 import { CARBON_CONFIG } from '../../../shared/config/carbonConfig'
 import type { DashboardStats } from '../types/dashboard.types'
 
 const DAILY_GOAL_KWH = 5
 
 export type DashboardStatsInput = {
-  today: DailyUsage | null
+  today: DailyEnergyUsage | null
   devices: Device[]
   isLoading: boolean
 }
@@ -56,7 +56,7 @@ export function calculateDashboardStats({
 }
 
 export function calculateCarbonSummary(
-  history: DailyUsage[],
+  history: DailyEnergyUsage[],
   devices: Device[],
 ): CarbonSummary {
   const historyDays = history.length || 1

@@ -1,5 +1,5 @@
 import type { Device } from '@/features/devices/types/device.types'
-import type { DailyUsage } from '@/features/energy/types/dailyUsage.types'
+import type { DailyEnergyUsage } from '@/features/energy/types/energyHistory.types'
 import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
 import { useEffect, useRef, useState } from 'react'
 import { fetchAIInsight } from '../api/dashboardApi'
@@ -14,7 +14,7 @@ export function useDashboardAI({
 }: {
   stats: DashboardStats
   devices: Device[]
-  today: DailyUsage | null
+  today: DailyEnergyUsage | null
 }): AIInsight {
   const [insight, setInsight] = useState<AIInsight>({
     recommendations: [],
@@ -34,8 +34,7 @@ export function useDashboardAI({
   const totalKwh = today?.totalKwh ?? 0
   const savedKwh = Math.max(estimatedMonthlyKwh - totalKwh, 0)
   const co2ReducedKg = savedKwh * CARBON_CONFIG.emissionFactor
-  const hasMeaningfulUsageData =
-    totalKwh > 0 || Object.keys(today?.devices ?? {}).length > 0
+  const hasMeaningfulUsageData = totalKwh > 0 || Object.keys(today?.devices ?? {}).length > 0
 
   useEffect(() => {
     if (stats.isLoading) return

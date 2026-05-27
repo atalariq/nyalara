@@ -8,9 +8,13 @@ import { protectedApiClient } from '@/shared/api/app-protected-api-client'
 import { isProtectedApiAuthError } from '@/shared/api/protected-api-client'
 import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
 import type { CreateDevicePayload, Device } from '../types/device.types'
+import { shouldUseMockDeviceService } from './device-service-mode'
 import { mockDeviceService } from './deviceServices.mock'
 
-const USE_MOCK = !process.env.EXPO_PUBLIC_API_BASE_URL
+const USE_MOCK = shouldUseMockDeviceService({
+  EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL,
+  EXPO_PUBLIC_USE_MOCK_DEVICES: process.env.EXPO_PUBLIC_USE_MOCK_DEVICES,
+})
 const POLL_INTERVAL_MS = 15_000
 
 function toDevice(dto: DeviceDto): Device {

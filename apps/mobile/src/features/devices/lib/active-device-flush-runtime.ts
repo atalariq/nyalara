@@ -33,10 +33,13 @@ export function createActiveDeviceFlushRuntime({
   const intervalByDeviceId: Record<string, number> = {}
   const lastFlushedAtByDeviceId: Record<string, number> = {}
 
-  async function flushDevice(userId: string, device: ActiveDevice) {
+  async function flushDevice(userId: string, device: Pick<ActiveDevice, 'id' | 'name' | 'watt'>) {
     const now = nowMs()
-    const lastFlushed =
-      lastFlushedAtByDeviceId[device.id] ?? (device.activatedAt as number)
+    const lastFlushed = lastFlushedAtByDeviceId[device.id]
+
+    if (!lastFlushed) {
+      return
+    }
     const durationMs = now - lastFlushed
 
     if (durationMs <= 0) {
@@ -46,25 +49,37 @@ export function createActiveDeviceFlushRuntime({
     const durationMinutes = durationMs / 1000 / 60
     const kwh = (device.watt * (durationMinutes / 60)) / 1000
 
-    await flushUsage({
-      userId,
-      deviceId: device.id,
-      name: device.name,
-      watt: device.watt,
-      durationMinutes,
-      kwh,
-    })
-
     lastFlushedAtByDeviceId[device.id] = now
+
+    try {
+      await flushUsage({
+        userId,
+        deviceId: device.id,
+        name: device.name,
+        watt: device.watt,
+        durationMinutes,
+        kwh,
+      })
+    } catch (error) {
+      lastFlushedAtByDeviceId[device.id] = lastFlushed
+      throw error
+    }
   }
 
   return {
     sync({ userId, devices }: { userId: string; devices: ActiveDevice[] }) {
       const activeDevices = devices.filter((d) => d.active && d.activatedAt)
       const activeIds = new Set(activeDevices.map((d) => d.id))
+      const devicesById = new Map(devices.map((device) => [device.id, device]))
 
       Object.keys(intervalByDeviceId).forEach((deviceId) => {
         if (!activeIds.has(deviceId)) {
+          const device = devicesById.get(deviceId)
+
+          if (device) {
+            void flushDevice(userId, device).catch(() => {})
+          }
+
           clearIntervalFn(intervalByDeviceId[deviceId])
           delete intervalByDeviceId[deviceId]
           delete lastFlushedAtByDeviceId[deviceId]
