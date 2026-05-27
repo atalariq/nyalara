@@ -127,11 +127,15 @@ Follow [docs/firebase-setup.md](docs/firebase-setup.md) for the detailed Firebas
 4. Configure Google sign-in for the mobile app.
 5. Provide local Admin credentials for the API.
 
-Seed the electricity emission factor before testing energy flows:
+Seed electricity emission factors before testing energy flows:
 
 ```bash
 pnpm --filter api seed:emission-factors
 ```
+
+Seed references and methodology notes:
+
+- `docs/emission-factors-sources.md`
 
 ## Run Locally
 

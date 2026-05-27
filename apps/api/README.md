@@ -17,9 +17,9 @@ The development server runs on `http://localhost:3000` by default.
 
 - `apps/api/.env` based on `apps/api/.env.example`
 - Firebase Admin credentials through Application Default Credentials
-- A seeded electricity emission factor for end-to-end energy flows
+- Seeded electricity emission factors for end-to-end energy flows
 
-Seed the emission factor when needed:
+Seed emission factors when needed:
 
 ```bash
 pnpm --filter api seed:emission-factors
@@ -86,7 +86,21 @@ Returns service health.
 
 - `GET /v1/emission-factors`
 
-Returns the active electricity emission factors used by the backend.
+Returns active electricity emission factors (public endpoint, no auth).
+
+Current seed strategy:
+
+- Indonesia is a special case with multiple active regional factors plus one active national fallback.
+- Other countries are seeded with national or grid-representative factors from official publications.
+
+Current backend selection behavior for calculations and usage writes:
+
+- Prefer active factor `country=ID` and `region=national` when available.
+- If that is unavailable, fallback uses deterministic ID ordering on active factors.
+
+Verification references are documented in:
+
+- `docs/emission-factors-sources.md`
 
 ### Devices
 

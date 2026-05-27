@@ -165,6 +165,83 @@ describe('POST /v1/calculate-electricity', () => {
     })
   })
 
+  it('prefers Indonesia national factor when multiple active factors exist', async () => {
+    const app = createApp({
+      environment: 'test',
+      auth: {
+        verifyIdToken: async () => createDecodedIdToken('full-user', 'password')
+      },
+      emissionFactors: {
+        listActiveElectricityFactors: async () => [
+          {
+            id: 'sg_grid_2024',
+            country: 'SG',
+            region: 'national',
+            unit: 'kwh',
+            kgCo2ePerKwh: 0.402,
+            version: '2024',
+            active: true
+          },
+          {
+            id: 'id_pln_national_2024',
+            country: 'ID',
+            region: 'national',
+            unit: 'kwh',
+            kgCo2ePerKwh: 0.85,
+            version: '2024',
+            active: true
+          }
+        ]
+      },
+      electricityUsages: {
+        createUsage: async () => {
+          throw new Error('not used in this test')
+        },
+        getMonthlySummary: async () => {
+          throw new Error('not used in this test')
+        },
+        listUsages: async () => {
+          throw new Error('not used in this test')
+        },
+        recalculateMonthlySummary: async () => {
+          throw new Error('not used in this test')
+        }
+      }
+    })
+
+    const response = await app.request('/v1/calculate-electricity', {
+      method: 'POST',
+      headers: {
+        authorization: 'Bearer valid-full-token',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        inputType: 'kwh',
+        timezoneOffsetMinutes: 420,
+        input: {
+          kwh: 100,
+          meterStart: null,
+          meterEnd: null,
+          unit: 'kwh'
+        },
+        period: {
+          startDate: '2026-05-01',
+          endDate: '2026-05-31',
+          month: '2026-05'
+        }
+      })
+    })
+
+    expect(response.status).toBe(200)
+    await expect(response.json()).resolves.toMatchObject({
+      success: true,
+      data: {
+        emissionFactorId: 'id_pln_national_2024',
+        emissionFactorKgCo2ePerKwh: 0.85
+      }
+    })
+  })
+
   it('requires a bearer token', async () => {
     const app = createApp({
       environment: 'test',

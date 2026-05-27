@@ -4,6 +4,7 @@ import type { OpenAPIHono } from '@hono/zod-openapi'
 import type { IdTokenVerifier } from '../auth/firebase-admin-auth.js'
 import { classifySession } from '../auth/session.js'
 import type { EmissionFactorReader } from '../emission-factors/emission-factor-reader.js'
+import { selectActiveEmissionFactor } from '../emission-factors/select-active-emission-factor.js'
 import { AppError } from '../platform/http/errors.js'
 
 const periodSchema = z.object({
@@ -105,7 +106,7 @@ export function registerCalculateElectricityRoutes(
 
     const payload = c.req.valid('json')
     const activeFactors = await emissionFactors.listActiveElectricityFactors()
-    const activeFactor = activeFactors[0]
+    const activeFactor = selectActiveEmissionFactor(activeFactors)
 
     if (!activeFactor) {
       throw new AppError(

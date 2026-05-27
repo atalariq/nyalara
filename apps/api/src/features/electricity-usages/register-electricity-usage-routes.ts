@@ -6,6 +6,7 @@ import type { IdTokenVerifier } from '../auth/firebase-admin-auth.js'
 import { classifySession } from '../auth/session.js'
 import type { DeviceService } from '../devices/device-service.js'
 import type { EmissionFactorReader } from '../emission-factors/emission-factor-reader.js'
+import { selectActiveEmissionFactor } from '../emission-factors/select-active-emission-factor.js'
 import { AppError } from '../platform/http/errors.js'
 import type {
   ElectricityUsageRecord,
@@ -404,7 +405,7 @@ async function buildUsageRecord({
   emissionFactors: EmissionFactorReader
 }): Promise<ElectricityUsageRecord> {
   const activeFactors = await emissionFactors.listActiveElectricityFactors()
-  const activeFactor = activeFactors[0]
+  const activeFactor = selectActiveEmissionFactor(activeFactors)
 
   if (!activeFactor) {
     throw new AppError(
