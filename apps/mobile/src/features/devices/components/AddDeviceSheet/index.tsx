@@ -1,16 +1,9 @@
 // features/devices/components/AddDeviceSheet/index.tsx
 import Feather from '@expo/vector-icons/Feather'
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetFooter,
-  BottomSheetScrollView,
-  BottomSheetTextInput,
-} from '@gorhom/bottom-sheet'
+import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { useMemo, useRef } from 'react'
 import { Controller } from 'react-hook-form'
-import { Text, TouchableOpacity, View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { getKeyboardSafeModalLayout } from '@/shared/components/ui/keyboard-safe-modal-layout'
+import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useDeviceSetup } from '../../hooks/useDeviceSetup'
 import { CategoryGrid } from './CategoryGrid'
 import { LocationGrid } from './LocationGrid'
@@ -23,8 +16,6 @@ type Props = {
 export function AddDeviceSheet({ visible, onClose }: Props) {
   const sheetRef = useRef<BottomSheet>(null)
   const snapPoints = useMemo(() => ['60%', '90%'], [])
-  const insets = useSafeAreaInsets()
-  const layout = getKeyboardSafeModalLayout('sheet')
   const { form, onSubmit, isSubmitting } = useDeviceSetup('list', onClose)
   const {
     control,
@@ -73,40 +64,6 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
           borderTopRightRadius: 28,
           backgroundColor: '#FFFFFF',
         }}
-        footerComponent={(footerProps) => (
-          <BottomSheetFooter
-            {...footerProps}
-            bottomInset={insets.bottom}
-            style={{
-              paddingHorizontal: 20,
-              paddingTop: layout.footerTopPadding,
-              backgroundColor: '#FFFFFF',
-            }}
-          >
-            <TouchableOpacity
-              onPress={onSubmit}
-              disabled={isSubmitting}
-              style={{
-                backgroundColor: '#111111',
-                borderRadius: 20,
-                paddingVertical: 18,
-                alignItems: 'center',
-                opacity: isSubmitting ? 0.6 : 1,
-                marginBottom: 8,
-              }}
-            >
-              <Text
-                style={{
-                  color: '#25CE7F',
-                  fontWeight: '700',
-                  fontSize: 16,
-                }}
-              >
-                {isSubmitting ? 'Adding...' : 'Finish Set Up'}
-              </Text>
-            </TouchableOpacity>
-          </BottomSheetFooter>
-        )}
         handleIndicatorStyle={{
           backgroundColor: '#E0E0E0',
           width: 36,
@@ -115,7 +72,7 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
         <BottomSheetScrollView
           contentContainerStyle={{
             paddingHorizontal: 20,
-            paddingBottom: layout.scrollBottomPadding + insets.bottom + 96,
+            paddingBottom: 40,
           }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
@@ -149,7 +106,7 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
                   paddingVertical: 14,
                 }}
               >
-                <BottomSheetTextInput
+                <TextInput
                   style={{
                     flex: 1,
                     fontSize: 14,
@@ -192,7 +149,7 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
                   marginBottom: 10,
                 }}
               >
-                <BottomSheetTextInput
+                <TextInput
                   style={{
                     flex: 1,
                     fontSize: 14,
@@ -233,7 +190,7 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
                     paddingVertical: 14,
                   }}
                 >
-                  <BottomSheetTextInput
+                  <TextInput
                     style={{
                       flex: 1,
                       fontSize: 14,
@@ -271,7 +228,7 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
                     paddingVertical: 14,
                   }}
                 >
-                  <BottomSheetTextInput
+                  <TextInput
                     style={{
                       flex: 1,
                       fontSize: 14,
@@ -295,6 +252,29 @@ export function AddDeviceSheet({ visible, onClose }: Props) {
               )}
             />
           </View>
+
+          <TouchableOpacity
+            onPress={onSubmit}
+            disabled={isSubmitting}
+            style={{
+              marginTop: 28,
+              backgroundColor: '#111111',
+              borderRadius: 20,
+              paddingVertical: 18,
+              alignItems: 'center',
+              opacity: isSubmitting ? 0.6 : 1,
+            }}
+          >
+            <Text
+              style={{
+                color: '#25CE7F',
+                fontWeight: '700',
+                fontSize: 16,
+              }}
+            >
+              {isSubmitting ? 'Adding...' : 'Finish Set Up'}
+            </Text>
+          </TouchableOpacity>
         </BottomSheetScrollView>
       </BottomSheet>
     </View>

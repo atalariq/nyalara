@@ -12,7 +12,11 @@ import {
 } from 'firebase/auth'
 
 export const authService = {
-  async register(email: string, password: string, fullName: string): Promise<void> {
+  async register(
+    email: string,
+    password: string,
+    fullName: string,
+  ): Promise<void> {
     const { user } = await createUserWithEmailAndPassword(auth, email, password)
     await updateProfile(user, { displayName: fullName })
   },
@@ -21,9 +25,9 @@ export const authService = {
     await signInWithEmailAndPassword(auth, email, password)
   },
 
-  async loginWithGoogle(idToken: string) {
+  async loginWithGoogle(idToken: string): Promise<void> {
     const credential = GoogleAuthProvider.credential(idToken)
-    return signInWithCredential(auth, credential)
+    await signInWithCredential(auth, credential)
   },
 
   async loginAsGuest(): Promise<void> {

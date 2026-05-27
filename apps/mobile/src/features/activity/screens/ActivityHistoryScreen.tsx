@@ -1,6 +1,6 @@
 import AppLoading from '@/shared/components/feedback/AppLoading'
-import { AppBackButton } from '@/shared/components/ui/AppBackButton'
 import { router } from 'expo-router'
+import { ArrowLeft } from 'lucide-react-native'
 import { FlatList, Pressable, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ActivitySummaryCards } from '../components/ActivitySummaryCards'
@@ -29,7 +29,13 @@ export function ActivityHistoryScreen() {
               className="flex-row items-center gap-4 px-5 pb-5"
               style={{ paddingTop: insets.top + 12 }}
             >
-              <AppBackButton onPress={() => router.back()} tone="dark" />
+              <Pressable
+                onPress={() => router.back()}
+                className="h-11 w-11 items-center justify-center rounded-2xl bg-white"
+                style={{ shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 8, elevation: 2 }}
+              >
+                <ArrowLeft size={18} color="#111111" />
+              </Pressable>
               <Text className="font-bold text-[#111]" style={{ fontSize: 28, letterSpacing: -0.8 }}>
                 Activity History
               </Text>

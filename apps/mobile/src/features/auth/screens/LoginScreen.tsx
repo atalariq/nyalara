@@ -1,12 +1,11 @@
 // LOGIN SCREEN
 
 import { router } from 'expo-router'
-import { Lock, Mail } from 'lucide-react-native'
+import { ArrowLeft, Lock, Mail } from 'lucide-react-native'
 
 import React from 'react'
 
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons'
-import { AppBackButton } from '@/shared/components/ui/AppBackButton'
 import { mobileFeatureFlags } from '@/shared/config/mobile-feature-flags'
 import {
   ActivityIndicator,
@@ -43,7 +42,14 @@ export function LoginScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <AppBackButton onPress={() => router.back()} className="mt-14 mb-10 self-start" />
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="flex-row items-center gap-2 mt-14 mb-10"
+        >
+          <ArrowLeft size={18} color="#25CE7F" />
+
+          <Text className="text-brand font-extrabold text-[22px]">Nyalara</Text>
+        </TouchableOpacity>
 
         {/* Hero */}
         <View className="items-center mb-10">
@@ -66,6 +72,9 @@ export function LoginScreen() {
             >
               <FontAwesome5 name="apple" size={18} color="#25CE7F" />
               <Text className="text-brand text-sm font-semibold">Continue with</Text>
+              {!mobileFeatureFlags.appleAuth && (
+                <Text className="text-[10px] text-zinc-500 font-medium">Soon</Text>
+              )}
             </TouchableOpacity>
 
             {/* Google */}
