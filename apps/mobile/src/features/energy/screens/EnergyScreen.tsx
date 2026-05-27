@@ -135,7 +135,19 @@ export default function EnergyScreen() {
               </Text>
               <Text className="font-semibold text-[18px] text-foreground-secondary">View All</Text>
             </View>
-            <RoomAssetsRow />
+
+            <View
+              className="mt-6 rounded-[34px] bg-white px-5 pt-6 pb-1"
+              style={{
+                shadowColor: '#000',
+                shadowOpacity: 0.06,
+                shadowRadius: 16,
+                shadowOffset: { width: 0, height: 6 },
+                elevation: 4,
+              }}
+            >
+              <RoomAssetsRow />
+            </View>
             <View
               className="mt-7 rounded-[34px] bg-white p-5"
               style={{
