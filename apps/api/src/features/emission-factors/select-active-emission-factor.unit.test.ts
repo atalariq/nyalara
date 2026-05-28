@@ -13,7 +13,9 @@ function factor(
     unit: 'kwh',
     kgCo2ePerKwh: partial.kgCo2ePerKwh ?? 0.85,
     version: partial.version ?? 'v1',
-    active: true
+    active: true,
+    scope: partial.scope ?? 'scope 2 (location-based)',
+    sourceNotes: partial.sourceNotes ?? ''
   }
 }
 

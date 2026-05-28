@@ -24,7 +24,7 @@ describe('createGeminiEnergyInsightGenerator', () => {
         required: ['title', 'summary', 'suggestions']
       })
       expect(body.system_instruction.parts[0].text).toContain(
-        'You generate practical electricity-saving insights'
+        'energy-efficiency advisor for Indonesian households'
       )
       expect(body.contents[0].parts[0].text).toContain('"month":"2026-05"')
       expect(body.contents[0].parts[0].text).toContain('"totalKgCo2e":102')
@@ -117,7 +117,7 @@ describe('createGeminiEnergyInsightGenerator', () => {
       model: {
         provider: 'google',
         name: 'gemini-3.5-flash',
-        promptVersion: 'energy-insight-v1'
+        promptVersion: 'energy-insight-v2'
       }
     })
   })

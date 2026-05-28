@@ -6,6 +6,8 @@ export type EmissionFactor = {
   kgCo2ePerKwh: number
   version: string
   active: true
+  scope: string
+  sourceNotes: string
 }
 
 export type EmissionFactorReader = {

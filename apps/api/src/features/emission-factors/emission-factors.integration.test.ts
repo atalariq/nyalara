@@ -21,7 +21,9 @@ describe('GET /v1/emission-factors', () => {
             unit: 'kwh',
             kgCo2ePerKwh: 0.85,
             version: 'v1',
-            active: true
+            active: true,
+            scope: 'scope 2 (location-based)',
+            sourceNotes: 'Indonesia national grid emission factor'
           }
         ]
       },
@@ -54,7 +56,9 @@ describe('GET /v1/emission-factors', () => {
           unit: 'kwh',
           kgCo2ePerKwh: 0.85,
           version: 'v1',
-          active: true
+          active: true,
+          scope: 'scope 2 (location-based)',
+          sourceNotes: 'Indonesia national grid emission factor'
         }
       ]
     })

@@ -6,7 +6,7 @@ import type {
   GenerateEnergyInsightContext
 } from './energy-insight-service.js'
 
-const promptVersion = 'energy-insight-v1'
+const promptVersion = 'energy-insight-v2'
 
 const geminiInsightSchema = z.object({
   title: z.string().min(1),
@@ -29,7 +29,7 @@ type CreateGeminiEnergyInsightGeneratorOptions = {
 export function createGeminiEnergyInsightGenerator(
   options: CreateGeminiEnergyInsightGeneratorOptions
 ): EnergyInsightGenerator {
-  const model = options.model ?? 'gemini-3.5-flash'
+  const model = options.model ?? 'gemini-2.5-flash-lite'
   const fetchImplementation = options.fetch ?? globalThis.fetch
 
   return {
@@ -48,8 +48,19 @@ export function createGeminiEnergyInsightGenerator(
               system_instruction: {
                 parts: [
                   {
-                    text:
-                      'You generate practical electricity-saving insights in Indonesian. Return only valid JSON.'
+                    text: `You are an energy-efficiency advisor for Indonesian households. You generate practical electricity-saving insights in Indonesian (Bahasa Indonesia).
+
+RULES:
+1. Return ONLY valid JSON matching the specified schema.
+2. Each suggestion's estimatedImpactKgCo2e MUST be a conservative estimate based on the user's actual usage data. If data is insufficient, estimate low rather than high. Typical household actions:
+   - Turning off unused lights (5-10W LED, 4-8h/day): 0.5-3 kgCO2e/month
+   - AC temperature adjustment (1°C increase): 5-15 kgCO2e/month
+   - Using efficient appliances vs old ones: 2-10 kgCO2e/month
+   - Reducing standby power: 1-3 kgCO2e/month
+3. NEVER fabricate precise numbers. Round to 1 decimal place. When uncertain, use ranges like "approximately X" in the description.
+4. Suggestions MUST be actionable, specific to the user's data, and safe for households.
+5. If monthlySummary shows low usage, acknowledge it positively before suggesting improvements.
+6. Write in clear Bahasa Indonesia. Avoid jargon.`
                   }
                 ]
               },
@@ -173,11 +184,26 @@ function toGeminiApiError(status: number) {
 }
 
 function buildPrompt(context: GenerateEnergyInsightContext) {
+  const summary = context.monthlySummary
+  const prev = context.previousMonthSummary
+  const comparisonNote = prev
+    ? `Compare to previous month: ${prev.totalKwh.toFixed(1)} kWh, ${prev.totalKgCo2e.toFixed(1)} kgCO2e.`
+    : 'No previous month data is available for comparison.'
+
   return JSON.stringify({
-    instruction:
-      'Generate a concise monthly electricity insight in Indonesian with actionable, safe household energy-saving suggestions.',
+    instruction: `Generate a concise monthly electricity insight in Bahasa Indonesia with 2-4 actionable household energy-saving suggestions.
+
+MONTHLY DATA: Month=${context.period.month}, TotalUsage=${summary.totalKwh.toFixed(1)} kWh, TotalEmissions=${summary.totalKgCo2e.toFixed(1)} kgCO2e, DailyAverage=${summary.averageKwhPerDay.toFixed(1)} kWh/day, UsageCount=${summary.usageCount} entries.
+${comparisonNote}
+
+EMISSION FACTOR: The local grid emission factor is approximately ${summary.totalKgCo2e > 0 ? (summary.totalKgCo2e / summary.totalKwh).toFixed(3) : '0.85'} kgCO2e/kWh.
+
+REQUIREMENTS:
+- Title: short, specific to this month's data.
+- Summary: highlight the key finding from the data (trend, comparison, or standout stat).
+- Suggestions: each MUST include a realistic, conservative estimatedImpactKgCo2e grounded in typical Indonesian household data.
+- Base impact estimates on the ACTUAL usage numbers provided, not generic averages.`,
     month: context.period.month,
-    period: context.period,
     monthlySummary: context.monthlySummary,
     previousMonthSummary: context.previousMonthSummary,
     preferences: context.preferences,
