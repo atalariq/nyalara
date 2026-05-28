@@ -29,8 +29,8 @@ gcloud --version
 ## Clone And Install
 
 ```bash
-git clone <your-fork-or-repo-url> carbon-tracker
-cd carbon-tracker
+git clone <your-fork-or-repo-url> nyalara
+cd nyalara
 pnpm install
 ```
 
@@ -62,6 +62,44 @@ Useful local API targets:
 - iOS simulator: `http://127.0.0.1:3000`
 - Physical device: `http://<your-lan-ip>:3000`
 
+### Frontend Using Local Backend
+
+When frontend needs to test against backend running on the same developer machine:
+
+1. Start backend from repo root:
+
+```bash
+pnpm --filter api dev
+```
+
+2. Confirm backend is reachable:
+
+```bash
+curl http://localhost:3000/v1/health
+```
+
+3. Set `EXPO_PUBLIC_API_BASE_URL` in `apps/mobile/.env` based on FE runtime target:
+
+- Android emulator: `http://10.0.2.2:3000`
+- iOS simulator: `http://127.0.0.1:3000`
+- Physical device: `http://<your-lan-ip>:3000` (same Wi-Fi as laptop)
+
+Android physical-device workaround (when LAN routing/firewall is problematic):
+
+```bash
+adb reverse tcp:3000 tcp:3000
+```
+
+Then you can use:
+
+- `EXPO_PUBLIC_API_BASE_URL=http://localhost:3000`
+
+4. Restart Expo after changing `.env`:
+
+```bash
+pnpm --filter mobile dev
+```
+
 ### Backend API
 
 Create the API environment file:
@@ -89,11 +127,15 @@ Follow [docs/firebase-setup.md](docs/firebase-setup.md) for the detailed Firebas
 4. Configure Google sign-in for the mobile app.
 5. Provide local Admin credentials for the API.
 
-Seed the electricity emission factor before testing energy flows:
+Seed electricity emission factors before testing energy flows:
 
 ```bash
 pnpm --filter api seed:emission-factors
 ```
+
+Seed references and methodology notes:
+
+- `docs/emission-factors-sources.md`
 
 ## Run Locally
 
@@ -146,7 +188,7 @@ Example deploy flow:
 gcloud auth login
 gcloud config set project <your-project-id>
 gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com
-gcloud run deploy carbon-tracker-api \
+gcloud run deploy nyalara-api \
   --source apps/api \
   --region <your-region> \
   --allow-unauthenticated \

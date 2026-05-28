@@ -1,8 +1,8 @@
 import { Text, View } from 'react-native'
-import type { DailyUsage } from '../types/dailyUsage.types'
+import type { DailyEnergyUsage } from '../types/energyHistory.types'
 
 type Props = {
-  history: DailyUsage[]
+  history: DailyEnergyUsage[]
 }
 
 const BAR_MAX_HEIGHT = 70

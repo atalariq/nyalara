@@ -1,5 +1,7 @@
 {
-  "name": "carbon-tracker",
+  "name": "nyalara",
+  "description": "Mobile-first electricity tracking app",
+  "license": "MIT",
   "private": true,
   "packageManager": "pnpm@9.0.0",
   "scripts": {
@@ -12,7 +14,7 @@
     "test": "pnpm -r test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "devDependencies": {
     "husky": "^9.1.7",

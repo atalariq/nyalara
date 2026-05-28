@@ -1,4 +1,4 @@
-import type { DeviceDto } from '@carbon-tracker/shared'
+import type { DeviceDto } from '@nyalara/shared'
 import type { DecodedIdToken } from 'firebase-admin/auth'
 import { describe, expect, it } from 'vitest'
 
@@ -9,7 +9,7 @@ function createDecodedIdToken(
   signInProvider: string
 ): DecodedIdToken {
   return {
-    aud: 'carbon-tracker',
+    aud: 'nyalara',
     auth_time: 0,
     exp: 0,
     firebase: {
@@ -17,7 +17,7 @@ function createDecodedIdToken(
       sign_in_provider: signInProvider
     },
     iat: 0,
-    iss: 'https://securetoken.google.com/carbon-tracker',
+    iss: 'https://securetoken.google.com/nyalara',
     sub: uid,
     uid
   } as DecodedIdToken
@@ -29,6 +29,7 @@ function createDevice(id: string): DeviceDto {
     name: 'Air Conditioner',
     category: 'appliances',
     deviceType: 'ac',
+    location: 'other',
     watt: 900,
     defaultDurationMinutes: 120,
     active: false,
@@ -111,6 +112,7 @@ describe('device routes', () => {
         createDevice: async ({ userId, device }) => {
           expect(userId).toBe('guest-user')
           expect(device.defaultDurationMinutes).toBe(90)
+          expect(device.location).toBe('other')
 
           return createDevice('device-2')
         },
@@ -184,11 +186,13 @@ describe('device routes', () => {
           expect(userId).toBe('guest-user')
           expect(deviceId).toBe('device-3')
           expect(device.active).toBe(true)
+          expect(device.location).toBe('bedroom')
 
           return {
             ...createDevice('device-3'),
             active: true,
-            activatedAt: 1_748_154_400_000
+            activatedAt: 1_748_154_400_000,
+            location: 'bedroom'
           }
         },
         deleteDevice: async () => {
@@ -222,7 +226,8 @@ describe('device routes', () => {
       },
       body: JSON.stringify({
         active: true,
-        activatedAt: 1_748_154_400_000
+        activatedAt: 1_748_154_400_000,
+        location: 'bedroom'
       })
     })
 
@@ -232,7 +237,8 @@ describe('device routes', () => {
       data: {
         ...createDevice('device-3'),
         active: true,
-        activatedAt: 1_748_154_400_000
+        activatedAt: 1_748_154_400_000,
+        location: 'bedroom'
       }
     })
   })

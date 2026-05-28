@@ -31,6 +31,26 @@ Start the mobile app:
 pnpm --filter mobile dev
 ```
 
+### Frontend Localhost Targeting Notes
+
+Set `EXPO_PUBLIC_API_BASE_URL` in `apps/mobile/.env` to match where FE runs:
+
+- Android emulator: `http://10.0.2.2:3000`
+- iOS simulator: `http://127.0.0.1:3000`
+- Physical device: `http://<your-lan-ip>:3000` (same LAN as backend host)
+
+Android physical device workaround when direct LAN access fails:
+
+```bash
+adb reverse tcp:3000 tcp:3000
+```
+
+Then set:
+
+- `EXPO_PUBLIC_API_BASE_URL=http://localhost:3000`
+
+After changing `.env`, restart Expo so the new base URL is picked up.
+
 ## Recommended Smoke Test Pass
 
 Run these checks in order.
@@ -48,6 +68,9 @@ Run these checks in order.
 2. Confirm the device appears in the list.
 3. Edit or remove the device if that flow is exposed in the current UI.
 4. Restart the app and confirm the device state persists.
+5. Confirm room/location is persisted:
+   - create device without selecting location in payload path that omits it, expect backend returns `location: "other"`
+   - create/update with explicit location, expect the same location appears on next list fetch
 
 ### 3. Dashboard Refresh
 

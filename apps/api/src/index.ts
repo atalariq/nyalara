@@ -6,6 +6,7 @@ import { createFirestoreEmissionFactorReader } from './features/emission-factors
 import { createGeminiEnergyInsightGenerator } from './features/energy-insights/gemini-energy-insight-generator.js'
 import { createFirestoreEnergyInsightService } from './features/energy-insights/firestore-energy-insight-service.js'
 import { createFirestoreElectricityUsageService } from './features/electricity-usages/firestore-electricity-usage-service.js'
+import { createFirestoreUserProfileService } from './features/profile/firestore-user-profile-service.js'
 import { AppError } from './features/platform/http/errors.js'
 import { loadLocalEnv } from './features/platform/env/load-local-env.js'
 import { getFirebaseAdminServices } from './features/platform/firebase/firebase-admin.js'
@@ -13,6 +14,7 @@ import {
   resolvePort,
   shouldLoadLocalEnv
 } from './features/platform/runtime/server-config.js'
+import { createFirestoreUserDataService } from './features/user-data/firestore-user-data-service.js'
 
 if (shouldLoadLocalEnv(process.env)) {
   loadLocalEnv([
@@ -32,6 +34,8 @@ const app = createApp({
   emissionFactors: createFirestoreEmissionFactorReader(firebase.firestore),
   devices: createFirestoreDeviceService(firebase.firestore),
   electricityUsages: createFirestoreElectricityUsageService(firebase.firestore),
+  userProfiles: createFirestoreUserProfileService(firebase.firestore),
+  userData: createFirestoreUserDataService(firebase.firestore),
   energyInsights: createFirestoreEnergyInsightService(
     firebase.firestore,
     geminiApiKey

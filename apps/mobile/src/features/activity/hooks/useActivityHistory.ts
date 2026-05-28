@@ -1,9 +1,9 @@
 // features/activity/hooks/useActivityHistory.ts
 
 import { useAuthStore } from '@/features/auth/store/authStore'
-import { dailyUsageService } from '@/features/energy/services/dailyUsageService'
+import { energyHistoryService } from '@/features/energy/services/energyHistoryService'
 import { useEffect, useRef, useState } from 'react'
-import type { DailyUsage, DeviceDailyRecord } from '@/features/energy/types/dailyUsage.types'
+import type { DailyEnergyUsage } from '@/features/energy/types/energyHistory.types'
 
 export type ActivityDayEntry = {
   date: string // "2026-05-21"
@@ -19,7 +19,7 @@ export type ActivityDayEntry = {
   }[]
 }
 
-function toActivityEntries(history: DailyUsage[]): ActivityDayEntry[] {
+function toActivityEntries(history: DailyEnergyUsage[]): ActivityDayEntry[] {
   return [...history]
     .sort((a, b) => b.date.localeCompare(a.date)) // newest first
     .map((day) => ({
@@ -63,7 +63,7 @@ export function useActivityHistory(): State {
     setError(null)
     loadedCountRef.current = 0
 
-    const unsubscribe = dailyUsageService.listenHistory(user.uid, 30, (data) => {
+    const unsubscribe = energyHistoryService.listenHistory(user.uid, 30, (data) => {
       setEntries(toActivityEntries(data))
       setIsLoading(false)
     })

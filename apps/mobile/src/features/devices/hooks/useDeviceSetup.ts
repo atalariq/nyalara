@@ -14,6 +14,7 @@ import { calcCost, calcEmissions, calcMonthlyKwh } from '../utils/carbonCalc'
 const schema = z.object({
   name: z.string().min(2, 'Name too short').max(50),
   deviceType: z.enum(['ac', 'tv', 'washer', 'fridge', 'lights', 'other']),
+  location: z.enum(['bedroom', 'bathroom', 'living_room', 'kitchen', 'dining_room', 'other']),
   watt: z.number({ error: 'Required' }).min(1, 'Min 1W').max(10000),
   hoursPerDay: z.number({ error: 'Required' }).min(0.1, 'Min 0.1h').max(24),
   daysPerMonth: z.number().min(1).max(31),
@@ -21,10 +22,7 @@ const schema = z.object({
 
 export type DeviceFormValues = z.infer<typeof schema>
 
-export function useDeviceSetup(
-  redirectTo: 'list' | 'dashboard' = 'list',
-  onSuccess?: () => void,
-) {
+export function useDeviceSetup(redirectTo: 'list' | 'dashboard' = 'list', onSuccess?: () => void) {
   const router = useRouter()
   const setDevices = useDeviceStore((s) => s.setDevices)
   const userId = useAuthStore((s) => s.user?.uid)
@@ -38,6 +36,7 @@ export function useDeviceSetup(
       watt: undefined,
       hoursPerDay: undefined,
       daysPerMonth: 30,
+      location: 'bedroom',
     },
   })
 

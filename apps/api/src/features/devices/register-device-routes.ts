@@ -1,8 +1,8 @@
 import { createRoute, z } from '@hono/zod-openapi'
 import type { OpenAPIHono } from '@hono/zod-openapi'
 
+import { authenticate } from '../auth/auth-middleware.js'
 import type { IdTokenVerifier } from '../auth/firebase-admin-auth.js'
-import { classifySession } from '../auth/session.js'
 import { AppError } from '../platform/http/errors.js'
 import type { DeviceService } from './device-service.js'
 
@@ -11,6 +11,16 @@ const deviceSchema = z.object({
   name: z.string(),
   category: z.enum(['electronics', 'appliances', 'lighting', 'other']),
   deviceType: z.enum(['ac', 'tv', 'washer', 'fridge', 'lights', 'other']),
+  location: z
+    .enum([
+      'bedroom',
+      'bathroom',
+      'living_room',
+      'kitchen',
+      'dining_room',
+      'other'
+    ])
+    .optional(),
   watt: z.number(),
   defaultDurationMinutes: z.number().nonnegative(),
   active: z.boolean(),
@@ -23,6 +33,17 @@ const deviceRequestSchema = z.object({
   name: z.string().min(1),
   category: z.enum(['electronics', 'appliances', 'lighting', 'other']),
   deviceType: z.enum(['ac', 'tv', 'washer', 'fridge', 'lights', 'other']),
+  location: z
+    .enum([
+      'bedroom',
+      'bathroom',
+      'living_room',
+      'kitchen',
+      'dining_room',
+      'other'
+    ])
+    .optional()
+    .default('other'),
   watt: z.number().positive(),
   defaultDurationMinutes: z.number().nonnegative(),
   active: z.boolean().optional().default(false),
@@ -213,21 +234,4 @@ export function registerDeviceRoutes(
       }
     })
   })
-}
-
-async function authenticate(
-  authorization: string | undefined,
-  auth: IdTokenVerifier
-) {
-  if (!authorization?.startsWith('Bearer ')) {
-    throw new AppError(401, 'unauthorized', 'Authorization token is required.')
-  }
-
-  const idToken = authorization.slice('Bearer '.length)
-
-  try {
-    return classifySession(await auth.verifyIdToken(idToken))
-  } catch {
-    throw new AppError(401, 'unauthorized', 'Authorization token is invalid.')
-  }
 }

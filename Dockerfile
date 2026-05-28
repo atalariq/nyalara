@@ -33,6 +33,7 @@ FROM node:22-slim AS runtime
 
 ENV NODE_ENV=production
 ENV PORT=8080
+ENV HUSKY=0
 
 WORKDIR /app/apps/api
 

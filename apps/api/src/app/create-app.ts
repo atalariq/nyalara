@@ -15,10 +15,14 @@ import { registerElectricityUsageRoutes } from '../features/electricity-usages/r
 import { registerListElectricityUsageRoutes } from '../features/electricity-usages/register-list-electricity-usages-routes.js'
 import { registerMonthlySummaryRoutes } from '../features/electricity-usages/register-monthly-summary-routes.js'
 import { registerRecalculateMonthlySummaryRoutes } from '../features/electricity-usages/register-recalculate-monthly-summary-routes.js'
+import type { UserProfileService } from '../features/profile/user-profile-service.js'
+import { registerUserProfileRoutes } from '../features/profile/register-user-profile-routes.js'
 import { AppError, toErrorEnvelope } from '../features/platform/http/errors.js'
 import { registerHealthRoutes } from '../features/platform/health/register-health-routes.js'
 import { registerOpenApiRoutes } from '../features/platform/openapi/register-openapi-routes.js'
 import { createRateLimiter } from '../features/platform/rate-limiter/create-rate-limiter.js'
+import type { UserDataService } from '../features/user-data/user-data-service.js'
+import { registerUserDataRoutes } from '../features/user-data/register-user-data-routes.js'
 
 export type AppEnvironment = 'development' | 'production' | 'test'
 
@@ -29,6 +33,8 @@ export type CreateAppOptions = {
   electricityUsages: ElectricityUsageService
   devices?: DeviceService
   energyInsights?: EnergyInsightService
+  userProfiles?: UserProfileService
+  userData?: UserDataService
 }
 
 export function createApp(options: CreateAppOptions) {
@@ -98,6 +104,11 @@ export function createApp(options: CreateAppOptions) {
   registerHealthRoutes(app)
   registerEmissionFactorRoutes(app, options.emissionFactors)
   registerDeviceRoutes(app, options.auth, options.devices ?? createMissingDeviceService())
+  registerUserProfileRoutes(
+    app,
+    options.auth,
+    options.userProfiles ?? createMissingUserProfileService()
+  )
   registerCalculateElectricityRoutes(app, options.auth, options.emissionFactors)
   registerElectricityUsageRoutes(
     app,
@@ -124,9 +135,48 @@ export function createApp(options: CreateAppOptions) {
         )
       })
   })
+  registerUserDataRoutes(app, options.auth, options.userData ?? createMissingUserDataService())
   registerOpenApiRoutes(app, options.environment)
 
   return app
+}
+
+function createMissingUserProfileService(): UserProfileService {
+  return {
+    async getProfile() {
+      throw new AppError(
+        500,
+        'user_profiles_not_configured',
+        'User profile service is not configured.'
+      )
+    },
+    async createProfile() {
+      throw new AppError(
+        500,
+        'user_profiles_not_configured',
+        'User profile service is not configured.'
+      )
+    },
+    async updateProfile() {
+      throw new AppError(
+        500,
+        'user_profiles_not_configured',
+        'User profile service is not configured.'
+      )
+    }
+  }
+}
+
+function createMissingUserDataService(): UserDataService {
+  return {
+    async deleteAllUserData() {
+      throw new AppError(
+        500,
+        'user_data_not_configured',
+        'User data service is not configured.'
+      )
+    }
+  }
 }
 
 function createMissingDeviceService(): DeviceService {

@@ -3,9 +3,10 @@ import { useActiveDeviceTimer } from '@/features/devices/hooks/useActiveDeviceTi
 import { useHamburgerStore } from '@/shared/components/ui/hamburger/HamburgerStore'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Menu } from 'lucide-react-native'
-import { Pressable, ScrollView, Text, View } from 'react-native'
+import { Pressable, ScrollView, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useGoalsStore } from '@/features/goals/store/goalsStore'
+import { useCarbonBudget } from '@/features/carbon-budget/hooks/useCarbonBudget'
+import { Image } from 'react-native'
 
 import {
   DashboardDailyImpact,
@@ -19,11 +20,13 @@ import { useDashboardAI } from '../hooks/useDashboardAI'
 import { useDashboardStats } from '../hooks/useDashboardStats'
 import { useDevices } from '@/features/devices/hooks/useDevices'
 import { useEnergyHistory } from '@/features/energy/hooks/useEnergyHistory'
+import { toFiniteNumber } from '../lib/finite-number'
 
 export default function DashboardScreen() {
   const user = useAuthStore((s) => s.user)
   const open = useHamburgerStore((s) => s.open)
-  const dailyTargetKwh = useGoalsStore((s) => s.dailyTargetKwh)
+  const { monthlyBudgetKwh } = useCarbonBudget()
+  const dailyTargetKwh = toFiniteNumber(monthlyBudgetKwh / 30)
 
   useActiveDeviceTimer()
   const { devices } = useDevices()
@@ -96,9 +99,12 @@ export default function DashboardScreen() {
             >
               <Menu size={26} color="#FFFFFF" strokeWidth={2} />
             </Pressable>
-
-            <View className="h-14 w-14 items-center justify-center rounded-full bg-white/20">
-              <Text className="text-base font-extrabold text-white">W</Text>
+            <View className="h-14 w-14 items-center justify-center rounded-full ">
+              <Image
+                source={require('@/assets/images/icon.png')}
+                className="h-10 w-10"
+                resizeMode="contain"
+              />
             </View>
           </View>
 
@@ -125,6 +131,7 @@ export default function DashboardScreen() {
           <DashboardRecommendations
             recommendations={insight.recommendations}
             status={insight.status}
+            hasDevices={devices.length > 0}
           />
         </ScrollView>
       </SafeAreaView>

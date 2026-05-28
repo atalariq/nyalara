@@ -1,25 +1,16 @@
-import { Plug } from 'lucide-react-native'
-import { Switch, Text, View } from 'react-native'
+// features/devices/components/DeviceList/DeviceCard.tsx
+import { Pencil, Plug } from 'lucide-react-native'
+import { Pressable, Switch, Text, View } from 'react-native'
 import type { DeviceListItem } from '../../hooks/useDeviceList'
 
 type Props = {
   device: DeviceListItem
   now: number
   onToggle: (id: string) => void
+  onEdit: (id: string) => void // ← tambah
 }
 
-function formatDuration(durationMs: number): string {
-  const totalMinutes = Math.max(0, Math.floor(durationMs / 1000 / 60))
-  const hours = Math.floor(totalMinutes / 60)
-  const minutes = totalMinutes % 60
-
-  if (hours > 0) {
-    return `${hours}h ${minutes}m`
-  }
-  return `${minutes}m`
-}
-
-export function DeviceCard({ device, now, onToggle }: Props) {
+export function DeviceCard({ device, now, onToggle, onEdit }: Props) {
   const durationLabel = device.active
     ? device.activatedAt
       ? `Active ${formatDuration(now - device.activatedAt)}`
@@ -33,32 +24,42 @@ export function DeviceCard({ device, now, onToggle }: Props) {
           <Plug size={24} color="#25CE7F" />
         </View>
         <View className="flex-1">
-          <Text
-            className="text-base font-semibold text-[#0E0E0E]"
-            numberOfLines={1}
-          >
+          <Text className="text-base font-semibold text-[#0E0E0E]" numberOfLines={1}>
             {device.name}
           </Text>
           <Text className="text-sm text-[#888]">{device.category}</Text>
         </View>
       </View>
 
-      <View className="items-end">
-        <Text
-          className={`text-[10px] mb-1 ${
-            device.active ? 'text-brand' : 'text-[#888]'
-          }`}
-        >
-          {durationLabel || 'Tap to start'}
+      <View className="items-end gap-1">
+        <Text className={`text-[10px] ${device.active ? 'text-brand' : 'text-[#888]'}`}>
+          {durationLabel}
         </Text>
-        <Text className="text-xs text-[#888] mb-1">{device.usageLabel}</Text>
-        <Switch
-          value={device.active}
-          onValueChange={() => onToggle(device.id)}
-          thumbColor={device.active ? '#FFFFFF' : '#F1F5F9'}
-          trackColor={{ false: '#D2D6DB', true: '#25CE7F' }}
-        />
+        <Text className="text-xs text-[#888]">{device.usageLabel}</Text>
+        <View className="flex-row items-center gap-2 mt-1">
+          {/* Edit button */}
+          <Pressable
+            onPress={() => onEdit(device.id)}
+            className="h-8 w-8 rounded-full bg-[#E8FFF4] items-center justify-center"
+          >
+            <Pencil size={14} color="#25CE7F" />
+          </Pressable>
+          <Switch
+            value={device.active}
+            onValueChange={() => onToggle(device.id)}
+            thumbColor={device.active ? '#FFFFFF' : '#F1F5F9'}
+            trackColor={{ false: '#D2D6DB', true: '#25CE7F' }}
+          />
+        </View>
       </View>
     </View>
   )
+}
+
+function formatDuration(durationMs: number): string {
+  const totalMinutes = Math.max(0, Math.floor(durationMs / 1000 / 60))
+  const hours = Math.floor(totalMinutes / 60)
+  const minutes = totalMinutes % 60
+  if (hours > 0) return `${hours}h ${minutes}m`
+  return `${minutes}m`
 }

@@ -1,12 +1,12 @@
 import { useAuthStore } from '@/features/auth/store/authStore'
 import { useCallback } from 'react'
-import { dailyUsageService } from '../services/dailyUsageService'
+import { energyHistoryService } from '../services/energyHistoryService'
 import { useEnergyHistoryStore } from '../store/energyHistoryStore'
-import type { DailyUsage } from '../types/dailyUsage.types'
+import type { DailyEnergyUsage } from '../types/energyHistory.types'
 
 type EnergyHistoryState = {
-  today: DailyUsage | null
-  history: DailyUsage[]
+  today: DailyEnergyUsage | null
+  history: DailyEnergyUsage[]
   isLoading: boolean
   error: string | null
   refetch: () => void
@@ -27,8 +27,8 @@ export function useEnergyHistory(): EnergyHistoryState {
     setError(null)
     try {
       const [todayData, historyData] = await Promise.all([
-        dailyUsageService.getByDate(user.uid, new Date()),
-        dailyUsageService.getHistory(user.uid, 30),
+        energyHistoryService.getByDate(user.uid, new Date()),
+        energyHistoryService.getHistory(user.uid, 30),
       ])
       setToday(todayData)
       setHistory([...historyData].sort((a, b) => a.date.localeCompare(b.date)))

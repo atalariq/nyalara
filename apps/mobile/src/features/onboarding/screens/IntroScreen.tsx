@@ -2,14 +2,7 @@
 import { AppButton } from '@/shared/components/ui/AppButton'
 import { router } from 'expo-router'
 import React, { useRef, useState } from 'react'
-import {
-  Dimensions,
-  FlatList,
-  ListRenderItem,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { Dimensions, FlatList, ListRenderItem, Text, TouchableOpacity, View } from 'react-native'
 import { OnboardingSlide } from '../components/OnboardingSlide'
 import { ONBOARDING_SLIDES } from '../data/slides'
 import { OnboardingSlideData } from '../types'
@@ -23,7 +16,7 @@ export default function IntroScreen() {
 
   const handleNext = () => {
     if (isLastSlide) {
-      router.replace('/(onboarding)/device-setup')
+      router.replace('/(onboarding)/house-type')
       return
     }
     const next = activeIndex + 1
@@ -32,14 +25,11 @@ export default function IntroScreen() {
   }
 
   const handleSkip = () => {
-    router.replace('/(onboarding)/device-setup')
+    router.replace('/(onboarding)/house-type')
   }
 
   const renderItem: ListRenderItem<OnboardingSlideData> = ({ item }) => (
-    <View
-      style={{ width: SCREEN_WIDTH }}
-      className="items-center justify-center"
-    >
+    <View style={{ width: SCREEN_WIDTH }} className="items-center justify-center">
       <OnboardingSlide
         slide={item}
         totalSlides={ONBOARDING_SLIDES.length}
@@ -53,9 +43,7 @@ export default function IntroScreen() {
       {/* Header */}
       <View className="flex-row justify-end px-6 pt-14">
         <TouchableOpacity onPress={handleSkip} activeOpacity={0.7}>
-          <Text className="text-[16px] font-semibold text-neutral-600">
-            Skip
-          </Text>
+          <Text className="text-[16px] font-semibold text-neutral-600">Skip</Text>
         </TouchableOpacity>
       </View>
 

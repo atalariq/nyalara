@@ -4,21 +4,17 @@ import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-import {
-  defaultEnvFilePath,
-  mintAnonymousAuthToken,
-} from './mint-anonymous-auth-token.mjs'
+import { defaultEnvFilePath, mintAnonymousAuthToken } from './mint-anonymous-auth-token.mjs'
 
 test('mints an anonymous Firebase token and prints the minimal JSON payload', async () => {
-  const tempDir = mkdtempSync(join(tmpdir(), 'carbon-tracker-mobile-auth-'))
+  const tempDir = mkdtempSync(join(tmpdir(), 'nyalara-mobile-auth-'))
   const envFilePath = join(tempDir, '.env')
 
   writeFileSync(
     envFilePath,
-    [
-      'EXPO_PUBLIC_FIREBASE_API_KEY=test-api-key',
-      'EXPO_PUBLIC_FIREBASE_PROJECT_ID=carbon-tracker-c1925',
-    ].join('\n'),
+    ['EXPO_PUBLIC_FIREBASE_API_KEY=test-api-key', 'EXPO_PUBLIC_FIREBASE_PROJECT_ID=nyalara'].join(
+      '\n',
+    ),
   )
 
   const writes = []
@@ -57,7 +53,7 @@ test('mints an anonymous Firebase token and prints the minimal JSON payload', as
     returnSecureToken: true,
   })
   assert.deepEqual(result, {
-    projectId: 'carbon-tracker-c1925',
+    projectId: 'nyalara',
     uid: 'guest-uid',
     isAnonymous: true,
     idToken: 'guest-id-token',

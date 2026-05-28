@@ -13,3 +13,6 @@ coverage
 !.env.example
 
 .DS_Store
+service-account.json
+google-services.json
+GoogleService-Info.plist

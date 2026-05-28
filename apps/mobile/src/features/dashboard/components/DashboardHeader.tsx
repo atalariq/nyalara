@@ -27,13 +27,13 @@ export function DashboardHeader({ displayName, dateLabel }: Props) {
             </View>
 
             {/* WEATHER */}
-            <View className="flex-row items-center gap-1.5">
+            {/* <View className="flex-row items-center gap-1.5">
               <SunMedium size={16} color="#28C76F" strokeWidth={2} />
 
               <Text className="text-[15px] text-[#404040]">
                 Weather data unavailable
               </Text>
-            </View>
+            </View> */}
           </View>
         </View>
 

@@ -19,7 +19,7 @@ export function DailyTargetCard({ value, onEdit }: Props) {
     >
       <View className="flex-row items-start justify-between">
         <View className="gap-1">
-          <Text className="text-xs font-semibold tracking-widest text-[#888]">DAILY TARGET</Text>
+          <Text className="text-xs font-semibold tracking-widest text-[#888]">CARBON BUDGET</Text>
 
           <Text className="text-3xl font-bold text-[#111]">{value} kWh</Text>
 

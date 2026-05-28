@@ -1,9 +1,8 @@
 import { createRoute, z } from '@hono/zod-openapi'
 import type { OpenAPIHono } from '@hono/zod-openapi'
 
+import { authenticate, requireFullAccount } from '../auth/auth-middleware.js'
 import type { IdTokenVerifier } from '../auth/firebase-admin-auth.js'
-import { classifySession } from '../auth/session.js'
-import { AppError } from '../platform/http/errors.js'
 import type { EnergyInsightService } from './energy-insight-service.js'
 
 const requestSchema = z.object({
@@ -60,26 +59,8 @@ export function registerGenerateEnergyInsightRoutes(
   energyInsights: EnergyInsightService
 ) {
   app.openapi(route, async (c) => {
-    const authorization = c.req.header('authorization')
-
-    if (!authorization?.startsWith('Bearer ')) {
-      throw new AppError(401, 'unauthorized', 'Authorization token is required.')
-    }
-
-    const idToken = authorization.slice('Bearer '.length)
-    let decodedToken
-
-    try {
-      decodedToken = await auth.verifyIdToken(idToken)
-    } catch {
-      throw new AppError(401, 'unauthorized', 'Authorization token is invalid.')
-    }
-
-    const session = classifySession(decodedToken)
-
-    if (session.kind !== 'full_account') {
-      throw new AppError(403, 'forbidden', 'A full account session is required.')
-    }
+    const session = await authenticate(c.req.header('authorization'), auth)
+    requireFullAccount(session)
 
     const payload = c.req.valid('json')
     const insight = await energyInsights.generateMonthlyInsight({

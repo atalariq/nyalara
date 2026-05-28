@@ -1,6 +1,6 @@
 import AppLoading from '@/shared/components/feedback/AppLoading'
 import { LinearGradient } from 'expo-linear-gradient'
-import { ScrollView, Text, View } from 'react-native'
+import { ImageBackground, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { ActiveDevicesList } from '../components/ActiveDevicesList'
@@ -9,6 +9,10 @@ import { EnergyStatusPill } from '../components/EnergyStatusPill'
 import { EnvironmentalImpact } from '../components/EnvironmentalImpact'
 import { useEnergyScreenData } from '../hooks/useEnergyScreenData'
 import type { EfficiencyLevel } from '../utils/energyEfficiency'
+import { useDevices } from '@/features/devices/hooks/useDevices'
+import type { LocationType } from '@/features/devices/types/device.types'
+import { DeviceCard } from '@/features/devices/components/AddDeviceSheet/DeviceCard'
+import { RoomAssetsRow } from '@/features/devices/components/RoomAssetsRow'
 
 const EFFICIENCY_STYLES: Record<EfficiencyLevel, { bg: string; text: string }> = {
   efficient: { bg: 'bg-brand', text: 'text-white' },
@@ -18,6 +22,13 @@ const EFFICIENCY_STYLES: Record<EfficiencyLevel, { bg: string; text: string }> =
 
 export default function EnergyScreen() {
   const insets = useSafeAreaInsets()
+  const { devices } = useDevices()
+  const grouped = devices.reduce<Partial<Record<LocationType, typeof devices>>>((acc, device) => {
+    const key = device.location ?? 'other'
+    if (!acc[key]) acc[key] = []
+    acc[key]!.push(device)
+    return acc
+  }, {})
   const {
     today,
     history,
@@ -50,22 +61,16 @@ export default function EnergyScreen() {
 
   return (
     <View className="flex-1 bg-brand">
-      <LinearGradient
-        colors={['#1FDD7A', '#45E39F']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
-      />
-
-      <View
+      <ImageBackground
+        source={require('@/assets/images/screen/hero-energy.png')}
+        resizeMode="cover"
         style={{
           position: 'absolute',
-          top: -100,
-          right: -70,
-          width: 240,
-          height: 240,
-          borderRadius: 999,
-          backgroundColor: 'rgba(255,255,255,0.1)',
+          top: 0,
+          right: -100,
+          width: 500,
+          height: 400,
+          opacity: 0.9,
         }}
       />
 
@@ -132,6 +137,18 @@ export default function EnergyScreen() {
             </View>
 
             <View
+              className="mt-6 rounded-[34px] bg-white px-5 pt-6 pb-1"
+              style={{
+                shadowColor: '#000',
+                shadowOpacity: 0.06,
+                shadowRadius: 16,
+                shadowOffset: { width: 0, height: 6 },
+                elevation: 4,
+              }}
+            >
+              <RoomAssetsRow />
+            </View>
+            <View
               className="mt-7 rounded-[34px] bg-white p-5"
               style={{
                 shadowColor: '#000',
@@ -175,6 +192,7 @@ export default function EnergyScreen() {
                 co2ReducedKg={co2ReducedKg}
                 environmentalQuote={insight.environmentalQuote}
                 isLoading={insight.status === 'loading'}
+                hasDevices={devices.length > 0}
               />
             </View>
           </View>
