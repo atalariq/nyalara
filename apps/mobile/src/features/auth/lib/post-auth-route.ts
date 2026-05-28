@@ -18,8 +18,8 @@ export function getPostAuthRoute({
 
   if (!hasProfile) {
     return {
-      action: 'reject' as const,
-      route: '/(auth)/register' as PostAuthRoute,
+      action: 'allow' as const,
+      route: '/(onboarding)/intro' as PostAuthRoute,
     }
   }
 
