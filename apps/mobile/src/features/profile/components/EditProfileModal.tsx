@@ -4,7 +4,6 @@ import { Controller, useForm } from 'react-hook-form'
 import {
   KeyboardAvoidingView,
   Modal,
-  Platform,
   Pressable,
   ScrollView,
   Text,
@@ -86,10 +85,7 @@ export function EditProfileModal({ visible, profile, isSaving, onClose, onSave }
 
   return (
     <Modal visible={visible} transparent animationType="fade">
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className="flex-1"
-      >
+      <KeyboardAvoidingView behavior="padding" className="flex-1">
         <Pressable
           className="flex-1 justify-end px-4"
           style={{ backgroundColor: '#00000050' }}

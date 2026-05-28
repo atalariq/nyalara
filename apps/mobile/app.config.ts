@@ -28,6 +28,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? './google-services.json',
     predictiveBackGestureEnabled: false,
     package: 'com.nyalara.mobile',
+    softwareKeyboardLayoutMode: 'resize',
   },
   web: {
     output: 'static',

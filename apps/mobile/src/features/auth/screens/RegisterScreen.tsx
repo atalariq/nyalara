@@ -8,7 +8,6 @@ import { mobileFeatureFlags } from '@/shared/config/mobile-feature-flags'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -25,10 +24,7 @@ export function RegisterScreen() {
   const { loginAsGuest, isLoading: isGuestLoading } = useGuestLogin()
 
   return (
-    <KeyboardAvoidingView
-      className="flex-1 bg-[#F6F6F6]"
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+    <KeyboardAvoidingView className="flex-1 bg-[#F6F6F6]" behavior="padding">
       <ScrollView
         className="flex-1"
         contentContainerStyle={{
