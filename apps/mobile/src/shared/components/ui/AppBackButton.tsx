@@ -30,13 +30,12 @@ export function AppBackButton({
         opacity: pressed ? 0.65 : 1,
       })}
     >
-      <View className="flex-row items-center">
+      <View className="flex-row items-center pl-1">
         <ChevronLeft size={20} color={theme.iconColor} strokeWidth={2.25} />
         <Text
-          className="text-[17px] font-medium"
+          className="text-[17px] font-medium ml-0.5"
           style={{
             color: theme.textColor,
-            marginLeft: -2,
           }}
         >
           {label}
