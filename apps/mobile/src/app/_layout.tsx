@@ -53,7 +53,17 @@ export default function RootLayout() {
     if (shellReady) {
       markStartup('splash hide requested')
       SplashScreen.hideAsync()
+      return
     }
+
+    // Safety net: never let the splash screen block the app for more than 4s.
+    // This prevents getting trapped when Metro is slow or auth init hangs.
+    const timeout = setTimeout(() => {
+      markStartup('splash hide forced by timeout')
+      SplashScreen.hideAsync()
+    }, 4000)
+
+    return () => clearTimeout(timeout)
   }, [shellReady])
 
   useEffect(() => {
