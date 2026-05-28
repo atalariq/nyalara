@@ -1,5 +1,4 @@
 import { useAuthStore } from '@/features/auth/store/authStore'
-import { setupStatusService } from '@/features/auth/services/app-setup-status-service'
 import AppLoading from '@/shared/components/feedback/AppLoading'
 import { Redirect } from 'expo-router'
 import { useEffect, useState } from 'react'
@@ -9,37 +8,11 @@ export default function Index() {
   const [route, setRoute] = useState<string | null>(null)
 
   useEffect(() => {
-    let active = true
-
-    async function resolveRoute() {
-      if (isLoading) {
-        return
-      }
-
-      if (!user) {
-        setRoute('/(onboarding)/welcome')
-        return
-      }
-
-      try {
-        const status = await setupStatusService.getStatus(user.uid)
-
-        if (!active) return
-
-        setRoute(status.isSetupComplete ? '/(app)/dashboard' : '/(onboarding)/intro')
-      } catch {
-        if (!active) return
-        // On failure, assume setup complete for authenticated users
-        // to avoid trapping them in an onboarding loop
-        setRoute('/(app)/dashboard')
-      }
+    if (isLoading) {
+      return
     }
 
-    void resolveRoute()
-
-    return () => {
-      active = false
-    }
+    setRoute(user ? '/(app)/dashboard' : '/(onboarding)/welcome')
   }, [isLoading, user])
 
   if (isLoading) return null
@@ -48,9 +21,5 @@ export default function Index() {
     return <AppLoading size="md" label="Loading your setup..." />
   }
 
-  return (
-    <Redirect
-      href={route as '/(app)/dashboard' | '/(onboarding)/welcome' | '/(onboarding)/intro'}
-    />
-  )
+  return <Redirect href={route as '/(app)/dashboard' | '/(onboarding)/welcome'} />
 }
