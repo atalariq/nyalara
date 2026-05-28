@@ -12,7 +12,7 @@
     "test": "pnpm -r test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "devDependencies": {
     "husky": "^9.1.7",
