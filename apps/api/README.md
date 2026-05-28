@@ -1,6 +1,8 @@
 # Nyalara API
 
-This package contains the Hono backend API for Nyalara. It supports calculations, persistence, summaries, and insight generation for the mobile experience.
+**73 tests · 77% coverage · TypeScript · Hono + Zod OpenAPI**
+
+The backend API for Nyalara — type-safe REST endpoints for electricity calculations, device management, verified usage tracking, monthly summaries, and Gemini-powered energy insights.
 
 ## Quick Start
 
@@ -100,9 +102,9 @@ Current backend selection behavior for calculations and usage writes:
 - Prefer active factor `country=ID` and `region=national` when available.
 - If that is unavailable, fallback uses deterministic ID ordering on active factors.
 
-Verification references are documented in:
+Each emission factor includes `scope` and `sourceNotes` fields documenting the methodology and original data source.
 
-- `docs/emission-factors-sources.md`
+Verification references: [../../docs/emission-factors-sources.md](../../docs/emission-factors-sources.md)
 
 ### Devices
 
@@ -238,6 +240,13 @@ Response fields include:
 - `suggestions`
 
 There is no separate `GET /v1/energy-insight` route at the moment.
+
+## Testing
+
+```bash
+pnpm --filter api test          # run all tests
+pnpm --filter api typecheck     # type-check only
+```
 
 ## Related Docs
 
