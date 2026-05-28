@@ -1,8 +1,8 @@
 import { createRoute, z } from '@hono/zod-openapi'
 import type { OpenAPIHono } from '@hono/zod-openapi'
 
+import { authenticate } from '../auth/auth-middleware.js'
 import type { IdTokenVerifier } from '../auth/firebase-admin-auth.js'
-import { classifySession } from '../auth/session.js'
 import { AppError } from '../platform/http/errors.js'
 import type { DeviceService } from './device-service.js'
 
@@ -234,21 +234,4 @@ export function registerDeviceRoutes(
       }
     })
   })
-}
-
-async function authenticate(
-  authorization: string | undefined,
-  auth: IdTokenVerifier
-) {
-  if (!authorization?.startsWith('Bearer ')) {
-    throw new AppError(401, 'unauthorized', 'Authorization token is required.')
-  }
-
-  const idToken = authorization.slice('Bearer '.length)
-
-  try {
-    return classifySession(await auth.verifyIdToken(idToken))
-  } catch {
-    throw new AppError(401, 'unauthorized', 'Authorization token is invalid.')
-  }
 }

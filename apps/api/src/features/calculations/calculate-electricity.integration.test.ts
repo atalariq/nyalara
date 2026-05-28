@@ -31,7 +31,9 @@ function createActiveElectricityFactors() {
       unit: 'kwh' as const,
       kgCo2ePerKwh: 0.85,
       version: 'v1',
-      active: true as const
+      active: true as const,
+      scope: 'scope 2 (location-based)',
+      sourceNotes: 'Indonesia national grid emission factor'
     }
   ]
 }
@@ -180,7 +182,9 @@ describe('POST /v1/calculate-electricity', () => {
             unit: 'kwh',
             kgCo2ePerKwh: 0.402,
             version: '2024',
-            active: true
+            active: true,
+            scope: 'scope 2 (location-based grid emission factor)',
+            sourceNotes: 'Singapore grid emission factor'
           },
           {
             id: 'id_pln_national_2024',
@@ -189,7 +193,9 @@ describe('POST /v1/calculate-electricity', () => {
             unit: 'kwh',
             kgCo2ePerKwh: 0.85,
             version: '2024',
-            active: true
+            active: true,
+            scope: 'scope 2 (location-based)',
+            sourceNotes: 'Indonesia national grid emission factor'
           }
         ]
       },

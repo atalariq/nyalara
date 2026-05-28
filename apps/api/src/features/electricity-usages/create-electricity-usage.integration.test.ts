@@ -31,7 +31,9 @@ function createActiveElectricityFactors() {
       unit: 'kwh' as const,
       kgCo2ePerKwh: 0.85,
       version: 'v1',
-      active: true as const
+      active: true as const,
+      scope: 'scope 2 (location-based)',
+      sourceNotes: 'Indonesia national grid emission factor'
     }
   ]
 }

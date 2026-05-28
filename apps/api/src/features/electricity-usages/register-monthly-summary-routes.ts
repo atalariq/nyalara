@@ -1,8 +1,8 @@
 import { createRoute, z } from '@hono/zod-openapi'
 import type { OpenAPIHono } from '@hono/zod-openapi'
 
+import { authenticate } from '../auth/auth-middleware.js'
 import type { IdTokenVerifier } from '../auth/firebase-admin-auth.js'
-import { classifySession } from '../auth/session.js'
 import { AppError } from '../platform/http/errors.js'
 import type { ElectricityUsageService } from './electricity-usage-service.js'
 
@@ -53,22 +53,7 @@ export function registerMonthlySummaryRoutes(
   electricityUsages: ElectricityUsageService
 ) {
   app.openapi(route, async (c) => {
-    const authorization = c.req.header('authorization')
-
-    if (!authorization?.startsWith('Bearer ')) {
-      throw new AppError(401, 'unauthorized', 'Authorization token is required.')
-    }
-
-    const idToken = authorization.slice('Bearer '.length)
-    let decodedToken
-
-    try {
-      decodedToken = await auth.verifyIdToken(idToken)
-    } catch {
-      throw new AppError(401, 'unauthorized', 'Authorization token is invalid.')
-    }
-
-    const session = classifySession(decodedToken)
+    const session = await authenticate(c.req.header('authorization'), auth)
     const query = c.req.valid('query')
     const monthlySummary = await electricityUsages.getMonthlySummary({
       userId: session.uid,

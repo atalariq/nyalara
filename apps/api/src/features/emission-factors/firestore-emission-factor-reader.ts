@@ -14,6 +14,8 @@ type EmissionFactorDocument = {
   kgCo2ePerKwh: number
   version: string
   active: boolean
+  scope?: string
+  sourceNotes?: string
 }
 
 export function createFirestoreEmissionFactorReader(
@@ -64,6 +66,8 @@ function toEmissionFactor(
     unit: 'kwh',
     kgCo2ePerKwh: document.kgCo2ePerKwh,
     version: document.version,
-    active: true
+    active: true,
+    scope: document.scope ?? 'scope 2 (location-based)',
+    sourceNotes: document.sourceNotes ?? ''
   }
 }

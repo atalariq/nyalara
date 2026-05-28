@@ -11,7 +11,9 @@ const emissionFactorSchema = z.object({
   unit: z.literal('kwh'),
   kgCo2ePerKwh: z.number(),
   version: z.string(),
-  active: z.literal(true)
+  active: z.literal(true),
+  scope: z.string(),
+  sourceNotes: z.string()
 })
 
 const listEmissionFactorsRoute = createRoute({

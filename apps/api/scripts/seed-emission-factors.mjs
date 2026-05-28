@@ -25,7 +25,8 @@ const factors = [
       'https://gatrik.esdm.go.id/frontend/download_index/?kode_category=emisi_pl&query=2024',
     sourcePublisher: 'Direktorat Jenderal Ketenagalistrikan (ESDM)',
     sourceNotes:
-      'Default national reference for backend fallback; Indonesia also includes active regional factors below.'
+      'Default national reference for backend fallback; Indonesia also includes active regional factors below.',
+    scope: 'scope 2 (location-based, OM50/BM50 combined margin)'
   },
   {
     id: 'id_jamali_cm_ex_post_2019',
@@ -44,7 +45,8 @@ const factors = [
       'https://gatrik.esdm.go.id/assets/uploads/download_index/files/96d7c-nilai-fe-grk-sistem-ketenagalistrikan-tahun-2019.pdf',
     sourcePublisher: 'Direktorat Jenderal Ketenagalistrikan (ESDM)',
     sourceNotes:
-      'Grid Jamali, faktor emisi CM Ex-Post (OM=0.5, BM=0.5) = 0.87 ton CO2/MWh => 0.87 kg CO2/kWh'
+      'Grid Jamali, faktor emisi CM Ex-Post (OM=0.5, BM=0.5) = 0.87 ton CO2/MWh => 0.87 kg CO2/kWh',
+    scope: 'scope 2 (location-based, OM50/BM50 combined margin)'
   },
   {
     id: 'id_khatulistiwa_cm_ex_post_2019',
@@ -63,7 +65,8 @@ const factors = [
       'https://gatrik.esdm.go.id/assets/uploads/download_index/files/96d7c-nilai-fe-grk-sistem-ketenagalistrikan-tahun-2019.pdf',
     sourcePublisher: 'Direktorat Jenderal Ketenagalistrikan (ESDM)',
     sourceNotes:
-      'Grid Khatulistiwa, faktor emisi CM Ex-Post (OM=0.5, BM=0.5) = 1.63 ton CO2/MWh => 1.63 kg CO2/kWh'
+      'Grid Khatulistiwa, faktor emisi CM Ex-Post (OM=0.5, BM=0.5) = 1.63 ton CO2/MWh => 1.63 kg CO2/kWh',
+    scope: 'scope 2 (location-based, OM50/BM50 combined margin)'
   },
   {
     id: 'id_batam_tanjung_pinang_cm_ex_post_2019',
@@ -82,7 +85,8 @@ const factors = [
       'https://gatrik.esdm.go.id/assets/uploads/download_index/files/96d7c-nilai-fe-grk-sistem-ketenagalistrikan-tahun-2019.pdf',
     sourcePublisher: 'Direktorat Jenderal Ketenagalistrikan (ESDM)',
     sourceNotes:
-      'Grid Batam-Tanjung Pinang, faktor emisi CM Ex-Post (OM=0.5, BM=0.5) = 0.82 ton CO2/MWh => 0.82 kg CO2/kWh'
+      'Grid Batam-Tanjung Pinang, faktor emisi CM Ex-Post (OM=0.5, BM=0.5) = 0.82 ton CO2/MWh => 0.82 kg CO2/kWh',
+    scope: 'scope 2 (location-based, OM50/BM50 combined margin)'
   },
   {
     id: 'id_bangka_cm_ex_post_2019',
@@ -101,7 +105,8 @@ const factors = [
       'https://gatrik.esdm.go.id/assets/uploads/download_index/files/96d7c-nilai-fe-grk-sistem-ketenagalistrikan-tahun-2019.pdf',
     sourcePublisher: 'Direktorat Jenderal Ketenagalistrikan (ESDM)',
     sourceNotes:
-      'Grid Bangka, faktor emisi CM Ex-Post (OM=0.5, BM=0.5) = 0.89 ton CO2/MWh => 0.89 kg CO2/kWh'
+      'Grid Bangka, faktor emisi CM Ex-Post (OM=0.5, BM=0.5) = 0.89 ton CO2/MWh => 0.89 kg CO2/kWh',
+    scope: 'scope 2 (location-based, OM50/BM50 combined margin)'
   },
   {
     id: 'id_lombok_cm_ex_post_2019',
@@ -120,7 +125,8 @@ const factors = [
       'https://gatrik.esdm.go.id/assets/uploads/download_index/files/96d7c-nilai-fe-grk-sistem-ketenagalistrikan-tahun-2019.pdf',
     sourcePublisher: 'Direktorat Jenderal Ketenagalistrikan (ESDM)',
     sourceNotes:
-      'Grid Lombok, faktor emisi CM Ex-Post (OM=0.5, BM=0.5) = 1.61 ton CO2/MWh => 1.61 kg CO2/kWh'
+      'Grid Lombok, faktor emisi CM Ex-Post (OM=0.5, BM=0.5) = 1.61 ton CO2/MWh => 1.61 kg CO2/kWh',
+    scope: 'scope 2 (location-based, OM50/BM50 combined margin)'
   },
   {
     id: 'my_peninsular_gef_2024',
@@ -138,7 +144,8 @@ const factors = [
     sourceUrl:
       'https://myenergystats.st.gov.my/documents/d/guest/grid-emission-factor-gef-in-malaysia-2022-2024-provisional-',
     sourcePublisher: 'Suruhanjaya Tenaga (Energy Commission Malaysia)',
-    sourceNotes: '2024 provisional GEF Peninsular Malaysia: 0.740 Gg CO2e/GWh.'
+    sourceNotes: '2024 provisional GEF Peninsular Malaysia: 0.740 Gg CO2e/GWh.',
+    scope: 'scope 2 (location-based grid emission factor)'
   },
   {
     id: 'my_sabah_gef_2024',
@@ -156,7 +163,8 @@ const factors = [
     sourceUrl:
       'https://myenergystats.st.gov.my/documents/d/guest/grid-emission-factor-gef-in-malaysia-2022-2024-provisional-',
     sourcePublisher: 'Suruhanjaya Tenaga (Energy Commission Malaysia)',
-    sourceNotes: '2024 provisional GEF Sabah: 0.539 Gg CO2e/GWh.'
+    sourceNotes: '2024 provisional GEF Sabah: 0.539 Gg CO2e/GWh.',
+    scope: 'scope 2 (location-based grid emission factor)'
   },
   {
     id: 'my_sarawak_gef_2024',
@@ -174,7 +182,8 @@ const factors = [
     sourceUrl:
       'https://myenergystats.st.gov.my/documents/d/guest/grid-emission-factor-gef-in-malaysia-2022-2024-provisional-',
     sourcePublisher: 'Suruhanjaya Tenaga (Energy Commission Malaysia)',
-    sourceNotes: '2024 provisional GEF Sarawak: 0.199 Gg CO2e/GWh.'
+    sourceNotes: '2024 provisional GEF Sarawak: 0.199 Gg CO2e/GWh.',
+    scope: 'scope 2 (location-based grid emission factor)'
   },
   {
     id: 'sg_national_gef_2024',
@@ -192,7 +201,8 @@ const factors = [
     sourceUrl: 'https://www.ema.gov.sg/resources/singapore-energy-statistics/chapter2',
     sourcePublisher: 'Energy Market Authority (Singapore)',
     sourceNotes:
-      'Singapore average grid emission factor decreased from 0.412 (2023) to 0.402 kg CO2/kWh (2024).'
+      'Singapore average grid emission factor decreased from 0.412 (2023) to 0.402 kg CO2/kWh (2024).',
+    scope: 'scope 2 (location-based grid emission factor)'
   },
   {
     id: 'fr_national_rte_2024',
@@ -209,7 +219,8 @@ const factors = [
     validTo: null,
     sourceUrl: 'https://analysesetdonnees.rte-france.com/en/annual-review-2024/keyfindings',
     sourcePublisher: 'RTE France',
-    sourceNotes: 'Average carbon intensity of French electricity generation in 2024: 21.7 gCO2eq/kWh.'
+    sourceNotes: 'Average carbon intensity of French electricity generation in 2024: 21.7 gCO2eq/kWh.',
+    scope: 'scope 2 (location-based grid emission factor)'
   },
   {
     id: 'de_national_uba_2024',
@@ -227,7 +238,8 @@ const factors = [
     sourceUrl:
       'https://www.umweltbundesamt.de/themen/co2-emissionen-pro-kilowattstunde-strom-2024',
     sourcePublisher: 'Umweltbundesamt (Germany)',
-    sourceNotes: 'Reported Strommix 2024 figure: 363 g CO2e/kWh.'
+    sourceNotes: 'Reported Strommix 2024 figure: 363 g CO2e/kWh.',
+    scope: 'scope 2 (location-based grid emission factor)'
   },
   {
     id: 'uk_national_desnz_2023_used_in_2025_factors',
@@ -246,7 +258,8 @@ const factors = [
       'https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2025',
     sourcePublisher: 'UK Department for Energy Security and Net Zero (DESNZ)',
     sourceNotes:
-      'Electricity consumed total factor listed in 2025 methodology tables for data year 2023: 0.19553 kgCO2e/kWh.'
+      'Electricity consumed total factor listed in 2025 methodology tables for data year 2023: 0.19553 kgCO2e/kWh.',
+    scope: 'scope 2+3 (well-to-tank + transmission distribution, electricity consumed total)'
   },
   {
     id: 'au_nsw_act_scope2_2024',
@@ -266,7 +279,8 @@ const factors = [
     sourcePublisher:
       'Department of Climate Change, Energy, the Environment and Water (Australia)',
     sourceNotes:
-      'NGA Factors 2024 scope 2 table includes NSW & ACT electricity factor of 0.66 kg CO2-e/kWh.'
+      'NGA Factors 2024 scope 2 table includes NSW & ACT electricity factor of 0.66 kg CO2-e/kWh.',
+    scope: 'scope 2 (location-based)'
   },
   {
     id: 'us_egrid_total_output_2023',
@@ -284,7 +298,8 @@ const factors = [
     sourceUrl: 'https://www.epa.gov/system/files/documents/2025-06/summary_tables_rev2.pdf',
     sourcePublisher: 'United States Environmental Protection Agency',
     sourceNotes:
-      'Total output emission rate listed as 899.633 lb/MWh; converted to 0.40807 kg/kWh using 0.000453592 conversion.'
+      'Total output emission rate listed as 899.633 lb/MWh; converted to 0.40807 kg/kWh using 0.000453592 conversion.',
+    scope: 'scope 2 (location-based, total output emission rate)'
   }
 ]
 
@@ -304,6 +319,7 @@ for (const factor of factors) {
     sourceUrl: factor.sourceUrl,
     sourcePublisher: factor.sourcePublisher,
     sourceNotes: factor.sourceNotes,
+    scope: factor.scope,
     updatedAt: FieldValue.serverTimestamp()
   })
 }

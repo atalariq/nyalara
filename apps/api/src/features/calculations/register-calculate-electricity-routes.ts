@@ -1,8 +1,8 @@
 import { createRoute, z } from '@hono/zod-openapi'
 import type { OpenAPIHono } from '@hono/zod-openapi'
 
+import { authenticate } from '../auth/auth-middleware.js'
 import type { IdTokenVerifier } from '../auth/firebase-admin-auth.js'
-import { classifySession } from '../auth/session.js'
 import type { EmissionFactorReader } from '../emission-factors/emission-factor-reader.js'
 import { selectActiveEmissionFactor } from '../emission-factors/select-active-emission-factor.js'
 import { AppError } from '../platform/http/errors.js'
@@ -87,22 +87,9 @@ export function registerCalculateElectricityRoutes(
   emissionFactors: EmissionFactorReader
 ) {
   app.openapi(route, async (c) => {
-    const authorization = c.req.header('authorization')
+    const session = await authenticate(c.req.header('authorization'), auth)
 
-    if (!authorization?.startsWith('Bearer ')) {
-      throw new AppError(401, 'unauthorized', 'Authorization token is required.')
-    }
-
-    const idToken = authorization.slice('Bearer '.length)
-    let decodedToken
-
-    try {
-      decodedToken = await auth.verifyIdToken(idToken)
-    } catch {
-      throw new AppError(401, 'unauthorized', 'Authorization token is invalid.')
-    }
-
-    classifySession(decodedToken)
+    void session
 
     const payload = c.req.valid('json')
     const activeFactors = await emissionFactors.listActiveElectricityFactors()
