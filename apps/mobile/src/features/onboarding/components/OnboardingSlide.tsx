@@ -1,16 +1,13 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 import { OnboardingSlideData } from '../types'
-import { OnboardingDots } from './OnboardingDots'
 import { OnboardingMockup } from './OnboardingMockup'
 
 interface Props {
   slide: OnboardingSlideData
-  totalSlides: number
-  activeIndex: number
 }
 
-export const OnboardingSlide = ({ slide, totalSlides, activeIndex }: Props) => {
+export const OnboardingSlide = ({ slide }: Props) => {
   return (
     <View className="flex-1 items-center">
       {/* Mockup */}
@@ -46,11 +43,6 @@ export const OnboardingSlide = ({ slide, totalSlides, activeIndex }: Props) => {
         >
           {slide.description}
         </Text>
-
-        {/* Dots */}
-        <View className="mt-10">
-          <OnboardingDots total={totalSlides} activeIndex={activeIndex} />
-        </View>
       </View>
     </View>
   )

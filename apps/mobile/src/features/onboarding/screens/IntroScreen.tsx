@@ -1,4 +1,5 @@
 // features/onboarding/screens/IntroScreen.tsx
+import { ensureProfile } from '@/features/auth/lib/ensure-profile'
 import { AppButton } from '@/shared/components/ui/AppButton'
 import { router } from 'expo-router'
 import React, { useRef, useState } from 'react'
@@ -12,6 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import { OnboardingDots } from '../components/OnboardingDots'
 import { OnboardingSlide } from '../components/OnboardingSlide'
 import { ONBOARDING_SLIDES } from '../data/slides'
 import { OnboardingSlideData } from '../types'
@@ -20,6 +22,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 export default function IntroScreen() {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [isSkipping, setIsSkipping] = useState(false)
   const flatListRef = useRef<FlatList>(null)
   const isLastSlide = activeIndex === ONBOARDING_SLIDES.length - 1
 
@@ -33,8 +36,11 @@ export default function IntroScreen() {
     setActiveIndex(next)
   }
 
-  const handleSkip = () => {
-    router.replace('/(onboarding)/house-type')
+  const handleSkip = async () => {
+    setIsSkipping(true)
+    await ensureProfile()
+    setIsSkipping(false)
+    router.replace('/(app)/dashboard')
   }
 
   const handleMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -44,11 +50,7 @@ export default function IntroScreen() {
 
   const renderItem: ListRenderItem<OnboardingSlideData> = ({ item }) => (
     <View style={{ width: SCREEN_WIDTH }} className="items-center justify-center">
-      <OnboardingSlide
-        slide={item}
-        totalSlides={ONBOARDING_SLIDES.length}
-        activeIndex={activeIndex}
-      />
+      <OnboardingSlide slide={item} />
     </View>
   )
 
@@ -56,8 +58,12 @@ export default function IntroScreen() {
     <View className="flex-1 bg-[#F8F8F8]">
       {/* Header */}
       <View className="flex-row justify-end px-6 pt-14">
-        <TouchableOpacity onPress={handleSkip} activeOpacity={0.7}>
-          <Text className="text-[16px] font-semibold text-neutral-600">Skip</Text>
+        <TouchableOpacity onPress={handleSkip} activeOpacity={0.7} disabled={isSkipping}>
+          <Text
+            className={`text-[16px] font-semibold ${isSkipping ? 'text-neutral-300' : 'text-neutral-600'}`}
+          >
+            {isSkipping ? 'Loading...' : 'Skip'}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -74,6 +80,11 @@ export default function IntroScreen() {
           showsHorizontalScrollIndicator={false}
           bounces={false}
         />
+      </View>
+
+      {/* Dots - fixed position below the slider */}
+      <View className="items-center pb-6">
+        <OnboardingDots total={ONBOARDING_SLIDES.length} activeIndex={activeIndex} />
       </View>
 
       {/* Footer */}

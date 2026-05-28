@@ -1,12 +1,58 @@
 import { AppBackButton } from '@/shared/components/ui/AppBackButton'
 import { AppButton } from '@/shared/components/ui/AppButton'
-import { LinearGradient } from 'expo-linear-gradient'
 import { router } from 'expo-router'
 import { Bolt, Leaf } from 'lucide-react-native'
+import { useEffect, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useAuthStore } from '@/features/auth/store/authStore'
+import { ensureProfile } from '@/features/auth/lib/ensure-profile'
+import { deviceService } from '../../devices/services/deviceService'
+import { LinearGradient } from 'expo-linear-gradient'
 
 export function DeviceOnboardingScreen() {
+  const user = useAuthStore((s) => s.user)
+  const [isCheckingDevices, setIsCheckingDevices] = useState(true)
+
+  useEffect(() => {
+    async function checkExistingDevices() {
+      if (!user?.uid) {
+        setIsCheckingDevices(false)
+        return
+      }
+      try {
+        const devices = await deviceService.getUserDevices(user.uid)
+        if (devices.length > 0) {
+          router.replace('/(onboarding)/device-setup/list')
+          return
+        }
+      } catch {
+        // Ignore error; let the user proceed with onboarding
+      }
+      setIsCheckingDevices(false)
+    }
+    checkExistingDevices()
+  }, [user?.uid])
+
+  const handleSkipForNow = async () => {
+    await ensureProfile()
+    router.replace('/(app)/dashboard')
+  }
+
+  if (isCheckingDevices) {
+    return (
+      <LinearGradient
+        colors={['#2AD47F', '#EFFFF6', '#FFFFFF']}
+        locations={[0, 0.9, 1]}
+        className="flex-1"
+      >
+        <SafeAreaView className="flex-1 items-center justify-center">
+          <Text className="text-white text-base font-semibold">Checking your devices...</Text>
+        </SafeAreaView>
+      </LinearGradient>
+    )
+  }
+
   return (
     <LinearGradient
       colors={['#2AD47F', '#EFFFF6', '#FFFFFF']}
@@ -67,7 +113,7 @@ export function DeviceOnboardingScreen() {
               variant="secondary-subtle"
               size="lg"
               fullWidth
-              onPress={() => router.replace('/(app)/dashboard')}
+              onPress={handleSkipForNow}
             />
           </View>
         </View>

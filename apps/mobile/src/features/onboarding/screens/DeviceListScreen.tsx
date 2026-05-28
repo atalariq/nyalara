@@ -1,18 +1,39 @@
 // features/onboarding/screens/DeviceListScreen.tsx
 import { router } from 'expo-router'
 import { PlusCircle } from 'lucide-react-native'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { AppBackButton } from '@/shared/components/ui/AppBackButton'
+import { useAuthStore } from '@/features/auth/store/authStore'
 import { AddDeviceSheet } from '../../devices/components/AddDeviceSheet'
 import { DeviceCard } from '../../devices/components/AddDeviceSheet/DeviceCard'
+import { deviceService } from '../../devices/services/deviceService'
 import { useDeviceStore } from '../../devices/store/deviceStore'
 
 export function DeviceListScreen() {
   const devices = useDeviceStore((s) => s.devices)
+  const setDevices = useDeviceStore((s) => s.setDevices)
+  const setLoading = useDeviceStore((s) => s.setLoading)
   const hasDevices = devices.length > 0
   const [sheetVisible, setSheetVisible] = useState(false)
+  const user = useAuthStore((s) => s.user)
+
+  useEffect(() => {
+    async function fetchDevicesIfEmpty() {
+      if (!user?.uid || devices.length > 0) return
+      setLoading(true)
+      try {
+        const fetched = await deviceService.getUserDevices(user.uid)
+        setDevices(fetched)
+      } catch {
+        // Ignore fetch errors; user can still add devices manually
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchDevicesIfEmpty()
+  }, [user?.uid])
 
   return (
     <SafeAreaView className="flex-1 bg-[#F4F4F4]">

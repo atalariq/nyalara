@@ -1,12 +1,13 @@
 import { router } from 'expo-router'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Animated, Pressable, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { AppBackButton } from '@/shared/components/ui/AppBackButton'
 import { useDeviceStore } from '../../devices/store/deviceStore'
+import { ensureProfile } from '@/features/auth/lib/ensure-profile'
 
 export function DeviceSetupCompleteScreen() {
   const devices = useDeviceStore((s) => s.devices)
+  const [isContinuing, setIsContinuing] = useState(false)
 
   const scaleAnim = useRef(new Animated.Value(0)).current
   const fadeAnim = useRef(new Animated.Value(0)).current
@@ -30,13 +31,15 @@ export function DeviceSetupCompleteScreen() {
   const totalKwh = devices.reduce((sum, d) => sum + (d.monthlyKwh ?? 0), 0)
   const dailyKwh = totalKwh / 30
 
+  async function handleContinue() {
+    setIsContinuing(true)
+    await ensureProfile()
+    setIsContinuing(false)
+    router.replace('/(app)/dashboard')
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-[#25CE7F]">
-      {/* Nav */}
-      <View className="flex-row items-center px-5 pt-2">
-        <AppBackButton onPress={() => router.back()} tone="light" />
-      </View>
-
       {/* Checkmark */}
       <View className="flex-1 items-center justify-center px-6">
         <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
@@ -98,11 +101,15 @@ export function DeviceSetupCompleteScreen() {
       {/* CTA */}
       <View className="px-5 pb-8">
         <Pressable
-          onPress={() => router.replace('/(app)/dashboard')}
+          onPress={handleContinue}
+          disabled={isContinuing}
           className="bg-white rounded-full py-4 flex-row items-center justify-center gap-2"
+          style={{ opacity: isContinuing ? 0.7 : 1 }}
         >
-          <Text className="text-[#0E0E0E] text-base font-semibold">Continue to App</Text>
-          <Text className="text-[#0E0E0E] text-base">→</Text>
+          <Text className="text-[#0E0E0E] text-base font-semibold">
+            {isContinuing ? 'Loading...' : 'Go to Dashboard'}
+          </Text>
+          {!isContinuing && <Text className="text-[#0E0E0E] text-base">→</Text>}
         </Pressable>
       </View>
     </SafeAreaView>

@@ -7,6 +7,9 @@ import { AppBackButton } from '@/shared/components/ui/AppBackButton'
 import { HOUSE_CONFIG, type HouseType } from '@/shared/config/carbonBudget'
 import { useCarbonBudgetStore } from '../../carbon-budget/store/carbonBudgetStore'
 import { AppButton } from '@/shared/components/ui/AppButton'
+import { useAuthStore } from '@/features/auth/store/authStore'
+import { profileService } from '@/features/profile/services/profileService'
+import { CARBON_CONFIG } from '@/shared/config/carbonConfig'
 
 const HOUSE_IMAGES: Record<HouseType, any> = {
   large: require('@/assets/images/house/large.png'),
@@ -18,10 +21,31 @@ export function HouseTypeScreen() {
   const router = useRouter()
   const setHouseType = useCarbonBudgetStore((s) => s.setHouseType)
   const [selected, setSelected] = useState<HouseType | null>(null)
+  const [isFinishing, setIsFinishing] = useState(false)
+  const user = useAuthStore((s) => s.user)
 
-  function handleFinish() {
+  async function handleFinish() {
     if (!selected) return
+    setIsFinishing(true)
     setHouseType(selected)
+
+    // Ensure profile exists so onboarding does not loop on dashboard entry
+    if (user) {
+      try {
+        await profileService.createProfile({
+          uid: user.uid,
+          displayName: user.displayName ?? (user.isAnonymous ? 'Guest User' : 'User'),
+          email: user.email ?? '',
+          electricityRate: CARBON_CONFIG.electricityRate,
+          emissionFactor: CARBON_CONFIG.emissionFactor,
+        })
+      } catch {
+        // Best-effort: continue onboarding even if profile creation fails;
+        // a safety net in DeviceSetupCompleteScreen will retry before entering the app.
+      }
+    }
+
+    setIsFinishing(false)
     router.replace('/(onboarding)/device-setup' as any)
   }
 
@@ -29,7 +53,7 @@ export function HouseTypeScreen() {
     <SafeAreaView className="flex-1 bg-white">
       {/* HEADER */}
       <View className="flex-row items-center gap-3 px-4 py-3">
-        <AppBackButton onPress={() => router.back()} />
+        <AppBackButton onPress={() => router.replace('/(onboarding)/intro')} />
       </View>
 
       <ScrollView
@@ -74,16 +98,16 @@ export function HouseTypeScreen() {
       <View className="absolute bottom-0 left-0 right-0 px-4 pb-8 pt-4 bg-white">
         <Pressable
           onPress={handleFinish}
-          disabled={!selected}
+          disabled={!selected || isFinishing}
           style={{
             backgroundColor: '#111',
             borderRadius: 99,
             paddingVertical: 18,
             alignItems: 'center',
-            opacity: selected ? 1 : 0.5,
+            opacity: selected && !isFinishing ? 1 : 0.5,
           }}
         >
-          <Text style={{ color: '#25CE7F', fontSize: 16, fontWeight: '700' }}>Finish Set Up</Text>
+          <Text style={{ color: '#25CE7F', fontSize: 16, fontWeight: '700' }}>Continue Set Up</Text>
         </Pressable>
       </View>
     </SafeAreaView>
