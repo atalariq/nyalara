@@ -1,9 +1,10 @@
 // features/onboarding/screens/DeviceListScreen.tsx
 import { router } from 'expo-router'
-import { ArrowLeft, PlusCircle } from 'lucide-react-native'
+import { PlusCircle } from 'lucide-react-native'
 import { useState } from 'react'
 import { Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { AppBackButton } from '@/shared/components/ui/AppBackButton'
 import { AddDeviceSheet } from '../../devices/components/AddDeviceSheet'
 import { DeviceCard } from '../../devices/components/AddDeviceSheet/DeviceCard'
 import { useDeviceStore } from '../../devices/store/deviceStore'
@@ -22,10 +23,7 @@ export function DeviceListScreen() {
       >
         {/* Header */}
         <View className="pt-3 mb-10">
-          <Pressable onPress={() => router.back()} className="flex-row items-center gap-2 mb-8">
-            <ArrowLeft size={18} color="#25CE7F" />
-            <Text className="text-[#25CE7F] text-lg font-bold">Nyalara</Text>
-          </Pressable>
+          <AppBackButton onPress={() => router.back()} className="mb-8 self-start" />
 
           <View className="self-center bg-[#25CE7F] rounded-full px-4 py-1 mb-8">
             <Text className="text-white text-[11px] font-bold tracking-wide">

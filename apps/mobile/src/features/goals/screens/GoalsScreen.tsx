@@ -2,8 +2,8 @@
 import React, { useState } from 'react'
 import { ScrollView, Text, View, Pressable } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { AppBackButton } from '@/shared/components/ui/AppBackButton'
 import { useRouter } from 'expo-router'
-import { ArrowLeft } from 'lucide-react-native'
 import { useGoalsStore } from '../store/goalsStore'
 import { DailyTargetCard } from '../components/DailyTargetCard'
 import { SustainabilityTargetsCard } from '../components/SustainabilityTargetsCard'
@@ -32,13 +32,7 @@ export default function GoalsScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View className="flex-row items-center gap-4 mb-2">
-          <Pressable
-            onPress={() => router.back()}
-            className="w-11 h-11 rounded-2xl bg-white items-center justify-center"
-            style={{ shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 8, elevation: 2 }}
-          >
-            <ArrowLeft size={18} color="#111" />
-          </Pressable>
+          <AppBackButton onPress={() => router.back()} tone="dark" />
           <Text className="text-3xl font-bold text-[#111]">Carbon Budget</Text>
         </View>
 

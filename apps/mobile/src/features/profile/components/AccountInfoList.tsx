@@ -1,5 +1,5 @@
 import { Building2, Mail, MapPin, User, Users, Zap } from 'lucide-react-native'
-import { Text, View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
 import type { AccountInfo } from '../types/profile.types'
 
 type RowProps = {
@@ -27,9 +27,10 @@ function InfoRow({ icon, label, value, last }: RowProps) {
 
 type Props = {
   data: AccountInfo
+  onEdit?: () => void
 }
 
-export function AccountInfoList({ data }: Props) {
+export function AccountInfoList({ data, onEdit }: Props) {
   const rows: RowProps[] = [
     {
       icon: <User size={16} color="#8E8E8E" />,
@@ -58,17 +59,24 @@ export function AccountInfoList({ data }: Props) {
     },
     {
       icon: <Zap size={16} color="#8E8E8E" />,
-      label: 'PLN Rate',
-      value: data.plnRate,
+      label: 'Electricity Rate',
+      value: data.electricityRateLabel,
       last: true,
     },
   ]
 
   return (
     <View className="px-4">
-      <Text className="text-xs font-semibold text-foreground-muted uppercase tracking-widest mb-1">
-        Account Info
-      </Text>
+      <View className="mb-1 flex-row items-center justify-between">
+        <Text className="text-xs font-semibold text-foreground-muted uppercase tracking-widest">
+          Account Info
+        </Text>
+        {onEdit ? (
+          <Pressable onPress={onEdit} hitSlop={8}>
+            <Text className="text-xs font-semibold uppercase tracking-widest text-brand">Edit</Text>
+          </Pressable>
+        ) : null}
+      </View>
       <View className="rounded-3xl bg-surface px-4">
         {rows.map((row, i) => (
           <InfoRow key={i} {...row} last={i === rows.length - 1} />

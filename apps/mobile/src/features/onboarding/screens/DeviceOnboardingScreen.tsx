@@ -1,7 +1,8 @@
+import { AppBackButton } from '@/shared/components/ui/AppBackButton'
 import { AppButton } from '@/shared/components/ui/AppButton'
 import { LinearGradient } from 'expo-linear-gradient'
 import { router } from 'expo-router'
-import { ArrowLeft, Bolt, Leaf } from 'lucide-react-native'
+import { Bolt, Leaf } from 'lucide-react-native'
 import { Pressable, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -22,11 +23,7 @@ export function DeviceOnboardingScreen() {
 
         <View className="flex-1 px-8 pt-4">
           {/* Header */}
-          <Pressable onPress={() => router.back()} className="flex-row items-center gap-2 mb-8">
-            <ArrowLeft size={18} color="white" />
-
-            <Text className="text-white text-lg font-bold">Nyalara</Text>
-          </Pressable>
+          <AppBackButton onPress={() => router.back()} tone="light" className="mb-8 self-start" />
 
           {/* Badge */}
           <View className="self-start bg-white px-4 py-1 rounded-full mb-6">
