@@ -83,6 +83,14 @@ export function useDeviceSetup(redirectTo: 'list' | 'dashboard' = 'list', onSucc
         visibilityTime: 2000,
       })
 
+      form.reset({
+        deviceType: 'tv',
+        watt: undefined,
+        hoursPerDay: undefined,
+        daysPerMonth: 30,
+        location: 'bedroom',
+      })
+
       if (onSuccess) {
         onSuccess()
       } else if (redirectTo === 'dashboard') {
