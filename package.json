@@ -1,5 +1,7 @@
 {
   "name": "nyalara",
+  "description": "Mobile-first electricity tracking app",
+  "license": "MIT",
   "private": true,
   "packageManager": "pnpm@9.0.0",
   "scripts": {
